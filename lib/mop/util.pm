@@ -45,7 +45,7 @@ BEGIN {
         HASH   => sub { +{ %{ $_[0] } }                           },
         ARRAY  => sub { +[ @{ $_[0] } ]                           },
         SCALAR => sub { my $x = $_[0]; \$x                        }, 
-        GLOB   => sub { select select my $fh; %{ *$fh } = @_; $fh },  
+        GLOB   => sub { select select my $fh; %{ *$fh } = @_; $fh },  # TODO - test me
     ); 
 }
 
