@@ -40,24 +40,24 @@ sub stash {
 
 sub name {
     my ($self) = @_;
-    B::svref_2object( $$self )->NAME
+    return B::svref_2object( $$self )->NAME
 }
 
 sub version {
     my ($self) = @_;
-    ${ *{ $$self->{'VERSION'} // return }{SCALAR} // return }
+    return ${ *{ $$self->{'VERSION'} // return }{SCALAR} // return }
 }
 
 sub authority {
     my ($self) = @_;
-    ${ *{ $$self->{'AUTHORITY'} // return }{SCALAR} // return }
+    return ${ *{ $$self->{'AUTHORITY'} // return }{SCALAR} // return }
 }
 
 # closed-ness
 
 sub is_closed {
     my ($self) = @_;
-    ${ *{ $$self->{'IS_CLOSED'} // return }{SCALAR} // return }
+    return ${ *{ $$self->{'IS_CLOSED'} // return }{SCALAR} // return }
 }
 
 # NOTE:
@@ -69,14 +69,14 @@ sub is_closed {
 
 sub set_is_closed {
     my ($self, $value) = @_;
-    *{ $$self->{'IS_CLOSED'} //= Symbol::gensym() } = $value ? \1 : \0;
+    return *{ $$self->{'IS_CLOSED'} //= Symbol::gensym() } = $value ? \1 : \0;
 }
 
 # finalizers
 
 sub finalizers {
     my ($self) = @_;
-    @{ *{ $$self->{'FINALIZERS'} // return }{ARRAY} // return }
+    return @{ *{ $$self->{'FINALIZERS'} // return }{ARRAY} // return }
 }
 
 sub add_finalizer {
@@ -84,11 +84,13 @@ sub add_finalizer {
     die '[PANIC] Cannot add a finalizer to a module which has been closed'
         if $self->is_closed;
     *{ $$self->{'FINALIZERS'} //= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
+    return;
 }
 
 sub run_all_finalizers {
     my ($self) = @_;
-    $_->() foreach $self->finalizers
+    $_->() foreach $self->finalizers;
+    return;
 }
 
 1;

@@ -13,19 +13,19 @@ sub new {
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
     $self->can('BUILD') && mop::util::BUILDALL( $self, $proto );
-    $self;
+    return $self;
 }
 
 sub BUILDARGS {
     shift;
     return scalar @_ == 1 && ref $_[0] 
         ? +{ %{ $_[0] } } 
-        : +{     @_     }
+        : +{     @_     };
 }
 
 sub CREATE {
     my ($class, $proto) = @_;
-    bless $proto => $class;
+    return bless $proto => $class;
 }
 
 sub DESTROY {
