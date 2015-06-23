@@ -18,7 +18,7 @@ sub new {
 
 sub BUILDARGS {
     shift;
-    return scalar @_ == 1 && ref $_[0] ? $_[0] : { @_ }
+    return scalar @_ == 1 && { (ref $_[0] ? %{$_[0]} : @_) }
 }
 
 sub CREATE {
@@ -68,7 +68,8 @@ C<@args> are passed into C<BUILDARGS>.
 This method takes the original C<@args> to the C<new> constructor 
 and is expected to turn them into a canonical form, which is a 
 HASH ref of name/value pairs. This form is considered a prototype
-candidate for the instance and is then passed to C<CREATE>.
+candidate for the instance and is then passed to C<CREATE> and 
+should be a (shallow) copy of what was contained in C<@args>. 
 
 =head2 C<CREATE ($class, $proto)>
 
