@@ -10,9 +10,9 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-    $self->can('BUILD') && mop::util::BUILDALL( $self, $args );
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
+    $self->can('BUILD') && mop::util::BUILDALL( $class, $self, $proto );
     $self;
 }
 
@@ -29,7 +29,7 @@ sub CREATE {
 }
 
 sub DESTROY {
-    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] )
+    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( ref $_[0], $_[0] )
 }
 
 1;

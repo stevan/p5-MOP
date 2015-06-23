@@ -7,63 +7,27 @@ use mro;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-## ------------------------------------------------------------------
-## Dispatching and class MRO walking
-## ------------------------------------------------------------------
-
-sub DISPATCHER {
-    my ($class, %opts) = @_;
-    my @mro = @{ mro::get_linear_isa( $class ) };
-    @mro = reverse @mro if $opts{reverse};
-    return sub { (shift @mro) || return };
-}
-
-sub WALKCLASS { 
-    my ($dispatcher) = @_;
-    return $dispatcher->();
-}
-
-sub WALKMETH  {  
-    my ($dispatcher, $method) = @_;
-    { 
-        no strict 'refs';
-        my $class = $dispatcher->();
-        return unless $class;
-        if (defined &{ $class . '::' . $method }) {
-            # NOTE:
-            # might want to check stash ownership 
-            # here, that is what mop::role would do. 
-            # - SL
-            return \&{ $class . '::' . $method };
-        }
-        redo;
-    } 
-}
-
-
-## ------------------------------------------------------------------
-## Instance construction and destruction protocol
-## ------------------------------------------------------------------
-
 sub BUILDALL {
-    my ($instance, $args) = @_;
-    my $dispatcher = DISPATCHER( ref $instance, reverse => 1 );
-    while ( my $method = WALKMETH( $dispatcher, 'BUILD' ) ) {
-        $instance->$method( $args );
+    my ($class, $instance, $proto) = @_;
+    foreach my $super ( reverse @{ mro::get_linear_isa( $class ) } ) {
+        my $fully_qualified_name = $super . '::BUILD';
+        if ( defined &{ $fully_qualified_name } ) {
+            $instance->$fully_qualified_name( $proto );
+        }
     }
     return; 
 }
 
 sub DEMOLISHALL {
-    my ($instance) = @_;
-    my $dispatcher = DISPATCHER( ref $instance );
-    while ( my $method = WALKMETH( $dispatcher, 'DEMOLISH' ) ) {
-        $instance->$method();
+    my ($class, $instance) = @_;
+    foreach my $super ( @{ mro::get_linear_isa( $class ) } ) {
+        my $fully_qualified_name = $super . '::DEMOLISH';
+        if ( defined &{ $fully_qualified_name } ) {
+            $instance->$fully_qualified_name();
+        }
     }
     return; 
 }
-
-## ------------------------------------------------------------------
 
 1;
 
