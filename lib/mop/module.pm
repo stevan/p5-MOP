@@ -6,9 +6,10 @@ use warnings;
 use B      ();
 use Symbol ();
 
+use mop::object;
+
 use mop::util;
 use mop::internal::util;
-use mop::object;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
