@@ -29,9 +29,14 @@ sub WALKMETH  {
         no strict 'refs';
         my $class = $dispatcher->();
         return unless $class;
-        defined &{ $class . '::' . $method }
-            ? \&{ $class . '::' . $method }
-            : redo;
+        if (defined &{ $class . '::' . $method }) {
+            # NOTE:
+            # might want to check stash ownership 
+            # here, that is what mop::role would do. 
+            # - SL
+            return \&{ $class . '::' . $method };
+        }
+        redo;
     } 
 }
 
