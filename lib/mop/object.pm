@@ -29,7 +29,7 @@ sub CREATE {
 }
 
 sub DESTROY {
-    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( ref $_[0], $_[0] )
+    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( mop::util::BLESSED( $_[0] ), $_[0] )
 }
 
 1;

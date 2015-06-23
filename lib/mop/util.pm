@@ -2,10 +2,23 @@ package mop::util;
 
 use strict;
 use warnings;
-use mro;
+
+use mro          ();
+use Scalar::Util ();
+
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
+
+## ------------------------------------------------------------------
+## GENERAL
+## ------------------------------------------------------------------
+
+*BLESSED = \&Scalar::Util::blessed;
+
+## ------------------------------------------------------------------
+## OBJECT INITIALIZATION AND DESTRUCTION 
+## ------------------------------------------------------------------
 
 sub BUILDALL {
     my ($class, $instance, $proto) = @_;
@@ -28,6 +41,8 @@ sub DEMOLISHALL {
     }
     return; 
 }
+
+## ------------------------------------------------------------------
 
 1;
 
