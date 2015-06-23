@@ -12,7 +12,7 @@ sub new {
     my $class = shift;
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
-    $self->can('BUILD') && mop::util::BUILDALL( $class, $self, $proto );
+    $self->can('BUILD') && mop::util::BUILDALL( $self, $proto );
     $self;
 }
 
@@ -29,7 +29,7 @@ sub CREATE {
 }
 
 sub DESTROY {
-    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( mop::util::BLESSED( $_[0] ), $_[0] )
+    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] )
 }
 
 1;
