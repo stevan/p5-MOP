@@ -4,38 +4,47 @@ use strict;
 use warnings;
 
 use Test::More;
-
-use Scalar::Util qw[ reftype ];
+use Test::Fatal;
 
 BEGIN {
-    use_ok('mop::util');
-    use_ok('mop::util::error');
+    use_ok('mop::internal::util');
+    use_ok('mop::internal::util::error');
 }
 
-{ 
-    my $e = mop::util::error->new(
-        from => 'main',
-        msg  => 'ERROR!'
-    ); 
-    isa_ok($e, 'mop::util::error');
+subtest '... testing error without type' => sub {
+    my $e = mop::internal::util::error->new( msg => 'ERROR!' );
+    isa_ok($e, 'mop::internal::util::error');
 
-    is($e->from, 'main', '... got the expected value of `from`');
+    is($e->type, 'ERROR', '... got the expected value of `type`');
     is($e->msg, 'ERROR!', '... got the expected value of `msg`');
-}
+};
 
-{
-    eval { mop::util::THROW( PANIC => 'PANIC!!!' ) };
+subtest '... testing error with type' => sub {
+    my $e = mop::internal::util::error->new( type => 'PANIC', msg => 'PANIC!' );
+    isa_ok($e, 'mop::internal::util::error');
+
+    is($e->type, 'PANIC', '... got the expected value of `type`');
+    is($e->msg, 'PANIC!', '... got the expected value of `msg`');
+};
+
+subtest '... testing error from THROW and CATCH' => sub {
+    eval { mop::internal::util::THROW( PANIC => 'PANIC!' ) };
     ok($@, '... got an exception');
 
-    my $e = mop::util::CATCH( $@ );
-    isa_ok($e, 'mop::util::error::PANIC');
-    isa_ok($e, 'mop::util::error');
+    my $e = mop::internal::util::CATCH( $@ );
+    isa_ok($e, 'mop::internal::util::error');
     isa_ok($e, 'mop::object');   
 
-    is($e->from, 'main', '... got the expected value of `from`');
-    like($e->msg, qr/^PANIC!!! at \//, '... got the expected value of `msg`');
-}
+    is($e->type, 'PANIC', '... got the expected value of `type`');
+    like($e->msg, qr/^PANIC! at \//, '... got the expected value of `msg`');
+};
 
-
+subtest '... testing error from an error' => sub {
+    like(
+        exception {  mop::internal::util::error->new( type => 'NOTHING' ) },
+        qr/\`msg\` is required/,
+        '... got the error we expected'
+    );
+};
 
 done_testing;

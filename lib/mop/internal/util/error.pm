@@ -18,20 +18,13 @@ BEGIN {
     );
 }
 
-sub BUILDARGS {
-    my $self = shift; 
-    return scalar @_ == 2 
-        ? { type => $_[0], msg => $_[1] } 
-        : $self->next::method( @_ );
-}
-
 sub CREATE {
     my ($class, $proto) = @_;
     foreach my $attr ( keys %HAS ) {
         $proto->{ $attr } = $HAS{ $attr }->()
             if not exists $proto->{ $attr };
     }
-    $self->next::method( $proto );
+    $class->next::method( $proto );
 }
 
 sub type { $_[0]->{type} }
