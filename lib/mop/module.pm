@@ -71,7 +71,7 @@ sub is_closed {
 
 sub set_is_closed {
     my ($self, $value) = @_;
-    *{ $$self->{'IS_CLOSED'} ||= Symbol::gensym() } = $value ? \1 : \0;
+    *{ $$self->{'IS_CLOSED'} //= Symbol::gensym() } = $value ? \1 : \0;
 }
 
 # finalizers
@@ -85,7 +85,7 @@ sub add_finalizer {
     my ($self, $finalizer) = @_;
     mop::internal::util::THROW( PANIC => "Cannot add a finalizer to a module which has been closed" )
         if $self->is_closed;
-    *{ $$self->{'FINALIZERS'} ||= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
+    *{ $$self->{'FINALIZERS'} //= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
 }
 
 sub run_all_finalizers {
