@@ -6,6 +6,7 @@ use warnings;
 use B      ();
 use Symbol ();
 
+use mop::util;
 use mop::object;
 
 our $VERSION   = '0.01';
@@ -16,7 +17,7 @@ our @ISA; BEGIN { @ISA = 'mop::object' };
 sub CREATE {
     my ($class, $args) = @_;
     my $name = $args->{name} 
-        || die "[mop::module::PANIC] You must specify a module name";
+        || mop::util::THROW( ARGS => "You must specify a module name" );
     {
         no strict 'refs';
         # get a ref to to the stash itself ...
@@ -81,7 +82,7 @@ sub finalizers {
 
 sub add_finalizer {
     my ($self, $finalizer) = @_;
-    die "[mop::module::PANIC] Cannot add a finalizer to a module which has been closed"
+    mop::util::THROW( PANIC => "Cannot add a finalizer to a module which has been closed" )
         if $self->is_closed;
     *{ $$self->{'FINALIZERS'} ||= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
 }

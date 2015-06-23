@@ -6,6 +6,9 @@ use warnings;
 use mro          ();
 use Scalar::Util ();
 
+use mop::util::error;
+use mop::util::error::PANIC;
+use mop::util::error::ARGS;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -15,6 +18,14 @@ our $AUTHORITY = 'cpan:STEVAN';
 ## ------------------------------------------------------------------
 
 *BLESSED = \&Scalar::Util::blessed;
+
+sub THROW { die join '' => '[', shift, '@', (scalar caller), '] ', @_ }
+
+sub CATCH {
+    my ($type, $from, $msg) = ($_[0] =~ /^\[(.*)\@(.*)\] (.*)/);
+    my $e_class = 'mop::util::error::' . $type;
+    return $e_class->new( from => $from, msg => $msg ); 
+}
 
 ## ------------------------------------------------------------------
 ## OBJECT INITIALIZATION AND DESTRUCTION 
