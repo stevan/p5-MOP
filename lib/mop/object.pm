@@ -10,9 +10,9 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-    my $args  = $class->BUILDARGS( @_ );
-    my $self  = $class->CREATE( $args );
     $self->can('BUILD') && mop::util::BUILDALL( $self, $args );
+    my $proto = $class->BUILDARGS( @_ );
+    my $self  = $class->CREATE( $proto );
     $self;
 }
 
