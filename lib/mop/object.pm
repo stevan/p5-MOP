@@ -22,12 +22,8 @@ sub BUILDARGS {
 }
 
 sub CREATE {
-    my ($class, $args) = @_;
-    mop::util::CONSTRUCT_INSTANCE(
-        repr       => 'HASH',        
-        bless_into => $class,        
-        args       => $args,
-    );
+    my ($class, $proto) = @_;
+    bless $proto => $class;
 }
 
 sub DESTROY {

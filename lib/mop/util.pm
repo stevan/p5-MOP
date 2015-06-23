@@ -35,37 +35,6 @@ sub WALKMETH  {
     } 
 }
 
-## ------------------------------------------------------------------
-## Instance construction 
-## ------------------------------------------------------------------
-
-our %GENERATORS;
-BEGIN {
-    %GENERATORS = (
-        HASH   => sub { +{ %{ $_[0] } }                           },
-        ARRAY  => sub { +[ @{ $_[0] } ]                           },
-        SCALAR => sub { my $x = $_[0]; \$x                        }, 
-        GLOB   => sub { select select my $fh; %{ *$fh } = @_; $fh },  # TODO - test me
-    ); 
-}
-
-sub CONSTRUCT_INSTANCE {
-    my %opts = @_;
-
-    my ($generator, $instance);
-
-    $generator = $opts{ generator }
-        ? $opts{ generator }
-        : ($opts{ repr } && $GENERATORS{ $opts{ repr } });
-
-    die "[mop::PANIC] You must specify either a `generator` or a `repr` to construct an instance"
-        unless $generator;
-
-    die "[mop::PANIC] You must specify a class to bless the instance into"
-        unless $opts{ bless_into };
-
-    bless $generator->( $opts{ args } || () ) => $opts{ bless_into };
-}
 
 ## ------------------------------------------------------------------
 ## Instance construction and destruction protocol

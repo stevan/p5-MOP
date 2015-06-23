@@ -18,20 +18,16 @@ sub CREATE {
     my ($class, $args) = @_;
     my $name = $args->{name} 
         || die "[mop::module::PANIC] You must specify a module name";
-
-    mop::util::CONSTRUCT_INSTANCE(       
-        bless_into => $class,        
-        generator  => sub {
-            no strict 'refs';
-            # get a ref to to the stash itself ...
-            my $stash = \%{ $name . '::' };
-            # and then a ref to that, because we 
-            # need to bless it and do not want to 
-            # bless the actual stash if we can 
-            # avoid it.
-            return \$stash
-        }
-    );
+    {
+        no strict 'refs';
+        # get a ref to to the stash itself ...
+        my $stash = \%{ $name . '::' };
+        # and then a ref to that, because we 
+        # need to bless it and do not want to 
+        # bless the actual stash if we can 
+        # avoid it.
+        return bless \$stash => $class;
+    }
 }
 
 # stash
