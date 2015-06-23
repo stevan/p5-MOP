@@ -33,31 +33,31 @@ sub CREATE {
 
 sub stash {
     my ($self) = @_;
-    return ${ $self } # returns the direct HASH ref of the stash 
+    return $$self; # returns the direct HASH ref of the stash 
 }
 
 # identity 
 
 sub name {
     my ($self) = @_;
-    B::svref_2object( $self->stash )->NAME
+    B::svref_2object( $$self )->NAME
 }
 
 sub version {
     my ($self) = @_;
-    ${ *{ $self->stash->{'VERSION'} // return }{SCALAR} // return }
+    ${ *{ $$self->{'VERSION'} // return }{SCALAR} // return }
 }
 
 sub authority {
     my ($self) = @_;
-    ${ *{ $self->stash->{'AUTHORITY'} // return }{SCALAR} // return }
+    ${ *{ $$self->{'AUTHORITY'} // return }{SCALAR} // return }
 }
 
 # closed-ness
 
 sub is_closed {
     my ($self) = @_;
-    ${ *{ $self->stash->{'IS_CLOSED'} // return }{SCALAR} // return }
+    ${ *{ $$self->{'IS_CLOSED'} // return }{SCALAR} // return }
 }
 
 # NOTE:
@@ -69,21 +69,21 @@ sub is_closed {
 
 sub set_is_closed {
     my ($self, $value) = @_;
-    *{ $self->stash->{'IS_CLOSED'} ||= Symbol::gensym() } = $value ? \1 : \0;
+    *{ $$self->{'IS_CLOSED'} ||= Symbol::gensym() } = $value ? \1 : \0;
 }
 
 # finalizers
 
 sub finalizers {
     my ($self) = @_;
-    @{ *{ $self->stash->{'FINALIZERS'} // return }{ARRAY} // return }
+    @{ *{ $$self->{'FINALIZERS'} // return }{ARRAY} // return }
 }
 
 sub add_finalizer {
     my ($self, $finalizer) = @_;
     die "[mop::module::PANIC] Cannot add a finalizer to a module which has been closed"
         if $self->is_closed;
-    *{ $self->stash->{'FINALIZERS'} ||= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
+    *{ $$self->{'FINALIZERS'} ||= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
 }
 
 sub run_all_finalizers {
