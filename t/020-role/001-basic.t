@@ -14,7 +14,7 @@ BEGIN {
 =pod
 
 TODO:
-- ???
+- test more varients of role composition
 
 =cut
 
