@@ -11,6 +11,16 @@ BEGIN {
     use_ok('mop::object');
 }
 
+=pod
+
+TODO:
+- test calling ->new on an instance
+    - test it under inheritance
+- test overriding ->new 
+    - test that it bypasses the CREATE, BUILD, etc.
+
+=cut
+
 {
     package Foo;
     use strict;
