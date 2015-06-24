@@ -58,7 +58,7 @@ subtest '... testing finalizer methods' => sub {
 };
 
 subtest '... testing errors after closed' => sub {
-        $module->set_is_closed(1);
+    $module->set_is_closed(1);
     ok($module->is_closed, '... the module is now closed');
 
     my $f3 = sub {};
