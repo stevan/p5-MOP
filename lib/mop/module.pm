@@ -105,6 +105,15 @@ mop::module - a more structured `package`
 
 =head1 SYNOPSIS
 
+    my $module = mop::module->new( name => 'Foo' );
+
+    warn 'Module (' . $module->name . ') has been closed'
+        if $module->is_closed;
+
+    $module->add_finalizer(sub { ... });
+
+    UNITCHECK { $module->run_all_finalizers }
+
 =head1 DESCRIPTION
 
 The idea of a module is really just a formalized convention for 
