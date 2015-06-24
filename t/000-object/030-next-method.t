@@ -9,6 +9,14 @@ BEGIN {
     use_ok('mop::object');
 }
 
+=pod
+
+This test just confirms the expected behavior 
+of next::method and that nothing we did altered
+it. 
+
+=cut
+
 {
     package Foo;
     use strict;

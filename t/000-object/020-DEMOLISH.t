@@ -9,6 +9,13 @@ BEGIN {
     use_ok('mop::object');
 }
 
+=pod
+
+TODO:
+- tests for DEMOLISH under multiple-inheritance
+
+=cut
+
 my $COLLECTOR;
 
 {
