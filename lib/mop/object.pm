@@ -3,6 +3,8 @@ package mop::object;
 use strict;
 use warnings;
 
+use Scalar::Util ();
+
 use mop::util;
 
 our $VERSION   = '0.01';
@@ -25,7 +27,7 @@ sub BUILDARGS {
 
 sub CREATE {
     my ($class, $proto) = @_;
-    return bless $proto => $class;
+    return bless $proto => Scalar::Util::blessed($class) || $class;
 }
 
 sub DESTROY {
