@@ -13,7 +13,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 ## GENERAL
 ## ------------------------------------------------------------------
 
-*BLESSED = \&Scalar::Util::blessed;
+# ...
 
 ## ------------------------------------------------------------------
 ## OBJECT INITIALIZATION AND DESTRUCTION 
@@ -21,7 +21,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub BUILDALL {
     my ($instance, $proto) = @_;
-    foreach my $super ( reverse @{ mro::get_linear_isa( BLESSED( $instance ) ) } ) {
+    foreach my $super ( reverse @{ mro::get_linear_isa( Scalar::Util::blessed( $instance ) ) } ) {
         my $fully_qualified_name = $super . '::BUILD';
         if ( defined &{ $fully_qualified_name } ) {
             $instance->$fully_qualified_name( $proto );
@@ -32,7 +32,7 @@ sub BUILDALL {
 
 sub DEMOLISHALL {
     my ($instance) = @_;
-    foreach my $super ( @{ mro::get_linear_isa( BLESSED( $instance ) ) } ) {
+    foreach my $super ( @{ mro::get_linear_isa( Scalar::Util::blessed( $instance ) ) } ) {
         my $fully_qualified_name = $super . '::DEMOLISH';
         if ( defined &{ $fully_qualified_name } ) {
             $instance->$fully_qualified_name();
