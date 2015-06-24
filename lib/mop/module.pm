@@ -96,3 +96,33 @@ sub run_all_finalizers {
 1;
 
 __END__
+
+=pod
+
+=head1 NAME
+
+mop::module - a more structured `package`
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+The idea of a module is really just a formalized convention for 
+using packages. It provides ways to access information (name, 
+version, authority) as well  as adds two concepts.
+
+=head2 Closing a module
+
+When a module is closed, it should no longer be altered, this 
+being Perl we only guarantee this through our own API.
+
+=head2 Finalization hooks
+
+These are simply callbacks that are associated with a module and 
+are expected to be called at UNITCHECK time. The callbacks are 
+run in FIFO order, but no attempt is made by the mop to govern 
+the module loading order. 
+
+=cut
+
+
