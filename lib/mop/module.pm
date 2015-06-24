@@ -16,7 +16,7 @@ our @ISA; BEGIN { @ISA = 'mop::object' };
 sub CREATE {
     my ($class, $args) = @_;
     my $name = $args->{name} 
-        || die '[MISSING_ARG] You must specify a module name';
+        || die '[MISSING_ARG] You must specify a package name';
     {
         no strict 'refs';
         # get a ref to to the stash itself ...
@@ -81,7 +81,7 @@ sub finalizers {
 
 sub add_finalizer {
     my ($self, $finalizer) = @_;
-    die '[PANIC] Cannot add a finalizer to a module which has been closed'
+    die '[PANIC] Cannot add a finalizer to a package which has been closed'
         if $self->is_closed;
     *{ $$self->{'FINALIZERS'} //= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
     return;
