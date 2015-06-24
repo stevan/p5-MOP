@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
 
 BEGIN {
     use_ok('mop::module');
@@ -14,7 +13,8 @@ BEGIN {
 =pod
 
 TODO:
-- ???
+- test this with inheritance
+    - and with multiple inheritance
 
 =cut
 
