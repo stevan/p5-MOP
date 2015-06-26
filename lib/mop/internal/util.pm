@@ -5,11 +5,83 @@ use warnings;
 
 use mop::module;
 
+use B                  (); # nasty stuff, all nasty stuff
+use Symbol             (); # creating the occasional symbol 
 use Devel::Hook        (); # need this for accessing the UNITCHECK's AV
 use Devel::GlobalPhase (); # need this for checking what global phase we are in
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
+
+## ------------------------------------------------------------------
+## Glob Inspection
+## ------------------------------------------------------------------
+
+sub DOES_GLOB_HAVE_NULL_CV {    
+    my ($glob) = @_;
+    # NOTE:
+    # If the glob eq -1 that means it may well be a null sub
+    # this seems to be some kind of artifact of an optimization 
+    # perhaps, I really don't know, it is odd. It should not 
+    # need to be dealt with in XS, it seems to be a Perl language
+    # level thing.
+    # - SL
+    return 1 if $glob eq -1;
+    # next lets see if we have a CODE slot ...
+    if ( my $code = *{ $glob }{CODE} ) {
+        # if it is a CV and the ROOT is a NULL op ...
+        my $op = B::svref_2object( $code );
+        return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL'); 
+    }
+    # if we had no CODE slot, it can't be a NULL CV ...
+    return 0;
+}
+
+sub CREATE_NULL_CV {
+    my ($in_pkg, $name) = @_;
+    # this just tries to eval the NULL CV into 
+    # place, it is ugly, but works for now 
+    eval "sub ${in_pkg}::${name}; 1;" or do { die $@ };
+    return;
+}
+
+sub REMOVE_CV_FROM_GLOB {
+    my ($stash, $name) = @_;
+    # find the glob we are looking for
+    # which might not exist, in which 
+    # case we do nothing ....
+    if ( my $glob = $stash->{ $name } ) {
+        # once we find it, extract all the 
+        # slots we need, note the missing 
+        # CODE slot since we don't need 
+        # that in our new glob ... 
+        my %to_save;
+        foreach my $slot (qw[ SCALAR ARRAY HASH FORMAT IO ]) {
+            if ( my $val = *{ $glob }{ $slot } ) {
+                $to_save{ $slot } = $val;
+            }
+        }
+        # replace the old glob with a new one ...
+        $stash->{ $name } = Symbol::gensym();
+        # now go about constructing our new 
+        # glob by restoring the other slots
+        {
+            no strict 'refs';
+            no warnings 'once';
+            # get the name of the stash, we could have 
+            # passed this in, but it is easy to get in 
+            # XS, and so we can punt that down the road 
+            # for the time being
+            my $pkg = B::svref_2object( $stash )->NAME;
+            foreach my $type ( keys %to_save ) {
+                *{ $pkg . '::' . $name } = $to_save{ $type };
+            }
+        }
+    }
+    # ... the end
+    return;
+}
+
 
 ## ------------------------------------------------------------------
 ## Class finalization 

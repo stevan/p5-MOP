@@ -8,6 +8,8 @@ use Symbol ();
 use mop::object;
 use mop::module;
 
+use mop::internal::util;
+
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -67,16 +69,83 @@ sub set_is_abstract {
 
 # required methods 
 
-sub required_methods { 0 } # Stub for now
+sub required_methods {
+    my $stash = $_[0]->stash;
 
-# method required_methods          ($self);
-# method has_required_method       ($self, $name);
-# method get_required_method       ($self, $name);
-# method add_required_method       ($self, $name);
-# method delete_required_method    ($self, $name);    
-# # aliasing
-# method alias_required_method     ($self, $name);
-# method has_required_method_alias ($self, $name);  
+    my @required;
+    foreach my $candidate ( keys %$stash ) {
+        push @required => $candidate
+            if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( 
+                $stash->{ $candidate } 
+            );
+    }
+    return @required;
+}
+
+sub requires_method {
+    my $stash = $_[0]->stash;
+    my $name  = $_[1];
+
+    return 0 unless exists $stash->{ $name };
+    return mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
+}
+
+sub add_required_method {
+    my ($self, $name) = @_;
+    die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+    # check if we have a glob already ...
+    if ( my $glob = $self->stash->{$name} ) {
+        # and if we have a NULL CV in it, just return 
+        return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob );
+        # and if we don't and have a CODE slot, we 
+        # need to die because this doesn't make sense
+        die "[PANIC] Cannot add a required method ($name) when there is a regular method already there"
+            if defined *{ $glob }{CODE};
+    }
+    # if we don't have a stash entry, 
+    # then just create one 
+    mop::internal::util::CREATE_NULL_CV( $self->name, $name );
+    return;
+}
+
+sub delete_required_method {
+    my ($self, $name) = @_;
+    die "[PANIC] Cannot delete method requirement ($name) from (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+
+    # check if we have a stash entry for $name ...
+    if ( my $glob = $self->stash->{$name} ) {
+        # and if we have a NULL CV in it, ...
+        if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
+            # then we must delete it
+            mop::internal::util::REMOVE_CV_FROM_GLOB( $self->stash, $name );
+            return;
+        }
+        else {
+            # and if we have a CV slot, but it doesn't have 
+            # a NULL CV in it, then we need to die because 
+            # this doesn't make sense
+            die "[PANIC] Cannot delete a required method ($name) when there is a regular method already there"
+                if defined *{ $glob }{CODE};
+
+            # if we have the glob, but no CV slot (NULL or otherwise)
+            # we do nothing ...
+            return;
+        }
+    }
+    # if there is no stash entry for $name, we do nothing
+    return;
+}
+
+# NOTE:
+# maybe add these in, not sure if we actually need them.
+#
+#   method alias_required_method     ($self, $name);
+#   method has_required_method_alias ($self, $name);  
+# 
+# See the comment in __NOTES__.txt for more info.
+# - SL
 
 # attributes
 
