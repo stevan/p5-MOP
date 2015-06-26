@@ -1,0 +1,3 @@
+- replace all the glob access with a mop::internal::util function
+    - I am sure my versions have side effects of some kind
+    - it will all be replaced by XS eventually
