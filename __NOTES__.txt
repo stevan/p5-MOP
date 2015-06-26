@@ -1,0 +1,15 @@
+NOTES
+=====
+
+## Do we actually want to alias required methods?
+
+There is value in knowing that a method was not defined in a package, 
+meaning that it is not owned by that package. But is there value in 
+knowing this when it comes to required methods? 
+
+Required methods will get composed in from roles, and they will be 
+inherited from abstract classes, but they are mostly just markers 
+that something is missing. They can't conflict since their bodies
+are always the same (NULL) and when you have two of the same name
+it is the same as having one. 
+
