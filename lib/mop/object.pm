@@ -29,7 +29,8 @@ sub CREATE {
 }
 
 sub DESTROY {
-    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] )
+    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] );
+    return;
 }
 
 1;

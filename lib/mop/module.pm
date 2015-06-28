@@ -76,6 +76,7 @@ sub is_closed {
 sub set_is_closed {
     my ($self, $value) = @_;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_CLOSED', $value ? \1 : \0 );
+    return;
 }
 
 # finalizers

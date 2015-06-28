@@ -97,6 +97,7 @@ sub set_is_abstract {
     die '[PANIC] Cannot set a package to be abstract which has been closed'
         if $self->is_closed;    
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
+    return;
 }
 
 # required methods 
