@@ -118,7 +118,7 @@ sub add_required_method {
     die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
     # check if we have a glob already ...
-    if ( my $glob = $self->stash->{$name} ) {
+    if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, just return 
         return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob );
         # and if we don't and have a CODE slot, we 
@@ -138,7 +138,7 @@ sub delete_required_method {
         if $self->is_closed;
 
     # check if we have a stash entry for $name ...
-    if ( my $glob = $self->stash->{$name} ) {
+    if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, ...
         if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
             # then we must delete it
