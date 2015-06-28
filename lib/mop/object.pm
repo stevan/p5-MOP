@@ -20,9 +20,7 @@ sub new {
 
 sub BUILDARGS {
     shift;
-    return scalar @_ == 1 && ref $_[0] 
-        ? +{ %{ $_[0] } } 
-        : +{     @_     };
+    return scalar @_ == 1 && ref $_[0] ? +{ %{ $_[0] } } : +{ @_ };
 }
 
 sub CREATE {
