@@ -208,4 +208,85 @@ mop::role - the metaclass for roles
 
 =head1 DESCRIPTION
 
+=head1 METHODS
+
+This module I<does> the L<mop::module> package, which means
+that it also has all the methods from that package as well.
+
+=head2 Role Relationships
+
+=over 4
+
+=item C<roles>
+
+=item C<set_roles( @roles )>
+
+=item C<does_role( $role )>
+
+=back
+
+=head2 Abstractness
+
+=over 4
+
+=item C<is_abstract>
+
+=item C<set_is_abstract( $value )>
+
+=back
+
+=head2 Required Methods
+
+=over 4
+
+=item C<required_methods>
+
+=item C<requires_method( $name )>
+
+=item C<add_required_method( $name )>
+
+=item C<delete_required_method( $name )>
+
+=back
+
+=head2 Attributes 
+
+=over 4
+
+=item C<attributes>
+
+=item C<has_attribute( $name )>
+
+=item C<get_attribute( $name )>
+
+=item C<add_attribute( $name, &$initializer )>
+
+=item C<delete_attribute( $name )>
+
+=item C<alias_attribute( $name, &$initializer )>
+
+=item C<has_attribute_alias ( $name )>
+
+=back
+
+=head2 Methods
+
+=over 4
+
+=item C<methods>
+
+=item C<has_method( $name )>
+
+=item C<get_method( $name )>
+
+=item C<add_method( $name, &$body )>
+
+=item C<delete_method( $name )>
+
+=item C<alias_method( $name, &$body )>
+
+=item C<has_method_alias( $name )>
+
+=back
+
 =cut

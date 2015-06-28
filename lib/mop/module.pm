@@ -132,6 +132,48 @@ are expected to be called at UNITCHECK time. The callbacks are
 run in FIFO order, but no attempt is made by the mop to govern 
 the module loading order. 
 
+=head1 METHODS
+
+=over 4
+
+=item C<stash>   
+
+=back
+
+=head2 Identity
+
+=over 4         
+
+=item C<name>             
+
+=item C<version>
+
+=item C<authority>
+
+=back
+
+=head2 Closing
+
+=over 4
+
+=item C<is_closed>
+
+=item C<set_is_closed( $value )>
+
+=back
+
+=head2 Finalization
+
+=over 4
+
+=item C<finalizers>
+
+=item C<add_finalizer( $finalizer )>
+
+=item C<run_all_finalizers>
+
+=back
+
 =cut
 
 
