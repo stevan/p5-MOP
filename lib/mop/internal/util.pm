@@ -14,7 +14,33 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## ------------------------------------------------------------------
-## Glob Inspection
+## Basic Glob access
+## ------------------------------------------------------------------
+
+sub GET_GLOB_SLOT {
+    my ($stash, $name, $slot) = @_;
+    # do my best to not autovivify, and 
+    # return undef if not
+    return unless exists $stash->{ $name };
+    # return the reference stored in the glob
+    # which might be undef, but that can be 
+    # handled by the caller
+    return *{ $stash->{ $name } }{ $slot };
+}
+
+sub SET_GLOB_SLOT {
+    my ($stash, $name, $value_ref) = @_;
+    # if the glob doesn't exist, create it
+    my $glob = $stash->{ $name } //= Symbol::gensym();
+    # then just store the reference in it
+    # which should figure out the proper 
+    # slot to put thing into without issue
+    *{$glob} = $value_ref;
+    return;
+}
+
+## ------------------------------------------------------------------
+## CV/Glob introspection
 ## ------------------------------------------------------------------
 
 sub DOES_GLOB_HAVE_NULL_CV {    
@@ -81,20 +107,6 @@ sub REMOVE_CV_FROM_GLOB {
     # ... the end
     return;
 }
-
-sub GET_GLOB_SLOT {
-    my ($stash, $name, $slot) = @_;
-    return unless exists $stash->{ $name };
-    return *{ $stash->{ $name } }{ $slot };
-}
-
-sub SET_GLOB_SLOT {
-    my ($stash, $name, $value_ref) = @_;
-    my $glob = $stash->{ $name } //= Symbol::gensym();
-    *{$glob} = $value_ref;
-    return;
-}
-
 
 ## ------------------------------------------------------------------
 ## Class finalization 
