@@ -40,7 +40,7 @@ sub stash {
 
 sub name {
     my ($self) = @_;
-    return B::svref_2object( $$self )->NAME
+    return B::svref_2object( $self->stash )->NAME
 }
 
 sub version {
