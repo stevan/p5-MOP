@@ -56,6 +56,11 @@ sub set_roles {
 
 sub does_role {
     my ($self, $role_to_test) = @_;
+    # FIXME:
+    # this is very inefficient, we could jump out
+    # early from the two `scalar grep` tests and 
+    # potentially save some processing.
+
     # try the simple way first ...
     return 1 if scalar grep { $_ eq $role_to_test } $self->roles;
     # then try the harder way next ...
