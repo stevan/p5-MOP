@@ -168,7 +168,7 @@ the module loading order.
 
 =item C<finalizers>
 
-=item C<add_finalizer( $finalizer )>
+=item C<add_finalizer( &$finalizer )>
 
 =item C<run_all_finalizers>
 
