@@ -16,6 +16,29 @@ our $AUTHORITY = 'cpan:STEVAN';
 our @ISA;  BEGIN { @ISA  = 'mop::object' };
 our @DOES; BEGIN { @DOES = 'mop::module' }; # to be composed later ...
 
+BEGIN {
+    # FIXME:
+    # Poor mans role composition, this will suffice 
+    # for now, until I have enough infrastructure to 
+    # be able to actually do the composition.
+    # - SL
+
+    *CREATE             = \&mop::module::CREATE;
+
+    *stash              = \&mop::module::stash;
+
+    *name               = \&mop::module::name;
+    *version            = \&mop::module::version;
+    *authority          = \&mop::module::authority;
+
+    *is_closed          = \&mop::module::is_closed;
+    *set_is_closed      = \&mop::module::set_is_closed;
+
+    *finalizers         = \&mop::module::finalizers;
+    *add_finalizer      = \&mop::module::add_finalizer;
+    *run_all_finalizers = \&mop::module::run_all_finalizers;
+}
+
 # other roles 
 
 sub roles {
@@ -170,29 +193,6 @@ sub delete_required_method {
 # method has_method_alias ($self, $name); 
 
 # ...
-
-BEGIN {
-    # FIXME:
-    # Poor mans role composition, this will suffice 
-    # for now, until I have enough infrastructure to 
-    # be able to actually do the composition.
-    # - SL
-
-    *CREATE             = \&mop::module::CREATE;
-
-    *stash              = \&mop::module::stash;
-
-    *name               = \&mop::module::name;
-    *version            = \&mop::module::version;
-    *authority          = \&mop::module::authority;
-
-    *is_closed          = \&mop::module::is_closed;
-    *set_is_closed      = \&mop::module::set_is_closed;
-
-    *finalizers         = \&mop::module::finalizers;
-    *add_finalizer      = \&mop::module::add_finalizer;
-    *run_all_finalizers = \&mop::module::run_all_finalizers;
-}
 
 1;
 
