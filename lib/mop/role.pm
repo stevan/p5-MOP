@@ -43,14 +43,16 @@ BEGIN {
 
 sub roles {
     my ($self) = @_;
-    return @{ *{ $self->stash->{'DOES'} // return }{ARRAY} // return }
+    my $does = mop::internal::util::GET_GLOB_SLOT( $$self, 'DOES', 'ARRAY' );
+    return unless $does;
+    return @$does;
 }
 
 sub set_roles {
     my ($self, @roles) = @_;
     die '[PANIC] Cannot add roles to a package which has been closed'
         if $self->is_closed;
-    *{ $self->stash->{'DOES'} //= Symbol::gensym() } = \@roles;
+    mop::internal::util::SET_GLOB_SLOT( $$self, 'DOES', \@roles );
     return;
 }
 
@@ -79,7 +81,9 @@ sub is_abstract {
     # calculated default, but if there is an $IS_ABSTRACT 
     # variable, only allow a true value to override the 
     # calculated default
-    return ${ *{ $self->stash->{'IS_ABSTRACT'} // return $default }{SCALAR} // return $default } ? 1 : $default;
+    my $is_abstract = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', 'SCALAR' );
+    return $default unless $is_abstract;
+    return $$is_abstract ? 1 : $default;
     # this approach should allow someone to create 
     # an abstract class even if they do not have any
     # required methods, but also keep the strict 
@@ -92,7 +96,7 @@ sub set_is_abstract {
     my ($self, $value) = @_;
     die '[PANIC] Cannot set a package to be abstract which has been closed'
         if $self->is_closed;    
-    return *{ $self->stash->{'IS_ABSTRACT'} //= Symbol::gensym() } = $value ? \1 : \0;
+    mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
 }
 
 # required methods 

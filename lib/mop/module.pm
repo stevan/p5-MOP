@@ -3,10 +3,10 @@ package mop::module;
 use strict;
 use warnings;
 
-use B      ();
-use Symbol ();
+use B ();
 
 use mop::object;
+use mop::internal::util;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -45,19 +45,25 @@ sub name {
 
 sub version {
     my ($self) = @_;
-    return ${ *{ $$self->{'VERSION'} // return }{SCALAR} // return }
+    my $version = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'VERSION', 'SCALAR' );
+    return unless $version;
+    return $$version;
 }
 
 sub authority {
     my ($self) = @_;
-    return ${ *{ $$self->{'AUTHORITY'} // return }{SCALAR} // return }
+    my $authority = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'AUTHORITY', 'SCALAR' );
+    return unless $authority;
+    return $$authority;
 }
 
 # closed-ness
 
 sub is_closed {
     my ($self) = @_;
-    return ${ *{ $$self->{'IS_CLOSED'} // return }{SCALAR} // return }
+    my $is_closed = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'IS_CLOSED', 'SCALAR' );
+    return unless $is_closed;
+    return $$is_closed;
 }
 
 # NOTE:
@@ -69,21 +75,23 @@ sub is_closed {
 
 sub set_is_closed {
     my ($self, $value) = @_;
-    return *{ $$self->{'IS_CLOSED'} //= Symbol::gensym() } = $value ? \1 : \0;
+    mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_CLOSED', $value ? \1 : \0 );
 }
 
 # finalizers
 
 sub finalizers {
     my ($self) = @_;
-    return @{ *{ $$self->{'FINALIZERS'} // return }{ARRAY} // return }
+    my $finalizers = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
+    return unless $finalizers;
+    return @$finalizers;    
 }
 
 sub add_finalizer {
     my ($self, $finalizer) = @_;
     die '[PANIC] Cannot add a finalizer to a package which has been closed'
         if $self->is_closed;
-    *{ $$self->{'FINALIZERS'} //= Symbol::gensym() } = [ $self->finalizers, $finalizer ];
+    mop::internal::util::SET_GLOB_SLOT( $self->stash, 'FINALIZERS', [ $self->finalizers, $finalizer ] );
     return;
 }
 

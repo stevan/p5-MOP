@@ -82,6 +82,19 @@ sub REMOVE_CV_FROM_GLOB {
     return;
 }
 
+sub GET_GLOB_SLOT {
+    my ($stash, $name, $slot) = @_;
+    return unless exists $stash->{ $name };
+    return *{ $stash->{ $name } }{ $slot };
+}
+
+sub SET_GLOB_SLOT {
+    my ($stash, $name, $value_ref) = @_;
+    my $glob = $stash->{ $name } //= Symbol::gensym();
+    *{$glob} = $value_ref;
+    return;
+}
+
 
 ## ------------------------------------------------------------------
 ## Class finalization 
