@@ -24,8 +24,14 @@ sub BUILDARGS {
 }
 
 sub CREATE {
-    my ($class, $proto) = @_;
-    return bless $proto => Scalar::Util::blessed($class) || $class;
+    my $class = Scalar::Util::blessed($_[0]) || $_[0];
+    my $proto = $_[1];
+    my %attrs = do { no strict 'refs'; %{$class . '::HAS'} };
+    foreach my $k ( keys %attrs ) {
+        $proto->{ $k } = $attrs{ $k }->( $proto ) 
+            unless exists $proto->{ $k };
+    }
+    return bless $proto => $class;
 }
 
 sub DESTROY {
@@ -77,9 +83,11 @@ should be a (shallow) copy of what was contained in C<@args>.
 =head2 C<CREATE ($class, $proto)>
 
 This method receives the C<$proto> candidate from C<BUILDARGS> and
-constructs from it a blessed instance. This newly blessed instance 
-is then initialized by calling all the available C<BUILD> methods in 
-the correct (reverse mro) order.
+constructs from it a blessed instance using the C<%HAS> hash in the 
+C<$class>. 
+
+This newly blessed instance is then initialized by calling all the 
+available C<BUILD> methods in the correct (reverse mro) order.
 
 =head2 C<BUILD ($self, $proto)>
 

@@ -1,6 +1,18 @@
 NOTES
 =====
 
+mop::object
+-----------
+
+The construction protocol for mop::object expects that by runtime
+you have already "compiled" all the neccessary meta information into 
+the package. This is because it must be able to read all meta 
+information using just package stash/glob operations only. 
+
+
+Questions
+---------
+
 ## Do we actually want to alias required methods?
 
 There is value in knowing that a method was not defined in a package, 
