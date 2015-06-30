@@ -20,6 +20,7 @@ TODO:
 - test inherited custom BUILDARGS
     - chaining BUILDARGS methods along inheritance
 - test under multiple inheritance
+- test with %HAS values
 
 =cut
 

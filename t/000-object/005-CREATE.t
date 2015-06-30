@@ -22,6 +22,7 @@ TODO:
 - test inheriting custom CREATE method
     - chaining CREATE methods along inheritance
 - test under multiple inheritance
+- test with %HAS values
 
 =cut
 

@@ -13,7 +13,7 @@ BEGIN {
 =pod
 
 TODO:
-- ???
+- test with %HAS values
 
 =cut
 

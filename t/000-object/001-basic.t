@@ -18,6 +18,7 @@ TODO:
     - test it under inheritance
 - test overriding ->new 
     - test that it bypasses the CREATE, BUILD, etc.
+- do more elaborate tests with %HAS
 
 =cut
 

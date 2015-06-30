@@ -13,6 +13,7 @@ BEGIN {
 
 TODO:
 - tests for DEMOLISH under multiple-inheritance
+- test with %HAS values that need destroying
 
 =cut
 

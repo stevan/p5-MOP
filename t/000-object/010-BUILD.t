@@ -17,6 +17,7 @@ TODO:
 - tests for BUILD under multiple-inheritance
 - tests where BUILD alters the instance
     - test this under inheritance
+- test with %HAS values
 
 =cut
 
