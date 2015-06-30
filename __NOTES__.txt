@@ -1,5 +1,31 @@
-NOTES
-=====
+Perl 5 MOP
+==========
+
+Object Orientation in Perl is just a Design Pattern
+---------------------------------------------------
+
+The mechanisms of OO Perl are few and they all operate off of the 
+assumption that users have followed the agreed upon patterns.
+
+- classes are packages
+- methods are subs in a package
+- `our @ISA` is used to store inheritance relationship
+- `bless` is used to attach a reference (instance) to 
+   a package (class)
+- methods are dispatched using the `->` operator
+
+This proposal aims to add a few more items to the pattern.
+
+- roles are just packages
+- role methods are subs that are defined in a package
+    - inherited methods are ignored
+    - imported subs are ignored
+- required (abstract) methods are just pre-declared subs
+- `our @DOES` is used to store role relationships
+- `our %HAS` is used to store attribute/member/slot 
+  information
+
+------------------------------------------------------------------
 
 mop::object
 -----------
@@ -9,6 +35,7 @@ you have already "compiled" all the neccessary meta information into
 the package. This is because it must be able to read all meta 
 information using just package stash/glob operations only. 
 
+------------------------------------------------------------------
 
 Questions
 ---------
