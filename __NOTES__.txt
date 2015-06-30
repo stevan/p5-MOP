@@ -25,6 +25,13 @@ This proposal aims to add a few more items to the pattern.
 - `our %HAS` is used to store attribute/member/slot 
   information
 
+... and not strictly needed, but very nice to have.
+
+- an absract class is a class which has one or more 
+  required methods
+- it is possible to close a class/package, which implies
+  a promise of no future alteration will be done
+
 ------------------------------------------------------------------
 
 mop::object
