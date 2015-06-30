@@ -72,6 +72,15 @@ sub does_role {
 
 # abstract-ness
 
+# NOTE:
+# ponder removing the required_methods logic from here
+# this is something that could be investigated at the 
+# class FINALIZATION time and then the IS_ABSTRACT flag
+# is set. We need to do this for inheritance anyway, so
+# we might as well handle it them, then we can assume 
+# that the package is in a consistent state.
+# - SL
+
 sub is_abstract {
     my ($self) = @_;
     # if you have required methods, you are abstract
