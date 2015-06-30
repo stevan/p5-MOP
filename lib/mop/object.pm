@@ -26,7 +26,12 @@ sub BUILDARGS {
 sub CREATE {
     my $class = Scalar::Util::blessed($_[0]) || $_[0];
     my $proto = $_[1];
-    my %attrs = do { no strict 'refs'; %{$class . '::HAS'} };
+    my %attrs = do { 
+        no strict 'refs'; 
+        die "[ABSTRACT] Cannot create an instance of '$class', it is abstract"
+            if ${$class . '::IS_ABSTRACT'};
+        %{$class . '::HAS'};
+    };
     foreach my $k ( keys %attrs ) {
         $proto->{ $k } = $attrs{ $k }->( $proto ) 
             unless exists $proto->{ $k };
