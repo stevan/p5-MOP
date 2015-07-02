@@ -34,6 +34,13 @@ This proposal aims to add a few more items to the pattern.
 
 ------------------------------------------------------------------
 
+Design Goals
+------------
+
+- Do as much as possible at compile time to make things easy at runtime
+
+------------------------------------------------------------------
+
 mop::object
 -----------
 
