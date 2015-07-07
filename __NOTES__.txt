@@ -1,11 +1,13 @@
 Perl 5 MOP
 ==========
 
+------------------------------------------------------------------
+
 Object Orientation in Perl is just a Design Pattern
 ---------------------------------------------------
 
-The mechanisms of OO Perl are few and they all operate off of the 
-assumption that users have followed the agreed upon patterns.
+The mechanisms of OO Perl are few and they all operate off of 
+the assumption that users have followed the agreed upon patterns.
 
 - classes are packages
 - methods are subs in a package
@@ -37,7 +39,8 @@ This proposal aims to add a few more items to the pattern.
 Design Goals
 ------------
 
-- Do as much as possible at compile time to make things easy at runtime
+- Do as much as possible at compile time to make things 
+  easy (and cheap) at runtime
 
 ------------------------------------------------------------------
 
@@ -47,7 +50,8 @@ mop::object
 The construction protocol for mop::object expects that by runtime
 you have already "compiled" all the neccessary meta information into 
 the package. This is because it must be able to read all meta 
-information using just package stash/glob operations only. 
+information using just package stash/glob operations only. (see the
+"Design Goals" above)
 
 ------------------------------------------------------------------
 
