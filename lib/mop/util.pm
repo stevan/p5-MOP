@@ -13,7 +13,9 @@ our $AUTHORITY = 'cpan:STEVAN';
 ## GENERAL
 ## ------------------------------------------------------------------
 
-# ...
+sub IS_CLASS_ABSTRACT { no strict 'refs'; ${$_[0] . '::IS_ABSTRACT'} }
+sub IS_CLASS_CLOSED   { no strict 'refs'; ${$_[0] . '::IS_CLOSED'}   }
+sub FETCH_CLASS_SLOTS { no strict 'refs'; %{$_[0] . '::HAS'}         }
 
 ## ------------------------------------------------------------------
 ## OBJECT INITIALIZATION AND DESTRUCTION 
