@@ -70,3 +70,21 @@ that something is missing. They can't conflict since their bodies
 are always the same (NULL) and when you have two of the same name
 it is the same as having one. 
 
+## Do we want to check abstract-ness via required methods?
+
+Currently, via the mop::role API, we define abstract-ness with two 
+different criteria. First, does a class/role have any required
+methods? This is the more classic definition of "abstract" in which 
+the class/role is not complete and therefore cannot be instantiated.
+Second, is the class/role explicitly marked as "abstract"? This is 
+the case where you, the programmer, decided the class was abstract.
+
+By making the "is-abstract" check have to look at the set of required
+methods, we slow down all instance construction. If instead we only 
+looked at the $IS_ABSTRACT flag/package-variable, and relied on the 
+fact that required methods would be checked at compile time and set 
+the $IS_ABSTRACT accordingly, then we could speed things up and avoid
+a lot of runtime meta layer calls. 
+
+
+
