@@ -13,7 +13,9 @@ BEGIN {
 =pod
 
 TODO:
-- ???
+- test the mop::util::IS_CLASS_CLOSED function here as well
+    - the two APIs (mop::util & mop-OO) should have 
+      the same end result
 
 =cut
 

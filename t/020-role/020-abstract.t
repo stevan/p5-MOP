@@ -13,7 +13,10 @@ BEGIN {
 =pod
 
 TODO:
-- ???
+- test the mop::util::IS_CLASS_ABSTRACT function here as well
+    - the two APIs (mop::util & mop-OO) should have 
+      the same end result
+- test setting abstract-ness from the Role API as well
 
 =cut
 
