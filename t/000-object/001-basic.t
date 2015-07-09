@@ -26,8 +26,8 @@ TODO:
     package Foo;
     use strict;
     use warnings;
-    our @ISA = ('mop::object');
-    our %HAS = (foo => sub { 'FOO' });
+    our @ISA; BEGIN { @ISA = ('mop::object') };
+    our %HAS; BEGIN { %HAS = (foo => sub { 'FOO' }) };
 }
 
 subtest '... simple mop::object test' => sub {
@@ -37,8 +37,7 @@ subtest '... simple mop::object test' => sub {
     is(blessed $o, 'mop::object', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
     
-    ok(exists $o->{foo}, '... got the expected slot');
-    is($o->{foo}, 'BAR', '... the expected slot has the expected value');
+    ok(!exists $o->{foo}, '... got the expected lack of a slot');
 };
 
 subtest '... simple mop::object subclass test' => sub {

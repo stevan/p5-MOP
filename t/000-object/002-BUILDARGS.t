@@ -28,7 +28,8 @@ TODO:
     package Foo::NoInheritance; 
     use strict;
     use warnings;
-    our @ISA = 'mop::object';
+    our @ISA; BEGIN { @ISA = ('mop::object') };
+    our %HAS; BEGIN { %HAS = (foo => sub { 'FOO' }) };
 
     sub BUILDARGS {
         my ($class, $bar) = @_;
@@ -38,7 +39,8 @@ TODO:
     package Foo::WithInheritance::NextMethod; 
     use strict;
     use warnings;
-    our @ISA = 'mop::object';
+    our @ISA; BEGIN { @ISA = ('mop::object') };
+    our %HAS; BEGIN { %HAS = (foo => sub { 'FOO' }) };
 
     sub BUILDARGS {
         my ($class, $bar) = @_;
@@ -48,7 +50,8 @@ TODO:
     package Foo::WithInheritance::SUPER; 
     use strict;
     use warnings;
-    our @ISA = 'mop::object';
+    our @ISA; BEGIN { @ISA = ('mop::object') };
+    our %HAS; BEGIN { %HAS = (foo => sub { 'FOO' }) };
 
     sub BUILDARGS {
         my ($class, $bar) = @_;

@@ -30,7 +30,8 @@ TODO:
     package Foo; 
     use strict;
     use warnings;
-    our @ISA = 'mop::object';
+    our @ISA; BEGIN { @ISA = ('mop::object') };
+    our %HAS; BEGIN { %HAS = (foo => sub { 'FOO' }) };
 
     sub CREATE {
         my ($class, $proto) = @_;

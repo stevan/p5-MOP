@@ -25,15 +25,19 @@ sub BUILDARGS {
 
 sub CREATE {
     my $class = Scalar::Util::blessed($_[0]) || $_[0];
-    my $proto = $_[1];    
     die "[ABSTRACT] Cannot create an instance of '$class', it is abstract" 
         if mop::util::IS_CLASS_ABSTRACT( $class );
+    
+    my $proto = $_[1];        
+    my $self  = {};    
     my %slots = mop::util::FETCH_CLASS_SLOTS( $class );
-    foreach my $k ( keys %slots ) {
-        $proto->{ $k } = $slots{ $k }->( $proto ) 
-            unless exists $proto->{ $k };
-    }
-    return bless $proto => $class;
+
+    $self->{ $_ } = exists $proto->{ $_ } 
+        ? $proto->{ $_ } 
+        : $slots{ $_ }->( $proto )
+            foreach keys %slots;
+
+    return bless $self => $class;
 }
 
 sub DESTROY {
