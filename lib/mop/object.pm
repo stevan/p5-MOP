@@ -25,6 +25,7 @@ sub BUILDARGS {
 
 sub CREATE {
     my $class = Scalar::Util::blessed($_[0]) || $_[0];
+    
     die "[ABSTRACT] Cannot create an instance of '$class', it is abstract" 
         if mop::util::IS_CLASS_ABSTRACT( $class );
     
