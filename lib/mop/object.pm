@@ -12,6 +12,9 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
+       $class = Scalar::Util::blessed( $class ) if ref $class;
+    die "[ABSTRACT] Cannot create an instance of '$class', it is abstract" 
+        if mop::util::IS_CLASS_ABSTRACT( $class );
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
     $self->can('BUILD') && mop::util::BUILDALL( $self, $proto );
@@ -24,11 +27,7 @@ sub BUILDARGS {
 }
 
 sub CREATE {
-    my $class = Scalar::Util::blessed($_[0]) || $_[0];
-    
-    die "[ABSTRACT] Cannot create an instance of '$class', it is abstract" 
-        if mop::util::IS_CLASS_ABSTRACT( $class );
-    
+    my $class = $_[0];
     my $proto = $_[1];        
     my $self  = {};    
     my %slots = mop::util::FETCH_CLASS_SLOTS( $class );
