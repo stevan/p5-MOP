@@ -159,6 +159,13 @@ sub required_methods {
 # operations are mostly stash manipulation functions and so 
 # therefore belong here in the continuim of responsibility/
 # ownership.
+#
+## The only argument that could likely be made is for the 
+## mop::method API to handle creating the NULL CV for the 
+## add_required_method, but that would require us to pass in 
+## a mop::method instance, which would be silly since we never
+## need it anyway. 
+# 
 # - SL
 
 sub requires_method {
