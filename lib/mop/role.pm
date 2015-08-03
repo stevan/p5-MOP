@@ -7,6 +7,7 @@ use Symbol ();
 
 use mop::object;
 use mop::module;
+use mop::method;
 
 use mop::internal::util;
 
@@ -109,20 +110,56 @@ sub set_is_abstract {
     return;
 }
 
+## Methods
+
+# get them all; regular, aliased & required
+sub all_methods {
+    my $stash = $_[0]->stash;
+    my @methods;
+    foreach my $candidate ( keys %$stash ) {
+        if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $candidate, 'CODE' ) ) {
+            push @methods => mop::method->new( body => $code );
+        }
+    }
+    return @methods;
+}
+
+# just the local non-required methods
+sub methods {
+    my $self  = shift;
+    my $class = $self->name;
+    return grep { not($_->is_required) && $_->origin_class ne $class } $self->all_methods
+}
+
+# just the non-local non-required methods
+sub aliased_methods {
+    my $self  = shift;
+    my $class = $self->name;
+    return grep { not($_->is_required) && $_->origin_class eq $class } $self->all_methods
+}
+
+# just the required methods (locality be damned)
+# NOTE: 
+# We don't care where are required method comes from
+# just that one exists, so aliasing is not part of the
+# criteria here.
+# - SL
+sub required_methods {
+    my $self  = shift;
+    return grep { $_->is_required } $self->all_methods
+}
+
 # required methods 
 
-sub required_methods {
-    my $stash = $_[0]->stash;
-
-    my @required;
-    foreach my $candidate ( keys %$stash ) {
-        push @required => $candidate
-            if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( 
-                $stash->{ $candidate } 
-            );
-    }
-    return @required;
-}
+# NOTE: 
+# there is no real heavy need to use the mop::method API
+# below because 1) it is not needed, and 2) the mop::method
+# API is really just an information shim, it does not perform
+# much in the way of actions. From my point of view, the below
+# operations are mostly stash manipulation functions and so 
+# therefore belong here in the continuim of responsibility/
+# ownership.
+# - SL
 
 sub requires_method {
     my $stash = $_[0]->stash;
@@ -180,14 +217,18 @@ sub delete_required_method {
     return;
 }
 
-# NOTE:
-# maybe add these in, not sure if we actually need them.
-#
-#   method alias_required_method     ($self, $name);
-#   method has_required_method_alias ($self, $name);  
-# 
-# See the comment in __NOTES__.txt for more info.
-# - SL
+# methods 
+
+# method has_method       ($self, $name);
+# method get_method       ($self, $name);
+# method add_method       ($self, $name, &$body);
+# method delete_method    ($self, $name);
+
+# aliased methods
+
+# method alias_method     ($self, $name, &$body);
+# method has_method_alias ($self, $name); 
+
 
 # attributes
 
@@ -199,17 +240,6 @@ sub delete_required_method {
 # # aliasing
 # method alias_attribute     ($self, $name, &$initializer);
 # method has_attribute_alias ($self, $name);
-
-# regular methods
-
-# method methods          ($self);
-# method has_method       ($self, $name);
-# method get_method       ($self, $name);
-# method add_method       ($self, $name, &$body);
-# method delete_method    ($self, $name);
-# # aliasing
-# method alias_method     ($self, $name, &$body);
-# method has_method_alias ($self, $name); 
 
 # ...
 

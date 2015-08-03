@@ -22,6 +22,14 @@ sub GET_GLOB_SLOT {
     # do my best to not autovivify, and 
     # return undef if not
     return unless exists $stash->{ $name };
+    # occasionally we need to auto-inflate 
+    # the optimized version of a required
+    # method, its annoying, but the XS side
+    # should not have to care about this so 
+    # it can be removed eventually.
+    if ( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) {
+        B::svref_2object( $stash )->NAME->can( $name );
+    }
     # return the reference stored in the glob
     # which might be undef, but that can be 
     # handled by the caller
