@@ -128,14 +128,14 @@ sub all_methods {
 sub methods {
     my $self  = shift;
     my $class = $self->name;
-    return grep { not($_->is_required) && $_->origin_class ne $class } $self->all_methods
+    return grep { not($_->is_required) && $_->origin_class eq $class } $self->all_methods
 }
 
 # just the non-local non-required methods
 sub aliased_methods {
     my $self  = shift;
     my $class = $self->name;
-    return grep { not($_->is_required) && $_->origin_class eq $class } $self->all_methods
+    return grep { not($_->is_required) && $_->origin_class ne $class } $self->all_methods
 }
 
 # just the required methods (locality be damned)
@@ -226,7 +226,26 @@ sub delete_required_method {
 
 # methods 
 
-# method has_method       ($self, $name);
+sub has_method {
+    my $class = $_[0]->name;
+    my $stash = $_[0]->stash;
+    my $name  = $_[1];
+
+    # check these two easy cases first ...
+    return 0 unless exists $stash->{ $name };
+    return 0 if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
+
+    # now we grab the CV and make sure it is 
+    # local, and return accordingly
+    if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
+        return mop::method->new( body => $code )->origin_class eq $class;
+    }
+
+    # if there was no CV, return false.
+    return 0;
+}
+
+
 # method get_method       ($self, $name);
 # method add_method       ($self, $name, &$body);
 # method delete_method    ($self, $name);
