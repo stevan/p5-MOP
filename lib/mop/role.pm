@@ -253,7 +253,25 @@ sub has_method {
 # aliased methods
 
 # method alias_method     ($self, $name, &$body);
-# method has_method_alias ($self, $name); 
+
+sub has_method_alias {
+    my $class = $_[0]->name;
+    my $stash = $_[0]->stash;
+    my $name  = $_[1];
+
+    # check these two easy cases first ...
+    return 0 unless exists $stash->{ $name };
+    return 0 if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
+
+    # now we grab the CV and make sure it is 
+    # local, and return accordingly
+    if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
+        return mop::method->new( body => $code )->origin_class ne $class;
+    }
+
+    # if there was no CV, return false.
+    return 0;
+}
 
 
 # attributes
