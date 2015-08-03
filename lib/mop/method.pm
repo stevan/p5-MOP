@@ -42,7 +42,7 @@ sub is_required {
 
 sub origin_class {
     my ($self) = @_;
-    return B::svref_2object( $self->body )->STASH->NAME
+    return B::svref_2object( $self->body )->GV->STASH->NAME
 }
 
 sub was_aliased_from {
