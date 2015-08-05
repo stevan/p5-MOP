@@ -245,12 +245,37 @@ sub has_method {
     return 0;
 }
 
+sub get_method {
+    my $class = $_[0]->name;
+    my $stash = $_[0]->stash;
+    my $name  = $_[1];
 
-# method get_method       ($self, $name);
+    # check the easy case first ...
+    return unless exists $stash->{ $name };
+
+    # now we grab the CV ...
+    if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
+        my $method = mop::method->new( body => $code );
+        # and make sure it is local, and 
+        # then return accordingly
+        return $method 
+            if $method->origin_class eq $class;
+    }
+
+    # if there was no CV, return false.
+    return;
+}
+
 # method add_method       ($self, $name, &$body);
 # method delete_method    ($self, $name);
 
 # aliased methods
+
+# NOTE:
+# There is no need for a get_method_alias because 
+# that is basically just calling ->can on the package
+# and creating your own mop::method object if you want
+# - SL 
 
 # method alias_method     ($self, $name, &$body);
 
