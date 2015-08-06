@@ -6,6 +6,7 @@ use warnings;
 use mop::module;
 
 use B                  (); # nasty stuff, all nasty stuff
+use Sub::Util          (); # handling some sub stuff
 use Symbol             (); # creating the occasional symbol 
 use Devel::Hook        (); # need this for accessing the UNITCHECK's AV
 use Devel::GlobalPhase (); # need this for checking what global phase we are in
@@ -77,6 +78,16 @@ sub CREATE_NULL_CV {
     # place, it is ugly, but works for now 
     eval "sub ${in_pkg}::${name}; 1;" or do { die $@ };
     return;
+}
+
+sub INSTALL_CV {
+    my ($in_pkg, $name, $code, %opts) = @_;
+    
+    no strict 'refs';
+    no warnings 'once', 'redefine';
+
+    my $fullname =  $in_pkg.'::'.$name;
+    *{$fullname} = $opts{set_subname} ? Sub::Util::set_subname($fullname, $code) : $code;
 }
 
 sub REMOVE_CV_FROM_GLOB {
