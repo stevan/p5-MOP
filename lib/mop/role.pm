@@ -250,8 +250,9 @@ sub get_method {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
-    # check the easy case first ...
+    # check the easy cases first ...
     return unless exists $stash->{ $name };
+    return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 
     # now we grab the CV ...
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {

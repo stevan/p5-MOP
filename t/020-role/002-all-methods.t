@@ -67,30 +67,43 @@ subtest '... testing all-methods' => sub {
     is($required_methods[0]->body, $all_methods[0]->body, '... the required method matches');
     is($methods[0]->body,          $all_methods[1]->body, '... the method matches');
     
-    subtest '... testing required method object' => sub {
-        isa_ok($all_methods[0], 'mop::method');
-        is($all_methods[0]->name, 'baz', '... got the expected name');
-        ok($all_methods[0]->is_required, '... the method is required');
-        is($all_methods[0]->origin_class, 'Foo', '... the method is not aliased');
-        like(
-            exception { $all_methods[0]->body->() }, 
-            qr/^Undefined subroutine \&Foo\:\:baz called/, 
-            '... got the expected exception from calling the required sub'
-        );
+    subtest '... testing required method object (Foo::baz)' => sub {
+
+        my @m = ($all_methods[0], $role->get_method('baz'));
+        is(scalar @m, 1, '... got one method to check');
+
+        foreach my $m ( @m ) {
+            isa_ok($m, 'mop::method');
+            is($m->name, 'baz', '... got the expected name');
+            ok($m->is_required, '... the method is required');
+            is($m->origin_class, 'Foo', '... the method is not aliased');
+            like(
+                exception { $m->body->() }, 
+                qr/^Undefined subroutine \&Foo\:\:baz called/, 
+                '... got the expected exception from calling the required sub'
+            );
+        }
 
         ok(!$role->has_method('baz'), '... we do not have a method by this name');
+        ok(!$role->get_method('baz'), '... we do not have a method by this name');
         ok(!$role->has_method_alias('baz'), '... we do not have an aliased method by this name');
         ok($role->requires_method('baz'), '... we do have a required method by this name');
     };
 
-    subtest '... testing non-required method object' => sub {
-        isa_ok($all_methods[1], 'mop::method');
-        is($all_methods[1]->name, 'foo', '... got the expected name');
-        ok(!$all_methods[1]->is_required, '... the method is required');
-        is($all_methods[1]->origin_class, 'Foo', '... the method is not aliased');
-        my $result;
-        is(exception { $result = $all_methods[1]->body->() }, undef, '... got the lack of an exception from calling the regular sub');
-        is($result, 'Foo::foo', '... got the expected result');
+    subtest '... testing non-required method object (Foo::foo)' => sub {
+
+        my @m = ($all_methods[1], $role->get_method('foo'));
+        is(scalar @m, 2, '... got two methods to check');
+
+        foreach my $m ( @m ) {
+            isa_ok($m, 'mop::method');
+            is($m->name, 'foo', '... got the expected name');
+            ok(!$m->is_required, '... the method is required');
+            is($m->origin_class, 'Foo', '... the method is not aliased');
+            my $result;
+            is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
+            is($result, 'Foo::foo', '... got the expected result');
+        }
 
         ok($role->has_method('foo'), '... we do have a method by this name');
         ok(!$role->has_method_alias('foo'), '... we do not have an aliased method by this name');
@@ -120,46 +133,64 @@ subtest '... testing all-methods (with aliased one)' => sub {
     is($required_methods[0]->body, $all_methods[1]->body, '... the aliased method matches');
     is($methods[0]->body,          $all_methods[0]->body, '... the method matches');
 
-    subtest '... testing regular method object' => sub {
-        isa_ok($all_methods[0], 'mop::method');
-        is($all_methods[0]->name, 'bar', '... got the expected name');
-        ok(!$all_methods[0]->is_required, '... the method is required');
-        is($all_methods[0]->origin_class, 'Bar', '... the method is not aliased');
-        my $result;
-        is(exception { $result = $all_methods[0]->body->() }, undef, '... got the lack of an exception from calling the regular sub');
-        is($result, 'Bar::bar', '... got the expected result');
+    subtest '... testing regular method object (Bar::bar)' => sub {
+
+        my @m = ($all_methods[0], $role->get_method('bar'));
+        is(scalar @m, 2, '... got two methods to check');
+
+        foreach my $m ( @m ) {
+            isa_ok($m, 'mop::method');
+            is($m->name, 'bar', '... got the expected name');
+            ok(!$m->is_required, '... the method is required');
+            is($m->origin_class, 'Bar', '... the method is not aliased');
+            my $result;
+            is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
+            is($result, 'Bar::bar', '... got the expected result');
+        }
 
         ok($role->has_method('bar'), '... we do have a method by this name');
         ok(!$role->has_method_alias('bar'), '... we do not have an aliased method by this name');
         ok(!$role->requires_method('bar'), '... we do not have a required method by this name');
     };
 
-    subtest '... testing aliased required method object' => sub {
-        isa_ok($all_methods[1], 'mop::method');
-        is($all_methods[1]->name, 'baz', '... got the expected name');
-        ok($all_methods[1]->is_required, '... the method is required');
-        isnt($all_methods[1]->origin_class, 'Bar', '... the method is aliased');
-        is($all_methods[1]->origin_class, 'Foo', '... the method is aliased');
-        like(
-            exception { $all_methods[1]->body->() }, 
-            qr/^Undefined subroutine \&Foo\:\:baz called/, 
-            '... got the expected exception from calling the required sub'
-        );
+    subtest '... testing aliased required method object (Bar::baz)' => sub {
+
+        my @m = ($all_methods[1], $role->get_method('baz'));
+        is(scalar @m, 1, '... got one method to check');
+
+        foreach my $m ( @m ) {
+            isa_ok($m, 'mop::method');
+            is($m->name, 'baz', '... got the expected name');
+            ok($m->is_required, '... the method is required');
+            isnt($m->origin_class, 'Bar', '... the method is aliased');
+            is($m->origin_class, 'Foo', '... the method is aliased');
+            like(
+                exception { $m->body->() }, 
+                qr/^Undefined subroutine \&Foo\:\:baz called/, 
+                '... got the expected exception from calling the required sub'
+            );
+        }
         
         ok(!$role->has_method('baz'), '... we do not have a method by this name');
         ok(!$role->has_method_alias('baz'), '... we do not have an aliased method by this name');
         ok($role->requires_method('baz'), '... we do have a required method by this name');
     };
 
-    subtest '... testing aliased method object' => sub {
-        isa_ok($all_methods[2], 'mop::method');
-        is($all_methods[2]->name, 'foo', '... got the expected name');
-        ok(!$all_methods[2]->is_required, '... the method is not required');
-        isnt($all_methods[2]->origin_class, 'Bar', '... the method is aliased');
-        is($all_methods[2]->origin_class, 'Foo', '... the method is aliased');
-        my $result;
-        is(exception { $result = $all_methods[2]->body->() }, undef, '... got the lack of an exception from calling the regular sub');
-        is($result, 'Foo::foo', '... got the expected result');
+    subtest '... testing aliased method object (Bar::foo)' => sub {
+
+        my @m = ($all_methods[2], $role->get_method('foo'));
+        is(scalar @m, 1, '... got two methods to check');
+
+        foreach my $m ( @m ) {
+            isa_ok($m, 'mop::method');
+            is($m->name, 'foo', '... got the expected name');
+            ok(!$m->is_required, '... the method is not required');
+            isnt($m->origin_class, 'Bar', '... the method is aliased');
+            is($m->origin_class, 'Foo', '... the method is aliased');
+            my $result;
+            is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
+            is($result, 'Foo::foo', '... got the expected result');
+        }
 
         ok(!$role->has_method('foo'), '... we do not have a method by this name');
         ok($role->has_method_alias('foo'), '... we do have an aliased method by this name');
