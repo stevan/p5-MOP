@@ -3,8 +3,6 @@ package mop::role;
 use strict;
 use warnings;
 
-use Symbol ();
-
 use mop::object;
 use mop::module;
 use mop::method;
