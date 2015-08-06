@@ -69,8 +69,10 @@ subtest '... testing all-methods' => sub {
     
     subtest '... testing required method object (Foo::baz)' => sub {
 
-        my @m = ($all_methods[0], $role->get_method('baz'));
+        my @m = ($all_methods[0]);
         is(scalar @m, 1, '... got one method to check');
+        push @m => $role->get_required_method('baz');
+        is(scalar @m, 2, '... got two methods to check');
 
         foreach my $m ( @m ) {
             isa_ok($m, 'mop::method');
@@ -92,7 +94,9 @@ subtest '... testing all-methods' => sub {
 
     subtest '... testing non-required method object (Foo::foo)' => sub {
 
-        my @m = ($all_methods[1], $role->get_method('foo'));
+        my @m = ($all_methods[1]);
+        is(scalar @m, 1, '... got one method to check');
+        push @m => $role->get_method('foo');
         is(scalar @m, 2, '... got two methods to check');
 
         foreach my $m ( @m ) {
@@ -108,6 +112,7 @@ subtest '... testing all-methods' => sub {
         ok($role->has_method('foo'), '... we do have a method by this name');
         ok(!$role->has_method_alias('foo'), '... we do not have an aliased method by this name');
         ok(!$role->requires_method('foo'), '... we do not have a required method by this name');
+        ok(!$role->get_required_method('foo'), '... we do not have a required method by this name')
     };
 
 };
@@ -135,7 +140,9 @@ subtest '... testing all-methods (with aliased one)' => sub {
 
     subtest '... testing regular method object (Bar::bar)' => sub {
 
-        my @m = ($all_methods[0], $role->get_method('bar'));
+        my @m = ($all_methods[0]);
+        is(scalar @m, 1, '... got one method to check');
+        push @m => $role->get_method('bar');
         is(scalar @m, 2, '... got two methods to check');
 
         foreach my $m ( @m ) {
@@ -151,11 +158,12 @@ subtest '... testing all-methods (with aliased one)' => sub {
         ok($role->has_method('bar'), '... we do have a method by this name');
         ok(!$role->has_method_alias('bar'), '... we do not have an aliased method by this name');
         ok(!$role->requires_method('bar'), '... we do not have a required method by this name');
+        ok(!$role->get_required_method('bar'), '... we do not have a required method by this name');
     };
 
     subtest '... testing aliased required method object (Bar::baz)' => sub {
 
-        my @m = ($all_methods[1], $role->get_method('baz'));
+        my @m = ($all_methods[1]);
         is(scalar @m, 1, '... got one method to check');
 
         foreach my $m ( @m ) {
@@ -172,14 +180,16 @@ subtest '... testing all-methods (with aliased one)' => sub {
         }
         
         ok(!$role->has_method('baz'), '... we do not have a method by this name');
+        ok(!$role->get_method('baz'), '... we do not have a method by this name');        
         ok(!$role->has_method_alias('baz'), '... we do not have an aliased method by this name');
         ok($role->requires_method('baz'), '... we do have a required method by this name');
+        ok(!$role->get_required_method('baz'), '... we do NOT have a required method by this name in the locak class');
     };
 
     subtest '... testing aliased method object (Bar::foo)' => sub {
 
-        my @m = ($all_methods[2], $role->get_method('foo'));
-        is(scalar @m, 1, '... got two methods to check');
+        my @m = ($all_methods[2]);
+        is(scalar @m, 1, '... got one method to check');
 
         foreach my $m ( @m ) {
             isa_ok($m, 'mop::method');
@@ -193,8 +203,10 @@ subtest '... testing all-methods (with aliased one)' => sub {
         }
 
         ok(!$role->has_method('foo'), '... we do not have a method by this name');
+        ok(!$role->get_method('foo'), '... we do not have a method by this name');
         ok($role->has_method_alias('foo'), '... we do have an aliased method by this name');
         ok(!$role->requires_method('foo'), '... we do not have a required method by this name');
+        ok(!$role->get_required_method('foo'), '... we do not have a required method by this name');
     };
 };
 

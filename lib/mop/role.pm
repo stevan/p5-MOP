@@ -176,6 +176,27 @@ sub requires_method {
     return mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 }
 
+sub get_required_method {
+    my $class = $_[0]->name;
+    my $stash = $_[0]->stash;
+    my $name  = $_[1];
+
+    # check these two easy cases first ...
+    return unless exists $stash->{ $name };
+    return unless mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } ); 
+
+    # now we grab the CV ...
+    if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
+        my $method = mop::method->new( body => $code );
+        # and make sure it is local, and 
+        # then return accordingly
+        return $method 
+            if $method->origin_class eq $class;
+    }
+
+    return;
+}
+
 sub add_required_method {
     my ($self, $name) = @_;
     die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
