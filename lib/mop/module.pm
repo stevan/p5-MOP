@@ -98,7 +98,7 @@ sub add_finalizer {
 
 sub run_all_finalizers {
     my ($self) = @_;
-    $_->() foreach $self->finalizers;
+    $_->( $self ) foreach $self->finalizers;
     return;
 }
 
