@@ -288,8 +288,19 @@ sub get_method {
     return;
 }
 
-# method add_method       ($self, $name, &$body);
-# method delete_method    ($self, $name);
+sub add_method {
+    my ($self, $name, $body) = @_;
+    die "[PANIC] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+    # ...
+}
+
+sub delete_method {
+    my ($self, $name) = @_;
+    die "[PANIC] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+    # ...
+}
 
 # aliased methods
 
@@ -299,7 +310,26 @@ sub get_method {
 # and creating your own mop::method object if you want
 # - SL 
 
-# method alias_method     ($self, $name, &$body);
+# NOTE:
+# Should aliasing be aloud even after a class is closed?
+# Probably not, but it might not be a bad idea to at 
+# least discuss in more detail what happens when a class
+# is actually closed.
+# - SL
+
+sub alias_method {
+    my ($self, $name, $body) = @_;
+    die "[PANIC] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+    # ...
+}
+
+sub delete_method_alias {
+    my ($self, $name) = @_;
+    die "[PANIC] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+    # ...
+}
 
 sub has_method_alias {
     my $class = $_[0]->name;
@@ -329,8 +359,9 @@ sub has_method_alias {
 # method add_attribute       ($self, $name, &$initializer);
 # method delete_attribute    ($self, $name);
 # # aliasing
-# method alias_attribute     ($self, $name, &$initializer);
-# method has_attribute_alias ($self, $name);
+# method alias_attribute        ($self, $name, &$initializer);
+# method has_attribute_alias    ($self, $name);
+# method delete_attribute_alias ($self, $name);
 
 # ...
 
