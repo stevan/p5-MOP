@@ -53,7 +53,17 @@ subtest '... testing creating a required method' => sub {
         exception { Foo->gorch },
         qr/^Undefined subroutine \&Foo\:\:gorch called/,
         '... and our successfully created required method behaves as we expect'
-    );     
+    );   
+
+    subtest '.... testing get-ing the required method object we just created' => sub {
+        my $m = $role->get_required_method('gorch');
+        ok(defined $m, '... this method is required');
+        isa_ok($m, 'mop::method');
+        is($m->name, 'gorch', '... got the expected name');
+        is($m->origin_class, 'Foo', '... got the expected origin class');
+        ok($m->is_required, '... this method is required');
+        is($m->body, \&Foo::gorch, '... got the expected body');
+    };  
 };
 
 subtest '... testing overwriting a regular method with a required method (it should fail)' => sub {

@@ -15,6 +15,7 @@ BEGIN {
 =pod
 
 TODO:
+- break up this test (it has too much going on in it)
 
 =cut
 
