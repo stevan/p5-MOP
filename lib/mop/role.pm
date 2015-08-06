@@ -287,17 +287,42 @@ sub get_method {
 }
 
 sub add_method {
-    my ($self, $name, $body) = @_;
+    my ($self, $name, $code) = @_;
     die "[PANIC] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    # ...
+    
+    mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
 }
 
 sub delete_method {
     my ($self, $name) = @_;
     die "[PANIC] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    # ...
+
+    # check if we have a stash entry for $name ...
+    if ( my $glob = $self->stash->{ $name } ) {
+        # and if we have a NULL CV in it, ...
+        if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
+            # then we need to die because this 
+            # shouldn't happen, we should only 
+            # delete regular methods.
+            die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
+        }
+        else {
+            # we need to make sure it is local, and 
+            # otherwise, error accordingly 
+            my $method = mop::method->new( body => *{ $glob }{CODE} );
+
+            die "[PANIC] Cannot delete a regular method ($name) when there is an aliased method already there"
+                if $method->origin_class ne $self->name;
+
+            # but if we have a regular method, then we 
+            # can just delete the CV from the glob
+            mop::internal::util::REMOVE_CV_FROM_GLOB( $self->stash, $name );
+        }
+    }
+    # if there is no stash entry for $name, we do nothing
+    return;
 }
 
 # aliased methods
@@ -316,17 +341,42 @@ sub delete_method {
 # - SL
 
 sub alias_method {
-    my ($self, $name, $body) = @_;
+    my ($self, $name, $code) = @_;
     die "[PANIC] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    # ...
+    
+    mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
 }
 
 sub delete_method_alias {
     my ($self, $name) = @_;
     die "[PANIC] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    # ...
+
+    # check if we have a stash entry for $name ...
+    if ( my $glob = $self->stash->{ $name } ) {
+        # and if we have a NULL CV in it, ...
+        if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
+            # then we need to die because this 
+            # shouldn't happen, we should only 
+            # delete regular methods.
+            die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
+        }
+        else {
+            # we need to make sure it is local, and 
+            # otherwise, error accordingly 
+            my $method = mop::method->new( body => *{ $glob }{CODE} );
+
+            die "[PANIC] Cannot delete an aliased method ($name) when there is a regular method already there"
+                if $method->origin_class eq $self->name;
+
+            # but if we have a regular method, then we 
+            # can just delete the CV from the glob
+            mop::internal::util::REMOVE_CV_FROM_GLOB( $self->stash, $name );
+        }
+    }
+    # if there is no stash entry for $name, we do nothing
+    return;
 }
 
 sub has_method_alias {
@@ -448,11 +498,11 @@ that it also has all the methods from that package as well.
 
 =item C<get_method( $name )>
 
-=item C<add_method( $name, &$body )>
+=item C<add_method( $name, &$code )>
 
 =item C<delete_method( $name )>
 
-=item C<alias_method( $name, &$body )>
+=item C<alias_method( $name, &$code )>
 
 =item C<has_method_alias( $name )>
 
