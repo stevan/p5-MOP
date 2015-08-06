@@ -20,10 +20,10 @@ TODO:
     use strict;
     use warnings;
     
-    sub foo { 'Foo::foo' }
+    sub foo;
 }
 
-subtest '... simple mop::method test' => sub {
+subtest '... simple required mop::method test' => sub {
     my $m = mop::method->new( body => \&Foo::foo );
     isa_ok($m, 'mop::object');
     isa_ok($m, 'mop::method');
@@ -31,7 +31,7 @@ subtest '... simple mop::method test' => sub {
     is($m->name, 'foo', '... got the name we expected');
     is($m->origin_class, 'Foo', '... got the origin class we expected');
     is($m->body, \&Foo::foo, '... got the body we expected');
-    ok(!$m->is_required, '... the method is not required');
+    ok($m->is_required, '... the method is required');
 
     ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
 };
