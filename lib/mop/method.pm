@@ -14,24 +14,25 @@ our @ISA; BEGIN { @ISA = 'mop::object' };
 
 sub CREATE {
     my ($class, $args) = @_; 
+
     die '[MISSING_ARG] You must specify a method body'
         unless $args->{body};
     die '[INVALID_ARG] The body specified must be a CODE reference'
         unless ref $args->{body} eq 'CODE';
-    my $body = $args->{body};
-    # NOTE:
-    # as with ...
-    return bless \$body => $class;
-}
 
-sub body {
-    my ($self) = @_;
-    return $$self;
+    my $body = $args->{body};
+
+    return bless \$body => $class;
 }
 
 sub name {
     my ($self) = @_;
     return B::svref_2object( $self->body )->GV->NAME
+}
+
+sub body {
+    my ($self) = @_;
+    return $$self;
 }
 
 sub is_required {
@@ -42,6 +43,16 @@ sub is_required {
 
 sub origin_class {
     my ($self) = @_;
+    # NOTE:
+    # Here we actually want the stash that is 
+    # associated with the GV (glob) that the 
+    # method body is associated with. This is 
+    # sometimes different then the COMP_STASH
+    # meaning the stash it was compiled in. It 
+    # seems to vary most with required subs, 
+    # which seem to be compiled in main:: even
+    # when I am expecting it not to be. 
+    # - SL 
     return B::svref_2object( $self->body )->GV->STASH->NAME
 }
 
