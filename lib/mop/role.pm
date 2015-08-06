@@ -44,7 +44,7 @@ BEGIN {
 
 sub roles {
     my ($self) = @_;
-    my $does = mop::internal::util::GET_GLOB_SLOT( $$self, 'DOES', 'ARRAY' );
+    my $does = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'DOES', 'ARRAY' );
     return unless $does;
     return @$does;
 }
@@ -53,7 +53,7 @@ sub set_roles {
     my ($self, @roles) = @_;
     die '[PANIC] Cannot add roles to a package which has been closed'
         if $self->is_closed;
-    mop::internal::util::SET_GLOB_SLOT( $$self, 'DOES', \@roles );
+    mop::internal::util::SET_GLOB_SLOT( $self->stash, 'DOES', \@roles );
     return;
 }
 
