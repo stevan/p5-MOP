@@ -82,7 +82,10 @@ sub CREATE_NULL_CV {
 
 sub INSTALL_CV {
     my ($in_pkg, $name, $code, %opts) = @_;
-    
+
+    die "[PANIC] You must specify a boolean value for `set_subname` option"
+        if not exists $opts{set_subname};
+
     no strict 'refs';
     no warnings 'once', 'redefine';
 
