@@ -1,3 +1,6 @@
 nytprof.out
 nytprof.out.*
 .DS_Store
+Makefile
+Makefile.old
+cover_db
