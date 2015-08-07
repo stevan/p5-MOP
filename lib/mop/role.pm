@@ -292,6 +292,7 @@ sub add_method {
         if $self->is_closed;
     
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
+    return;
 }
 
 sub delete_method {
@@ -362,6 +363,7 @@ sub alias_method {
         if $self->is_closed;
     
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
+    return;
 }
 
 sub delete_method_alias {
