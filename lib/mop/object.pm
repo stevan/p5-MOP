@@ -23,7 +23,16 @@ sub new {
 
 sub BUILDARGS {
     shift;
-    return scalar @_ == 1 && ref $_[0] ? +{ %{ $_[0] } } : +{ @_ };
+    if ( scalar @_ == 1 && ref $_[0] ) {
+        die '[PANIC] expected a HASH reference but got a ' . $_[0]
+            unless ref $_[0] eq 'HASH';
+        return +{ %{ $_[0] } };
+    }
+    else {
+        die '[PANIC] expected an even sized list reference but instead got ' . (scalar @_) . ' element(s)'
+            unless ((scalar @_) % 2) == 0;
+        return +{ @_ };
+    }
 }
 
 sub CREATE {
