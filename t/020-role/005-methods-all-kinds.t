@@ -24,18 +24,12 @@ BEGIN {
     use strict;
     use warnings;
 
-    our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
-
     sub foo { 'Foo::foo' }
     sub baz;
 
     package Bar;
     use strict;
     use warnings;
-
-    our $VERSION   = '0.02';
-    our $AUTHORITY = 'cpan:STEVAN';  
 
     our @DOES = ('Foo');  
 
