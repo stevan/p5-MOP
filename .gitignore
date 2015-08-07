@@ -1,6 +1,7 @@
-nytprof.out
-nytprof.out.*
+MYMETA.*
+blib
+pm_to_blib
+nytprof.*
 .DS_Store
-Makefile
-Makefile.old
+Makefile*
 cover_db
