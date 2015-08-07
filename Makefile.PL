@@ -1,5 +1,16 @@
+## ----------------------------------------------
+## NOTE:
+## ----------------------------------------------
+## This is just a temp version for now so that I 
+## can get some Devel::Cover stats on the test 
+## suite, it will need to include the deps in the 
+## cpanfile as well as handle any C/XS stuff. For 
+## now it is best to just punt on doing anything
+## useful in here.
+## - SL
+## ----------------------------------------------
 
-use v5.20;
+use strict;
 use warnings;
 use ExtUtils::MakeMaker 6.30;
 
@@ -23,7 +34,7 @@ my %WriteMakefileArgs = (
 #        'XSLoader'          => '0',
 #    },
 #    'clean'              => { 'FILES' => 'callparser1.h' },
-    'test'               => { 'TESTS' => 't/*.t t/*/*.t' },
+    'test'               => { 'TESTS' => 't/*/*.t' },
 );
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
