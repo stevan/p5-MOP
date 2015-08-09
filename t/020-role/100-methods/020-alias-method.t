@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Fatal;
 
 use Scalar::Util qw[ blessed ];
 
@@ -70,6 +71,24 @@ subtest '... testing basics' => sub {
         is($m->body, Foo->can('foo'), '... the method body is what we expected');
         is($m->body, $Foo_foo_method, '... the method body is what we expected');
     };
+};
+
+subtest '... testing exception when role is closed' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    is(
+        exception { $Foo->set_is_closed(1) },
+        undef,
+        '... closed class successfully'
+    );
+
+    like(
+        exception { $Foo->alias_method('foo' => sub { 'Foo::foo' } ) },
+        qr/^\[PANIC\] Cannot add a method alias \(foo\) to \(Foo\) because it has been closed/,
+        '... could not alias a method when the class is closed'
+    );
 };
 
 done_testing;

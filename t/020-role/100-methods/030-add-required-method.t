@@ -79,5 +79,23 @@ subtest '... testing overwriting a regular method with a required method (it sho
     is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');     
 };
 
+subtest '... testing exception when role is closed' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    is(
+        exception { $Foo->set_is_closed(1) },
+        undef,
+        '... closed class successfully'
+    );
+
+    like(
+        exception { $Foo->add_required_method('foo') },
+        qr/^\[PANIC\] Cannot add a method requirement \(foo\) to \(Foo\) because it has been closed/,
+        '... could not delete a required method when the class is closed'
+    );
+};
+
 
 done_testing;
