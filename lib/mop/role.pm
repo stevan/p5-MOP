@@ -78,6 +78,9 @@ sub does_role {
 # is set. We need to do this for inheritance anyway, so
 # we might as well handle it them, then we can assume 
 # that the package is in a consistent state.
+#
+# see also: "__NOTES__.txt/Do we want to check abstract-ness via required methods?"
+#
 # - SL
 
 sub is_abstract {
@@ -143,7 +146,7 @@ sub aliased_methods {
 # criteria here.
 # - SL
 sub required_methods {
-    my $self  = shift;
+    my $self = shift;
     return grep { $_->is_required } $self->all_methods
 }
 
