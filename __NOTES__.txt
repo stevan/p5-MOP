@@ -86,5 +86,10 @@ fact that required methods would be checked at compile time and set
 the $IS_ABSTRACT accordingly, then we could speed things up and avoid
 a lot of runtime meta layer calls. 
 
+IMPLMENTATION NOTES:
+
+We should be already inheriting the required methods, this same process
+can also transfer the IS_ABSTRACT flag from package to package.
+
 
 
