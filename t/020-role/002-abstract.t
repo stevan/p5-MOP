@@ -91,6 +91,13 @@ subtest '... testing setting a role that has required method' => sub {
     ok($role->is_abstract, '... the role is abstract (even though we mark as not being so)');
     ok(!mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is (not) abstract according to the package');
     ok($role->requires_method('baz'), '... because the baz method is required');
+    is(
+        exception { $role->set_is_abstract(1) },
+        undef,
+        '... was able to set the abstract flag without issue'
+    );
+    ok($role->is_abstract, '... the role is abstract now');
+    ok(mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is now abstract according to the package');
 };
 
 subtest '... testing setting a role to NOT be abstract' => sub {

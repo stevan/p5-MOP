@@ -416,20 +416,112 @@ sub has_method_alias {
     return 0;
 }
 
+## Attributes
 
-# attributes
+# get them all; regular & aliased
+sub all_attributes {
+    my $self = shift;
+    my $has = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+    return unless $has;
+    return map { 
+        mop::attribute->new( 
+            name        => $_, 
+            initializer => $has->{ $_ } 
+        ) 
+    } keys %$has;
+}
 
-# method attributes          ($self);
-# method has_attribute       ($self, $name);
-# method get_attribute       ($self, $name);
+# just the local attrinites
+sub attributes {
+    my $self  = shift;
+    my $class = $self->name;
+    return grep { $_->origin_class eq $class } $self->all_attributes
+}
+
+# just the non-local attributes
+sub aliased_attributes {
+    my $self  = shift;
+    my $class = $self->name;
+    return grep { $_->origin_class ne $class } $self->all_attributes
+}
+
+## regular ...
 # method add_attribute       ($self, $name, &$initializer);
 # method delete_attribute    ($self, $name);
-# # aliasing
+
+sub has_attribute {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $class = $self->name;
+    my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    return unless $has;
+    return unless exists $has->{ $name };
+    
+    return mop::attribute->new( 
+        name        => $name, 
+        initializer => $has->{ $name }
+    )->origin_class eq $class;
+}
+
+sub get_attribute {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $class = $self->name;
+    my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    return unless $has;
+    return unless exists $has->{ $name };
+    
+    my $attribute = mop::attribute->new( 
+        name        => $name, 
+        initializer => $has->{ $name }
+    );
+
+    return $attribute 
+        if $attribute->origin_class eq $class;
+
+    return;
+}
+
+## aliasing
 # method alias_attribute        ($self, $name, &$initializer);
-# method has_attribute_alias    ($self, $name);
 # method delete_attribute_alias ($self, $name);
 
-# ...
+sub has_attribute_alias {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $class = $self->name;
+    my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    return unless $has;
+    return unless exists $has->{ $name };
+    
+    return mop::attribute->new( 
+        name        => $name, 
+        initializer => $has->{ $name }
+    )->origin_class ne $class;
+}
+
+sub get_attribute_alias {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $class = $self->name;
+    my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    return unless $has;
+    return unless exists $has->{ $name };
+    
+    my $attribute = mop::attribute->new( 
+        name        => $name, 
+        initializer => $has->{ $name }
+    );
+
+    return $attribute 
+        if $attribute->origin_class ne $class;
+
+    return;
+}
 
 1;
 

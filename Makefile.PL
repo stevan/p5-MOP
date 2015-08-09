@@ -34,7 +34,7 @@ my %WriteMakefileArgs = (
 #        'XSLoader'          => '0',
 #    },
 #    'clean'              => { 'FILES' => 'callparser1.h' },
-    'test'               => { 'TESTS' => 't/*/*.t' },
+    'test'               => { 'TESTS' => 't/*.t t/*/*.t t/*/*/*.t' },
 );
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
