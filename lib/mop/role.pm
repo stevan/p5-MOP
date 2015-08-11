@@ -187,14 +187,13 @@ sub get_required_method {
     return unless mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } ); 
 
     # now we grab the CV ...
-    if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
-        my $method = mop::method->new( body => $code );
-        # and make sure it is local, and 
-        # then return accordingly
-        return $method 
-            if $method->origin_class eq $class;
-    }
-
+    my $method = mop::method->new( 
+        body => mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) 
+    );
+    # and make sure it is local, and 
+    # then return the method ...
+    return $method if $method->origin_class eq $class;
+    # or return nothing ...
     return;
 }
 
@@ -202,18 +201,29 @@ sub add_required_method {
     my ($self, $name) = @_;
     die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    # check if we have a glob already ...
+
+    #warn "adding required method : $name";
+
+    #use Data::Dumper;
+    #warn Dumper $self->stash;
+
+    # if we already have a glob there ...
     if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, just return 
         return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob );
-        # and if we don't and have a CODE slot, we 
+        # and if we don't and we have a CODE slot, we 
         # need to die because this doesn't make sense
         die "[PANIC] Cannot add a required method ($name) when there is a regular method already there"
             if defined *{ $glob }{CODE};
     }
-    # if we don't have a stash entry, 
-    # then just create one 
+    else {
+        #warn "NOT HAVE: $name";
+    }
+
+    # if we get here, then we
+    # just create a null CV
     mop::internal::util::CREATE_NULL_CV( $self->name, $name );
+    
     return;
 }
 

@@ -51,4 +51,8 @@ subtest '... testing setting a role that has required method' => sub {
     };
 };
 
+subtest '... testing setting a role that has required method' => sub {
+    ok(!$role->get_required_method('some_random_NAME'), '... got nothing back if the required method does not exist');
+};
+
 done_testing;
