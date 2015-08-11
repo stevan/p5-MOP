@@ -497,6 +497,10 @@ sub get_attribute {
 sub add_attribute {
     my $self        = $_[0]; 
     my $name        = $_[1];    
+
+    die "[PANIC] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+
     my $initializer = $_[2];
     my $stash       = $self->stash;
     my $class       = $self->name;

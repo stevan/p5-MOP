@@ -71,4 +71,22 @@ subtest '... simple adding an attribute test' => sub {
     );
 };
 
+subtest '... testing exception when role is closed' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    is(
+        exception { $Foo->set_is_closed(1) },
+        undef,
+        '... closed class successfully'
+    );
+
+    like(
+        exception { $Foo->add_attribute( foo => $Foo::foo_initializer ) },
+        qr/^\[PANIC\] Cannot add an attribute \(foo\) to \(Foo\) because it has been closed/,
+        '... could not add an attribute when the class is closed'
+    );
+};
+
 done_testing;
