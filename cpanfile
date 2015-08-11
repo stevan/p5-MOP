@@ -31,6 +31,7 @@ requires 'Scalar::Util' => 0;
 
 requires 'Devel::Hook'        => 0; # needed to access the UNITCHECK AV
 requires 'Devel::GlobalPhase' => 0; # needed to access global phase
+requires 'Sub::Name'          => 0; # needed to set names to anon subs
 
 ## ------------------------------------------------------------------
 ## Test modules
