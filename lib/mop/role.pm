@@ -506,7 +506,7 @@ sub add_attribute {
     my $class       = $self->name;
     my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
 
-    die '[PANIC] Attribute is not from the local class (' . $class . '), it is from (' . $attr->origin_class . ')' 
+    die '[PANIC] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')' 
         if $attr->origin_class ne $class;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );

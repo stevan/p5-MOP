@@ -108,7 +108,7 @@ subtest '... testing error adding an attribute whose initializer is not correct'
 
     like(
         exception { $role->add_attribute( foo => sub { 0 } ) },
-        qr/^\[PANIC\] Attribute is not from the local class \(Foo\)\, it is from \(main\)/,
+        qr/^\[PANIC\] Attribute is not from local \(Foo\)\, it is from \(main\)/,
         '... cannot add an initializer that is not from the class'
     );
 };
