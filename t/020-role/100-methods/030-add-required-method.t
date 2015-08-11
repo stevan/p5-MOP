@@ -125,6 +125,18 @@ subtest '... testing creating a required method when glob is already there (w/ou
     };  
 };
 
+subtest '... testing exception when method name is bad' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    like(
+        exception { $Foo->add_required_method('this-canno\tnbeaname') },
+        qr/^Illegal declaration of subroutine /,
+        '... could not add a required method whose name is not valid perl'
+    );
+};
+
 subtest '... testing exception when role is closed' => sub {
     my $Foo = mop::role->new( name => 'Foo' );
     isa_ok($Foo, 'mop::role');
@@ -139,7 +151,7 @@ subtest '... testing exception when role is closed' => sub {
     like(
         exception { $Foo->add_required_method('foo') },
         qr/^\[PANIC\] Cannot add a method requirement \(foo\) to \(Foo\) because it has been closed/,
-        '... could not delete a required method when the class is closed'
+        '... could not add a required method when the class is closed'
     );
 };
 
