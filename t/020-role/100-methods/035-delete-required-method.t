@@ -15,21 +15,21 @@ BEGIN {
 =pod
 
 TODO:
-- test deleting method when a class is closed
 - test deleting when ...
     - alias method exists
-    - regular method exists
-- test that deleting the required method does not mess up the glob
-    - this will require having @ and % values in the glob, etc.
 
 =cut
 
 {
     package Foo;
     use strict;
-    use warnings;   
+    use warnings;  
+
+    our $bling = 100;
 
     sub foo;
+
+    sub bar { 'Foo::bar' }
 }
 
 subtest '... testing deleting method alias' => sub {
@@ -59,6 +59,51 @@ subtest '... testing deleting method alias' => sub {
 
     ok(!$Foo->get_method_alias('foo'), '... the [foo] method is not an alias');
     ok(!$Foo->has_method_alias('foo'), '... the [foo] method is not an alias');
+};
+
+subtest '... testing deleting a required method that does not exist (but has glob already)' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    is($Foo::bling, 100, '... we have our package variable named same as our method');
+
+    is(
+        exception { $Foo->delete_required_method('bling') },
+        undef,
+        '... deleted required method successfully'
+    );
+
+    is($Foo::bling, 100, '... and our package variable is fine');
+};
+
+subtest '... testing deleting a required method that does not exist' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    ok(!$Foo->delete_required_method('some_random_NAME'), '... got nothing back if the required method does not exist');
+};
+
+subtest '... testing deleting a required method that is actually a reqular method' => sub {
+    my $Foo = mop::role->new( name => 'Foo' );
+    isa_ok($Foo, 'mop::role');
+    isa_ok($Foo, 'mop::object');
+
+    ok(!$Foo->requires_method('bar'), '... this method is not required (it is a regular method)');
+    ok($Foo->has_method('bar'), '... this method is not required (it is a regular method)');
+
+    like(
+        exception { $Foo->delete_required_method('bar') },
+        qr/^\[PANIC\] Cannot delete a required method \(bar\) when there is a regular method already there/,
+        '... added the required method successfully'
+    ); 
+
+    ok(!$Foo->requires_method('bar'), '... this method is still not required');
+    ok($Foo->has_method('bar'), '... this method is a regular method');
+
+    is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');     
+    is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');     
 };
 
 subtest '... testing exception when role is closed' => sub {

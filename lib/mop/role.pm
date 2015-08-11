@@ -315,6 +315,9 @@ sub delete_method {
             die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
         }
         else {
+            # if we don't have a code slot ...
+            return unless defined *{ $glob }{CODE};
+
             # we need to make sure it is local, and 
             # otherwise, error accordingly 
             my $method = mop::method->new( body => *{ $glob }{CODE} );
@@ -383,9 +386,12 @@ sub delete_method_alias {
             # then we need to die because this 
             # shouldn't happen, we should only 
             # delete regular methods.
-            die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
+            die "[PANIC] Cannot delete an aliased method ($name) when there is a required method already there";
         }
         else {
+            # if we don't have a code slot ...
+            return unless defined *{ $glob }{CODE};
+            
             # we need to make sure it is local, and 
             # otherwise, error accordingly 
             my $method = mop::method->new( body => *{ $glob }{CODE} );

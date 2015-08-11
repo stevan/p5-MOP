@@ -47,11 +47,11 @@ subtest '... testing setting a role that has required method' => sub {
         is($m->name, 'baz', '... got the expected name');
         is($m->origin_class, 'Foo', '... got the expected origin class');
         ok($m->is_required, '... this method is required');
-        is($m->body, \&Foo::baz, '... got the expected body');
+        is($m->body, Foo->can('baz'), '... got the expected body');
     };
 };
 
-subtest '... testing setting a role that has required method' => sub {
+subtest '... testing getting a required method that does not exist' => sub {
     ok(!$role->get_required_method('some_random_NAME'), '... got nothing back if the required method does not exist');
 };
 
