@@ -542,10 +542,6 @@ sub delete_attribute {
     return;
 }
 
-## aliasing
-# method alias_attribute        ($self, $name, &$initializer);
-# method delete_attribute_alias ($self, $name);
-
 sub has_attribute_alias {
     my $self  = $_[0]; 
     my $name  = $_[1];    
@@ -577,6 +573,54 @@ sub get_attribute_alias {
 
     return $attribute 
         if $attribute->origin_class ne $class;
+
+    return;
+}
+
+sub alias_attribute {
+    my $self        = $_[0]; 
+    my $name        = $_[1];    
+
+    die "[PANIC] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+
+    my $initializer = $_[2];
+    my $stash       = $self->stash;
+    my $class       = $self->name;
+    my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
+
+    die '[PANIC] Attribute is from the local class (' . $class . '), it should be from a different class' 
+        if $attr->origin_class eq $class;
+
+    my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
+    mop::internal::util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
+        unless $has;
+
+    $has->{ $name } = $initializer;
+    return;
+}
+
+sub delete_attribute_alias {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $stash = $self->stash;
+    my $class = $self->name;
+
+    die "[PANIC] Cannot delete an attribute alias ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+
+    my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
+    
+    return unless $has;
+    return unless exists $has->{ $name };
+
+    die "[PANIC] Cannot delete an attribute alias ($name) when there is an regular attribute already there"
+        if mop::attribute->new( 
+            name        => $name, 
+            initializer => $has->{ $name } 
+        )->origin_class eq $class;    
+
+    delete $has->{ $name };
 
     return;
 }
