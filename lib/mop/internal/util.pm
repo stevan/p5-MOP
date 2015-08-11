@@ -40,11 +40,17 @@ sub GET_GLOB_SLOT {
 sub SET_GLOB_SLOT {
     my ($stash, $name, $value_ref) = @_;
     # if the glob doesn't exist, create it
-    my $glob = $stash->{ $name } //= Symbol::gensym();
-    # then just store the reference in it
-    # which should figure out the proper 
-    # slot to put thing into without issue
-    *{$glob} = $value_ref;
+    $stash->{ $name } //= Symbol::gensym();
+    {
+        no strict 'refs';
+        no warnings 'once';
+        # get the name of the stash, we could have 
+        # passed this in, but it is easy to get in 
+        # XS, and so we can punt that down the road 
+        # for the time being
+        my $pkg = B::svref_2object( $stash )->NAME;
+        *{ $pkg . '::' . $name } = $value_ref;
+    }
     return;
 }
 
