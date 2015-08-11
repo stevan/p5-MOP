@@ -391,7 +391,7 @@ sub delete_method_alias {
         else {
             # if we don't have a code slot ...
             return unless defined *{ $glob }{CODE};
-            
+
             # we need to make sure it is local, and 
             # otherwise, error accordingly 
             my $method = mop::method->new( body => *{ $glob }{CODE} );
@@ -457,7 +457,6 @@ sub aliased_attributes {
 }
 
 ## regular ...
-# method add_attribute       ($self, $name, &$initializer);
 # method delete_attribute    ($self, $name);
 
 sub has_attribute {
@@ -493,6 +492,25 @@ sub get_attribute {
         if $attribute->origin_class eq $class;
 
     return;
+}
+
+sub add_attribute {
+    my $self        = $_[0]; 
+    my $name        = $_[1];    
+    my $initializer = $_[2];
+    my $stash       = $self->stash;
+    my $class       = $self->name;
+    my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
+
+    die '[PANIC] Attribute is not from the local class (' . $class . '), it is from (' . $attr->origin_class . ')' 
+        if $attr->origin_class ne $class;
+
+    my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
+    mop::internal::util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
+        if not defined $has;
+
+    $has->{ $name } = $initializer;
+    return ;
 }
 
 ## aliasing
