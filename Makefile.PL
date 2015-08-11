@@ -29,12 +29,28 @@ my %WriteMakefileArgs = (
     'EXE_FILES'          => [],
     'LICENSE'            => 'perl',
     'NORECURS'           => 1,
-#    'PREREQ_PM'  => {
+    'PREREQ_PM'  => {
+        # core ....
+        'B'                  => 0, 
+        'Symbol'             => 0,
+        'Scalar::Util'       => 0,
+        
+        # things to be replaced 
+        # by XS at some point
+        'Devel::Hook'        => 0, # needed to access the UNITCHECK AV
+        'Devel::GlobalPhase' => 0, # needed to access global phase
+        'Sub::Name'          => 0, # needed to set names to anon subs
+
+        # tests ..
+        'Test::More'         => 0,
+        'Test::Fatal'        => 0,        
+
+        # gonna need these later ...
 #        'Devel::CallParser' => '0',
 #        'XSLoader'          => '0',
-#    },
-#    'clean'              => { 'FILES' => 'callparser1.h' },
-    'test'               => { 'TESTS' => 't/*.t t/*/*.t t/*/*/*.t' },
+    },
+    'clean'              => { FILES => 'cover_db/' }, # callparser1.h' },
+    'test'               => { RECURSIVE_TEST_FILES => 1 },
 );
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
