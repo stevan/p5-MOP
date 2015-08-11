@@ -666,23 +666,11 @@ that it also has all the methods from that package as well.
 
 =back
 
-=head2 Required Methods
-
-=over 4
-
-=item C<required_methods>
-
-=item C<requires_method( $name )>
-
-=item C<add_required_method( $name )>
-
-=item C<delete_required_method( $name )>
-
-=back
-
 =head2 Attributes 
 
 =over 4
+
+=item C<all_attributes>
 
 =item C<attributes>
 
@@ -694,15 +682,39 @@ that it also has all the methods from that package as well.
 
 =item C<delete_attribute( $name )>
 
+=item C<aliased_attributes>
+
 =item C<alias_attribute( $name, &$initializer )>
 
 =item C<has_attribute_alias ( $name )>
+
+=item C<get_attribute_alias ( $name )>
+
+=item C<delete_attribute_alias ( $name )>
+
+=back
+
+=head2 Required Methods
+
+=over 4
+
+=item C<required_methods>
+
+=item C<requires_method( $name )>
+
+=item C<get_required_method( $name )>
+
+=item C<add_required_method( $name )>
+
+=item C<delete_required_method( $name )>
 
 =back
 
 =head2 Methods
 
 =over 4
+
+=item C<all_methods>
 
 =item C<methods>
 
@@ -714,9 +726,15 @@ that it also has all the methods from that package as well.
 
 =item C<delete_method( $name )>
 
+=item C<aliased_methods>
+
 =item C<alias_method( $name, &$code )>
 
 =item C<has_method_alias( $name )>
+
+=item C<get_method_alias( $name )>
+
+=item C<delete_method_alias( $name )>
 
 =back
 
