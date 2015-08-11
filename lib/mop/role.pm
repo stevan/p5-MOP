@@ -202,11 +202,6 @@ sub add_required_method {
     die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
-    #warn "adding required method : $name";
-
-    #use Data::Dumper;
-    #warn Dumper $self->stash;
-
     # if we already have a glob there ...
     if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, just return 
@@ -215,9 +210,6 @@ sub add_required_method {
         # need to die because this doesn't make sense
         die "[PANIC] Cannot add a required method ($name) when there is a regular method already there"
             if defined *{ $glob }{CODE};
-    }
-    else {
-        #warn "NOT HAVE: $name";
     }
 
     # if we get here, then we
