@@ -23,6 +23,14 @@ TODO:
     use warnings;
 
     our $foo_initializer = sub { 'Foo::foo' };    
+
+    package Bar;
+    use strict;
+    use warnings;
+
+    our $bar_initializer = sub { 'Bar::bar' };    
+
+    our %HAS;
 }
 
 subtest '... simple adding an attribute test' => sub {
@@ -59,7 +67,41 @@ subtest '... simple adding an attribute test' => sub {
     ok($a->was_aliased_from('Foo'), '... the attribute belongs to Foo');
 };
 
-subtest '... simple adding an attribute test' => sub {
+subtest '... simple adding an attribute test (when %HAS is present)' => sub {
+    my $role = mop::role->new( name => 'Bar' );
+    isa_ok($role, 'mop::role');
+    isa_ok($role, 'mop::object');
+
+    my @all_attributes     = $role->all_attributes;
+    my @regular_attributes = $role->attributes;    
+    my @aliased_attributes = $role->aliased_attributes;
+
+    is(scalar @all_attributes,     0, '... no attributes');
+    is(scalar @regular_attributes, 0, '... no regular attribute');
+    is(scalar @aliased_attributes, 0, '... no aliased attributes');
+
+    ok(!$role->has_attribute('bar'), '... we have a no bar attribute');
+    my $attribute = $role->get_attribute('bar');
+    ok(!$attribute, '... we can not get the bar attirbute');
+
+    is(
+        exception { $role->add_attribute( bar => $Bar::bar_initializer ) },
+        undef,
+        '... added the attribute successfully'
+    );
+
+    my $a = $role->get_attribute('bar');
+    isa_ok($a, 'mop::object');
+    isa_ok($a, 'mop::attribute');
+
+    is($a->name, 'bar', '... got the name we expected');
+    is($a->origin_class, 'Bar', '... got the origin class we expected');
+    is($a->initializer, $Bar::bar_initializer, '... got the initializer we expected');
+
+    ok($a->was_aliased_from('Bar'), '... the attribute belongs to Bar');
+};
+
+subtest '... testing error adding an attribute whose initializer is not correct' => sub {
     my $role = mop::role->new( name => 'Foo' );
     isa_ok($role, 'mop::role');
     isa_ok($role, 'mop::object');

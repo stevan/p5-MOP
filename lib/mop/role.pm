@@ -511,10 +511,35 @@ sub add_attribute {
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
     mop::internal::util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
-        if not defined $has;
+        unless $has;
 
     $has->{ $name } = $initializer;
-    return ;
+    return;
+}
+
+sub delete_attribute {
+    my $self  = $_[0]; 
+    my $name  = $_[1];    
+    my $stash = $self->stash;
+    my $class = $self->name;
+
+    die "[PANIC] Cannot delete an attribute ($name) to (" . $self->name . ") because it has been closed"
+        if $self->is_closed;
+
+    my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
+    
+    return unless $has;
+    return unless exists $has->{ $name };
+
+    die "[PANIC] Cannot delete a regular attribute ($name) when there is an aliased attribute already there"
+        if mop::attribute->new( 
+            name        => $name, 
+            initializer => $has->{ $name } 
+        )->origin_class ne $class;    
+
+    delete $has->{ $name };
+
+    return;
 }
 
 ## aliasing
