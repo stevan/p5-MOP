@@ -40,7 +40,7 @@ sub GET_GLOB_SLOT {
 sub SET_GLOB_SLOT {
     my ($stash, $name, $value_ref) = @_;
     # if the glob doesn't exist, create it
-    $stash->{ $name } //= Symbol::gensym();
+    $stash->{ $name } = Symbol::gensym() unless exists $stash->{ $name };
     {
         no strict 'refs';
         no warnings 'once';
