@@ -300,7 +300,7 @@ sub COMPOSE_ALL_ROLE_METHODS {
     # flatten the set of required methods ...
     foreach my $r ( @roles ) {
         foreach my $m ( $r->required_methods ) {
-            $required{ $m } = undef;
+            $required{ $m->name } = undef;
         }
     }
 
