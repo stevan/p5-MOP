@@ -129,7 +129,48 @@ sub all_methods {
 sub methods {
     my $self  = shift;
     my $class = $self->name;
-    return grep { not($_->is_required) && $_->origin_class eq $class } $self->all_methods
+    my @roles = $self->roles;
+
+    my @methods;
+    foreach my $method ( $self->all_methods ) {
+        # if the method is required, we don't want it
+        next if $method->is_required;
+
+        # if the method is not originally from the
+        # class, then we probably don't want it ...
+        if ( $method->origin_class ne $class ) {
+            # if our class has roles, then non-local
+            # methods *might* be valid, so ...
+
+            # if we don't have roles, then 
+            # it can't be valid, so we don't 
+            # want it
+            next unless @roles;
+
+            # if we do have roles, but our 
+            # method was not aliased from one
+            # of them, then we don't want it.
+            next unless $method->was_aliased_from( @roles );
+
+            # if we are here then we have 
+            # a non-required method that is 
+            # not from the local class, it 
+            # has roles and was aliased from
+            # one of them, which means we want
+            # to keep it, so we let it fall through
+        }
+
+        # if we are here then we have 
+        # a non-required method that is 
+        # either from the local class, 
+        # or is not from a local class, 
+        # but has fallen through our 
+        # conditional above.
+
+        push @methods => $method;
+    }
+
+    return @methods;
 }
 
 # just the non-local non-required methods
@@ -251,8 +292,9 @@ sub delete_required_method {
 # methods 
 
 sub has_method {
-    my $class = $_[0]->name;
-    my $stash = $_[0]->stash;
+    my $self  = $_[0];
+    my $class = $self->name;
+    my $stash = $self->stash;
     my $name  = $_[1];
 
     # check these two easy cases first ...
@@ -262,7 +304,12 @@ sub has_method {
     # now we grab the CV and make sure it is 
     # local, and return accordingly
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
-        return mop::method->new( body => $code )->origin_class eq $class;
+        my $method = mop::method->new( body => $code );
+        my @roles  = $self->roles;
+        # and make sure it is local, and 
+        # then return accordingly
+        return $method->origin_class eq $class
+            || (@roles && $method->was_aliased_from( @roles ));
     }
 
     # if there was no CV, return false.
@@ -270,8 +317,9 @@ sub has_method {
 }
 
 sub get_method {
-    my $class = $_[0]->name;
-    my $stash = $_[0]->stash;
+    my $self  = $_[0];
+    my $class = $self->name;
+    my $stash = $self->stash;
     my $name  = $_[1];
 
     # check the easy cases first ...
@@ -281,10 +329,12 @@ sub get_method {
     # now we grab the CV ...
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
         my $method = mop::method->new( body => $code );
+        my @roles  = $self->roles;
         # and make sure it is local, and 
         # then return accordingly
         return $method 
-            if $method->origin_class eq $class;
+            if $method->origin_class eq $class
+            || (@roles && $method->was_aliased_from( @roles ));
     }
 
     # if there was no CV, return false.
@@ -321,9 +371,22 @@ sub delete_method {
             # we need to make sure it is local, and 
             # otherwise, error accordingly 
             my $method = mop::method->new( body => *{ $glob }{CODE} );
+            my @roles  = $self->roles;
 
-            die "[PANIC] Cannot delete a regular method ($name) when there is an aliased method already there"
-                if $method->origin_class ne $self->name;
+            # if the method has not come from 
+            # the local class, we need to see 
+            # if it was added from a role 
+            if ($method->origin_class ne $self->name) {
+
+                # if it came from a role, then it is 
+                # okay to be deleted, but if it didn't
+                # then we have an error cause they are 
+                # trying to delete an alias using the 
+                # regular method method
+                unless ( $method->was_aliased_from( @roles ) ) {
+                    die "[PANIC] Cannot delete a regular method ($name) when there is an aliased method already there"
+                }
+            }
 
             # but if we have a regular method, then we 
             # can just delete the CV from the glob

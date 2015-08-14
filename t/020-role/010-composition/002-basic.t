@@ -27,13 +27,23 @@ TODO:
     use strict;
     use warnings;    
 
+    our @DOES; BEGIN { @DOES = ('Foo') }
+
     sub bar { 'Bar::bar' }
+
+    BEGIN { 
+        mop::internal::util::APPLY_ROLES(
+            mop::role->new( name => __PACKAGE__ ), 
+            \@DOES, 
+            to => 'role' 
+        )
+    }
 
     package FooBar;
     use strict;
     use warnings;
 
-    our @DOES; BEGIN { @DOES = ('Foo', 'Bar') }
+    our @DOES; BEGIN { @DOES = ('Bar') }
 
     BEGIN { 
         mop::internal::util::APPLY_ROLES(
@@ -53,6 +63,9 @@ subtest '... testing sub-roles' => sub {
     my $Bar = mop::role->new( name => 'Bar' );
     isa_ok($Bar, 'mop::role');
 
+    ok($Bar->does_role('Foo'), '... Bar does the Foo role');
+
+    ok($Bar->has_method_alias('foo'), '... Bar has the foo method aliased');
     ok($Bar->has_method('bar'), '... Bar has the bar method');
 };
 

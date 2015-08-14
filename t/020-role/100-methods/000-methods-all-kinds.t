@@ -125,7 +125,7 @@ subtest '... testing all-methods (with aliased one)' => sub {
     my @aliased_methods  = sort { $a->name cmp $b->name } $role->aliased_methods;
     my @required_methods = sort { $a->name cmp $b->name } $role->required_methods;
 
-    is(scalar @methods,          1, '... only got one element in the list of regular methods');
+    is(scalar @methods,          2, '... only got one element in the list of regular methods');
     is(scalar @aliased_methods,  1, '... only got one element in the list of aliased methods');
     is(scalar @required_methods, 1, '... only got one element in the list of required methods');
 
@@ -197,8 +197,8 @@ subtest '... testing all-methods (with aliased one)' => sub {
             is($result, 'Foo::foo', '... got the expected result');
         }
 
-        ok(!$role->has_method('foo'), '... we do not have a method by this name');
-        ok(!$role->get_method('foo'), '... we do not have a method by this name');
+        ok($role->has_method('foo'), '... we do not have a method by this name');
+        ok($role->get_method('foo'), '... we do not have a method by this name');
         ok($role->has_method_alias('foo'), '... we do have an aliased method by this name');
         ok(!$role->requires_method('foo'), '... we do not have a required method by this name');
         ok(!$role->get_required_method('foo'), '... we do not have a required method by this name');
