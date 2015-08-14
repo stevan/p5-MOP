@@ -49,7 +49,7 @@ my %WriteMakefileArgs = (
 #        'Devel::CallParser' => '0',
 #        'XSLoader'          => '0',
     },
-    'clean'              => { FILES => 'cover_db/' }, # callparser1.h' },
+    'clean'              => { FILES => 'cover_db/ nytprof/' }, # callparser1.h' },
     'test'               => { RECURSIVE_TEST_FILES => 1 },
 );
 
