@@ -56,16 +56,26 @@ sub set_roles {
 }
 
 sub does_role {
-    my ($self, $role_to_test) = @_;
-    # FIXME:
-    # this is very inefficient, we could jump out
-    # early from the two `scalar grep` tests and 
-    # potentially save some processing.
+    my $self    = $_[0];
+    my $to_test = $_[1];
+    my @roles   = $self->roles;
+
+    # no roles, will never match ...
+    return 0 unless @roles;
 
     # try the simple way first ...
-    return 1 if scalar grep { $_ eq $role_to_test } $self->roles;
+    foreach my $role ( @roles ) {
+        return 1 if $role eq $to_test;
+    }
+
     # then try the harder way next ...
-    return 1 if scalar grep { mop::role->new( name => $_ )->does_role( $role_to_test ) } $self->roles;
+    foreach my $role ( @roles ) {
+        return 1 
+            if mop::role->new( name => $role )
+                        ->does_role( $to_test );
+    }
+
+    # oh well ...
     return 0;
 }
 
