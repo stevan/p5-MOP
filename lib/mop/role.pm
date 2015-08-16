@@ -536,7 +536,6 @@ sub aliased_attributes {
 }
 
 ## regular ...
-# method delete_attribute    ($self, $name);
 
 sub has_attribute {
     my $self  = $_[0]; 
