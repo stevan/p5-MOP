@@ -492,6 +492,12 @@ sub has_method_alias {
 
 ## Attributes
 
+## FIXME:
+## The same problem we had methods needs to be fixed with 
+## attributes, just checking the origin_class v. class is 
+## not enough, we need to check aliasing as well.
+## - SL
+
 # get them all; regular & aliased
 sub all_attributes {
     my $self = shift;
