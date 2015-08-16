@@ -49,16 +49,6 @@ sub CREATE {
     return bless $self => $class;
 }
 
-# NOTE:
-# just a thought here, if we have this CREATE/FETCH/STORE combo
-# that understands the representation, then it becomes fairly 
-# easy to have mop::object::SCALAR, mop::object::ARRAY, etc. for
-# each different kind of instance type, while still maintaining
-# the possibility of compataibility (if you choose to use it).
-# - SL
-sub FETCH { $_[0]->{ $_[1] }         }
-sub STORE { $_[0]->{ $_[1] } = $_[2] }
-
 sub DESTROY {
     $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] );
     return;
