@@ -68,20 +68,6 @@ subtest '... all the BUILDARGS' => sub {
 
 };
 
-subtest '... FETCH and STORE' => sub {
-    my $foo = Foo->new;
-    isa_ok($foo, 'Foo');
-
-    is($foo->FETCH('test1'), 'Foo::test1', '... got the expected value');
-    is($foo->FETCH('test2'), 'Foo::test2', '... got the expected value');
-
-    $foo->STORE('test1', 10);
-    $foo->STORE('test2', 20);
-
-    is($foo->FETCH('test1'), 10, '... got the expected value');
-    is($foo->FETCH('test2'), 20, '... got the expected value');
-};
-
 subtest '... funkier BUILDARGS' => sub {
 
     like(
