@@ -43,7 +43,7 @@ sub CREATE {
 
     $self->{ $_ } = exists $proto->{ $_ } 
         ? $proto->{ $_ } 
-        : $slots{ $_ }->( $proto )
+        : $slots{ $_ }->( $self, $proto )
             foreach keys %slots;
 
     return bless $self => $class;
