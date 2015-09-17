@@ -7,6 +7,7 @@ use mop::object;
 use mop::module;
 use mop::role;
 use mop::method;
+use mop::attribute;
 
 use mop::internal::util;
 
