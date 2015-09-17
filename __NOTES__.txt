@@ -1,0 +1,112 @@
+Perl 5 MOP
+==========
+
+------------------------------------------------------------------
+
+Object Orientation in Perl is just a Design Pattern
+---------------------------------------------------
+
+The mechanisms of OO Perl are few and they all operate off of 
+the assumption that users have followed the agreed upon patterns.
+
+- classes are packages
+- methods are subs in a package
+- `our @ISA` is used to store inheritance relationship
+- `bless` is used to attach a reference (instance) to 
+   a package (class)
+- methods are dispatched using the `->` operator
+
+This proposal aims to add a few more items to the pattern.
+
+- roles are just packages
+- role methods are subs that are defined in a package
+    - inherited methods are ignored
+    - imported subs are ignored
+- required (abstract) methods are just pre-declared subs
+- `our @DOES` is used to store role relationships
+- `our %HAS` is used to store attribute/member/slot 
+  information
+
+... and not strictly needed, but very nice to have.
+
+- an absract class is a class which has one or more 
+  required methods
+- it is possible to close a class/package, which implies
+  a promise of no future alteration will be done
+
+------------------------------------------------------------------
+
+Design Goals
+------------
+
+- Do as much as possible at compile time to make things 
+  easy (and cheap) at runtime
+
+------------------------------------------------------------------
+
+mop::object
+-----------
+
+The construction protocol for mop::object expects that by runtime
+you have already "compiled" all the neccessary meta information into 
+the package. This is because it must be able to read all meta 
+information using just package stash/glob operations only. (see the
+"Design Goals" above)
+
+------------------------------------------------------------------
+
+The role of `bless`
+-------------------
+
+The mop intentionally does not do any meta-object management, that 
+is considered to be the responsibility of the user of the mop. 
+
+However, we may decide that is a stupid idea, in which case it will 
+make sense to support the idea of "pinning" a specific metaclass to 
+a given package. I believe that it makes more sense to then overide 
+the built in `bless` operation to support possible dynamic dispatch 
+to a "pinned" metaclass, rather then force all who want to use this
+feature to manage their metaclasses, etc. etc. etc. This could be 
+turned on and off via some kind of lexical pragma to better facilitate 
+gradual adoption. 
+
+------------------------------------------------------------------
+
+Questions
+---------
+
+## Do we actually want to alias required methods?
+
+There is value in knowing that a method was not defined in a package, 
+meaning that it is not owned by that package. But is there value in 
+knowing this when it comes to required methods? 
+
+Required methods will get composed in from roles, and they will be 
+inherited from abstract classes, but they are mostly just markers 
+that something is missing. They can't conflict since their bodies
+are always the same (NULL) and when you have two of the same name
+it is the same as having one. 
+
+## Do we want to check abstract-ness via required methods?
+
+Currently, via the mop::role API, we define abstract-ness with two 
+different criteria. First, does a class/role have any required
+methods? This is the more classic definition of "abstract" in which 
+the class/role is not complete and therefore cannot be instantiated.
+Second, is the class/role explicitly marked as "abstract"? This is 
+the case where you, the programmer, decided the class was abstract.
+
+By making the "is-abstract" check have to look at the set of required
+methods, we slow down all instance construction. If instead we only 
+looked at the $IS_ABSTRACT flag/package-variable, and relied on the 
+fact that required methods would be checked at compile time and set 
+the $IS_ABSTRACT accordingly, then we could speed things up and avoid
+a lot of runtime meta layer calls. 
+
+IMPLMENTATION NOTES:
+
+We should be already inheriting the required methods, this same process
+can also transfer the IS_ABSTRACT flag from package to package.
+
+
+
