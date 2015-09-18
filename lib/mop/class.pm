@@ -26,6 +26,8 @@ BEGIN {
     )
 }
 
+# instance management
+
 sub bless_instance { 
     my $self     = $_[0];
     my $instance = $_[1];
@@ -38,6 +40,28 @@ sub bless_instance {
     # - SL 
 
     bless $instance => $self->name;
+}
+
+# superclasses
+
+sub superclasses {
+    my ($self) = @_;
+    my $isa = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'ISA', 'ARRAY' );
+    return unless $isa;
+    return @$isa;
+}
+
+sub set_superclasses {
+    my ($self, @superclasses) = @_;
+    die '[PANIC] Cannot add superclasses to a package which has been closed'
+        if $self->is_closed;
+    mop::internal::util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
+    return;
+}
+
+sub mro {
+    my ($self) = @_;
+    return mro::get_linear_isa( $self->name );
 }
 
 1;
