@@ -8,6 +8,7 @@ use Data::Dumper;
 
 BEGIN {
     use_ok('mop::role');
+    use_ok('mop::class');
 }
 
 BEGIN {
@@ -99,7 +100,7 @@ BEGIN {
 
 my $Eq         = mop::role->new( name => 'Eq' );
 my $Comparable = mop::role->new( name => 'Comparable');
-my $USCurrency = mop::role->new( name => 'US::Currency');
+my $USCurrency = mop::class->new( name => 'US::Currency');
 
 ok($Comparable->does_role( 'Eq' ), '... Comparable does the Eq role');
 
