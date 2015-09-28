@@ -91,4 +91,16 @@ that it also has all the methods from that package as well.
 
 =back
 
+=head2 Inheritance
+
+=over 4
+
+=item C<superclasses()>
+
+=item C<set_superclasses( @supers )>
+
+=item C<mro()>
+
+=back
+
 =cut
