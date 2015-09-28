@@ -7,7 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop::role');
+    use_ok('mop::class');
 }
 
 =pod
@@ -71,12 +71,19 @@ TODO:
         $self->{z} = $z;
     }
 
+    sub clear {
+        my ($self) = @_;
+        my $data = $self->next::method;
+        $self->{'z'} = 0;
+    }    
+
     sub pack {
         my ($self) = @_;
         my $data = $self->next::method;
         $data->{z} = $self->{z};
         $data;
     }
+
 }
 
 ## Test an instance
@@ -128,6 +135,49 @@ subtest '... test an instance of Point3D' => sub {
     is_deeply $p3d->pack, { x => 10, y => 320, z => 30 }, '... got the right value from pack';
 };
 
+subtest '... meta test' => sub {
+
+    my @mop_object_methods = qw[
+        new BUILDARGS CREATE DESTROY
+    ];
+
+    my @Point_methods = qw[
+        x set_x
+        y set_y
+        pack 
+        clear
+    ];
+
+    my @Point3D_methods = qw[
+        z set_z
+        clear
+    ];
+
+    subtest '... test Point' => sub {
+
+        my $Point = mop::class->new( name => 'Point' );
+        isa_ok($Point, 'mop::class');
+        isa_ok($Point, 'mop::object');
+
+        is_deeply($Point->mro, [ 'Point', 'mop::object' ], '... got the expected mro');
+        is_deeply([ $Point->superclasses ], [ 'mop::object' ], '... got the expected superclasses');
+        
+        foreach ( @Point_methods ) {
+            ok($Point->has_method( $_ ), '... Point has method ' . $_);
+
+            my $m = $Point->get_method( $_ );
+            isa_ok($m, 'mop::method');
+            is($m->name, $_, '... got the right method name (' . $_ . ')');
+            ok(!$m->is_required, '... the ' . $_ . ' method is not a required method'); 
+            is($m->origin_class, 'Point', '... the ' . $_ . ' method was defined in Point class')
+        }
+
+        ok(Point->can( $_ ), '... Point can call method ' . $_)
+            foreach @mop_object_methods, @Point_methods;        
+
+    };
+
+};
 
 done_testing;
 
