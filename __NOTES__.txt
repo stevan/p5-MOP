@@ -41,6 +41,12 @@ Design Goals
 
 - Do as much as possible at compile time to make things 
   easy (and cheap) at runtime
+- Strive for internal consistency
+    - Perl 5 already has an object system
+        - and billions of lines of code using it
+    - the mop should provide an API to that system 
+        - and it should be easy to keep consistent state 
+          between the two systems
 
 ------------------------------------------------------------------
 
