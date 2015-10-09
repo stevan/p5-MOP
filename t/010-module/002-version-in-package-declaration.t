@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More skip_all => $^V lt v5.12;
 
 use Scalar::Util qw[ blessed ];
 
