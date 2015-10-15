@@ -3,7 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More skip_all => $^V lt v5.12;
+use Test::More (
+    $^V lt v5.12 
+        ? (skip_all => 'This test only works for v5.12 and above') 
+        : ()
+);
 
 use Scalar::Util qw[ blessed ];
 
