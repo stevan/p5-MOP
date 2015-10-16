@@ -98,7 +98,19 @@ mop::object
         );
     }
 
-    my $person = Person->new;
+    package Employee {
+        use strict;
+        use warnings;
+
+        our @ISA = ('Person');
+        our %HAS = (
+            %Person::HAS, # inheritance ;)
+            job_title => sub { die 'job_title is required' },
+            manager   => sub {},
+        );
+    }
+
+    my $employee = Employee->new;
 
 =head1 DESCRIPTION
 
