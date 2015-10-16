@@ -72,7 +72,7 @@ mop::object
         use strict;
         use warnings;
 
-        use parent 'mop::object';
+        our @ISA = ('mop::object');
     }
 
     my $person = Person->new;
