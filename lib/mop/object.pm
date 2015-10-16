@@ -73,6 +73,29 @@ mop::object
         use warnings;
 
         our @ISA = ('mop::object');
+
+        our %HAS = (
+
+            ## Required
+            # this attribute is required because if 
+            # it is not supplied, the initialiser below 
+            # will run, which will die
+            name   => sub { die 'name is required' },
+
+            ## Optional w/ Default
+            # this attribute has a default value 
+            age    => sub { 0 },
+
+            ## Optional w/out Default
+            # this attribute has no defualt value
+            # and is not required, however we need
+            # to still have an empty sub since we 
+            # use that sub to locate the "home" package
+            # of a given attribute (useful when 
+            # attributes are inherited or composed in
+            # via roles)
+            gender => sub {},
+        );
     }
 
     my $person = Person->new;
