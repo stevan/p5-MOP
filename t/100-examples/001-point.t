@@ -61,7 +61,7 @@ TODO:
     package Point3D;
     use strict;
     use warnings;
-    our @ISA; BEGIN { @ISA = ('Point')          }
+    our @ISA; BEGIN { @ISA = ('Point') }
     our %HAS; BEGIN { %HAS = (%Point::HAS, z => sub { 0 } ) }
 
     sub z { $_[0]->{z} }
