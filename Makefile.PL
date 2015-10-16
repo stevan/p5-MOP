@@ -10,6 +10,8 @@
 ## - SL
 ## ----------------------------------------------
 
+use v5.10;
+
 use strict;
 use warnings;
 use ExtUtils::MakeMaker 6.30;
