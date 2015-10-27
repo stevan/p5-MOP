@@ -18,6 +18,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 our @ISA;  BEGIN { @ISA  = 'mop::object' };
 our @DOES; BEGIN { @DOES = 'mop::module' }; # to be composed later ...
 
+our $IS_CLOSED;
 BEGIN {
     # FIXME:
     # Poor mans role composition, this will suffice 
@@ -39,6 +40,8 @@ BEGIN {
     *finalizers         = \&mop::module::finalizers;
     *add_finalizer      = \&mop::module::add_finalizer;
     *run_all_finalizers = \&mop::module::run_all_finalizers;
+
+    $IS_CLOSED = 1;
 }
 
 # other roles 

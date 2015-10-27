@@ -12,6 +12,8 @@ use mop::util;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
+our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+
 sub new {
     my $class = shift;
        $class = Scalar::Util::blessed( $class ) if ref $class;

@@ -19,12 +19,15 @@ our $AUTHORITY = 'cpan:STEVAN';
 our @ISA;  BEGIN { @ISA  = 'mop::object' };
 our @DOES; BEGIN { @DOES = 'mop::role' }; # to be composed later ...
 
+our $IS_CLOSED;
 BEGIN {
     # apply them roles  ...
     mop::internal::util::APPLY_ROLES(
         mop::role->new( name => __PACKAGE__ ), 
         \@DOES, 
         to => 'class' 
+    );
+    $IS_CLOSED = 1;
 }
 
 # superclasses
