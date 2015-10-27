@@ -47,6 +47,9 @@ Design Goals
     - the mop should provide an API to that system 
         - and it should be easy to keep consistent state 
           between the two systems
+- Accessor generation is a solved problem
+    - focus on lower level integration with the language
+        - sugar can always be added later on
 
 ------------------------------------------------------------------
 
