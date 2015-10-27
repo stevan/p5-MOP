@@ -69,6 +69,11 @@ sub was_aliased_from {
     return 0;
 }
 
+sub get_code_attributes {
+    my ($self) = @_;
+    mop::internal::util::GET_ATTRIBUTES_FOR_CODE( $self->body )
+}
+
 1;
 
 __END__

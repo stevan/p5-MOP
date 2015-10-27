@@ -139,6 +139,41 @@ sub REMOVE_CV_FROM_GLOB {
 }
 
 ## ------------------------------------------------------------------
+## Code Attributes
+## ------------------------------------------------------------------
+
+# NOTE:
+# Not hugely happy with the approach of this, but it 
+# is a start, we can improve on it as we use it.
+# - SL
+
+our %CODE_TO_ATTRIBUTE_MAP = ();
+
+sub GET_ATTRIBUTES_FOR_CODE { $CODE_TO_ATTRIBUTE_MAP{ 0+$_[0] } }
+
+sub INSTALL_CODE_ATTRIBUTE_HANDLER {
+    my $pkg       = shift;
+    my %supported = map { $_ => undef } @_;
+
+    no strict 'refs';
+    *{$pkg . '::MODIFY_CODE_ATTRIBUTES'} = sub {
+        my $pkg   = shift;
+        my $code  = shift;
+        my @attrs = @_;
+
+        my @bad_attrs = grep { not exists $supported{ $_ } } @attrs;
+        return @bad_attrs if @bad_attrs;
+
+        my $id = 0+$code;
+
+        $CODE_TO_ATTRIBUTE_MAP{ $id } = [] unless exists $CODE_TO_ATTRIBUTE_MAP{ $id };
+        push @{ $CODE_TO_ATTRIBUTE_MAP{ $id } } => @attrs;
+
+        return ();
+    };
+}
+
+## ------------------------------------------------------------------
 ## Class finalization 
 ## ------------------------------------------------------------------
 
