@@ -25,23 +25,6 @@ BEGIN {
         mop::role->new( name => __PACKAGE__ ), 
         \@DOES, 
         to => 'class' 
-    )
-}
-
-# instance management
-
-sub bless_instance { 
-    my $self     = $_[0];
-    my $instance = $_[1];
-
-    # TODO (eventually)
-    # This shold also support Package::Anon
-    # type thing, which would likely do the 
-    # blessing in a different way.
-    # Just something to think about.
-    # - SL 
-
-    bless $instance => $self->name;
 }
 
 # superclasses
@@ -84,14 +67,6 @@ mop::class - the metaclass for class
 
 This module I<does> the L<mop::role> package, which means
 that it also has all the methods from that package as well.
-
-=head2 Instance construction and management
-
-=over 4
-
-=item C<bless_instance( $instance )>
-
-=back
 
 =head2 Inheritance
 
