@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use v5.20;
+use strict;
 use warnings;
 
 use Test::More;
@@ -16,6 +16,7 @@ isa_ok($Class, 'mop::class');
 isa_ok($Class, 'mop::object');
 
 ok($Class->does_role('mop::role'), '... mop::class does mop::role');
+ok($Class->does_role('mop::module'), '... mop::class does mop::module');
 
 my @METHODS = qw[
     CREATE 
