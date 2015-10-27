@@ -33,6 +33,7 @@ subtest '... testing finalizer methods' => sub {
     {
         my @finalizers = $module->finalizers;
         ok(!(scalar @finalizers), '... no finalizers present');
+        ok(!$module->has_finalizers, '... we have no finalizers');
     }
 
     my $f1 = sub {};
@@ -43,6 +44,8 @@ subtest '... testing finalizer methods' => sub {
         ok((scalar @finalizers), '... got finalizers now');
         is(scalar @finalizers, 1, '... got one finalizer');
         is($finalizers[0], $f1, '... and it is the CODE ref we expected');
+
+        ok($module->has_finalizers, '... we have finalizers');
     }
 
     my $f2 = sub {};
