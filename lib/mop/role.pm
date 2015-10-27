@@ -39,6 +39,7 @@ BEGIN {
 
     *finalizers         = \&mop::module::finalizers;
     *add_finalizer      = \&mop::module::add_finalizer;
+    *has_finalizers     = \&mop::module::has_finalizers;
     *run_all_finalizers = \&mop::module::run_all_finalizers;
 
     $IS_CLOSED = 1;

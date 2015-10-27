@@ -92,6 +92,13 @@ sub finalizers {
     return @$finalizers;    
 }
 
+sub has_finalizers {
+    my ($self) = @_;
+    my $finalizers = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
+    return 0 unless $finalizers;
+    return !! scalar @$finalizers;    
+}
+
 sub add_finalizer {
     my ($self, $finalizer) = @_;
     die '[PANIC] Cannot add a finalizer to a package which has been closed'
