@@ -147,30 +147,37 @@ sub REMOVE_CV_FROM_GLOB {
 # is a start, we can improve on it as we use it.
 # - SL
 
-our %CODE_TO_ATTRIBUTE_MAP = ();
-
-sub GET_ATTRIBUTES_FOR_CODE { $CODE_TO_ATTRIBUTE_MAP{ 0+$_[0] } }
-
 sub INSTALL_CODE_ATTRIBUTE_HANDLER {
     my $pkg       = shift;
     my %supported = map { $_ => undef } @_;
 
-    no strict 'refs';
-    *{$pkg . '::MODIFY_CODE_ATTRIBUTES'} = sub {
-        my $pkg   = shift;
-        my $code  = shift;
-        my @attrs = @_;
+    {
+        no strict 'refs'; 
 
-        my @bad_attrs = grep { not exists $supported{ $_ } } @attrs;
-        return @bad_attrs if @bad_attrs;
+        # NOTE:
+        # this will effectively be shared package
+        # level storage for this particular module
+        # - SL
+        my %cv_to_attr_map;
 
-        my $id = 0+$code;
+        *{$pkg . '::FETCH_CODE_ATTRIBUTES'} = sub {
+            my (undef, $code) = @_;
+            return @{ $cv_to_attr_map{ 0+$code } };
+        };
 
-        $CODE_TO_ATTRIBUTE_MAP{ $id } = [] unless exists $CODE_TO_ATTRIBUTE_MAP{ $id };
-        push @{ $CODE_TO_ATTRIBUTE_MAP{ $id } } => @attrs;
+        *{$pkg . '::MODIFY_CODE_ATTRIBUTES'} = sub {
+            my (undef, $code, @attrs) = @_;
 
-        return ();
-    };
+            my @bad_attrs = grep { not exists $supported{ $_ } } @attrs;
+            return @bad_attrs if @bad_attrs;
+
+            $cv_to_attr_map{ 0+$code } = \@attrs;
+
+            return ();
+        };
+    }
+
+    return;
 }
 
 ## ------------------------------------------------------------------

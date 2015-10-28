@@ -5,7 +5,8 @@ use v5.10;
 use strict;
 use warnings;
 
-use B ();
+use B          ();
+use attributes ();
 
 use mop::object;
 
@@ -71,7 +72,7 @@ sub was_aliased_from {
 
 sub get_code_attributes {
     my ($self) = @_;
-    mop::internal::util::GET_ATTRIBUTES_FOR_CODE( $self->body )
+    attributes::get( $self->body );
 }
 
 1;

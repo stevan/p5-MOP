@@ -46,7 +46,7 @@ subtest '... simple mop::method test' => sub {
     ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
 
     is_deeply(
-        $m->get_code_attributes,
+        [ $m->get_code_attributes ],
         [ 'Bar' ],
         '... got the attributes we expected'
     );
