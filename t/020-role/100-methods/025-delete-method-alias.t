@@ -23,7 +23,7 @@ our $Foo_foo = sub { 'Foo::foo' };
 {
     package Foo;
     use strict;
-    use warnings;   
+    use warnings;
 
     our $bling = 100;
 
@@ -32,7 +32,7 @@ our $Foo_foo = sub { 'Foo::foo' };
 
     {
         no warnings 'once';
-        *foo = $Foo_foo;  
+        *foo = $Foo_foo;
     }
 }
 
@@ -42,7 +42,7 @@ subtest '... testing deleting method alias' => sub {
     isa_ok($Foo, 'mop::object');
 
     ok(!$Foo->has_method('foo'), '... [foo] method to get');
-    ok(!$Foo->get_method('foo'), '... [foo] method to get');    
+    ok(!$Foo->get_method('foo'), '... [foo] method to get');
 
     ok(!$Foo->requires_method('foo'), '... the [foo] method is not required');
     ok(!$Foo->get_required_method('foo'), '... the [foo] method is not required');
@@ -101,13 +101,13 @@ subtest '... testing deleting a method alias that is actually a reqular method' 
         exception { $Foo->delete_method_alias('bar') },
         qr/^\[PANIC\] Cannot delete an aliased method \(bar\) when there is a regular method already there/,
         '... added the required method successfully'
-    ); 
+    );
 
     ok(!$Foo->has_method_alias('bar'), '... this method is still not required');
     ok($Foo->has_method('bar'), '... this method is a regular method');
 
-    is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');     
-    is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');     
+    is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');
+    is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');
 };
 
 subtest '... testing deleting a method alias that is actually a required method' => sub {
@@ -122,10 +122,10 @@ subtest '... testing deleting a method alias that is actually a required method'
         exception { $Foo->delete_method_alias('baz') },
         qr/^\[PANIC\] Cannot delete an aliased method \(baz\) when there is a required method already there/,
         '... failed adding the required method successfully'
-    ); 
+    );
 
     ok(!$Foo->has_method_alias('baz'), '... this method is not an alias');
-    ok($Foo->requires_method('baz'), '... this method is still required');    
+    ok($Foo->requires_method('baz'), '... this method is still required');
 };
 
 subtest '... testing exception when role is closed' => sub {

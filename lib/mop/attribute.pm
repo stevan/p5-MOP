@@ -17,16 +17,16 @@ our @ISA; BEGIN { @ISA = 'mop::object' };
 our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
 
 sub CREATE {
-    my ($class, $args) = @_; 
-    
+    my ($class, $args) = @_;
+
     die '[MISSING_ARG] You must specify an attribute name'
         unless $args->{name};
     die '[MISSING_ARG] You must specify an attribute initializer'
-        unless $args->{initializer};    
+        unless $args->{initializer};
     die '[INVALID_ARG] The initializer specified must be a CODE reference'
         unless ref $args->{initializer} eq 'CODE';
 
-    return bless { 
+    return bless {
         name        => $args->{name},
         initializer => $args->{initializer},
     } => $class;
@@ -45,7 +45,7 @@ sub initializer {
 sub origin_class {
     my ($self) = @_;
     # NOTE:
-    # for the time being we are going to stick with 
+    # for the time being we are going to stick with
     # the COMP_STASH as the indicator for the initalizers
     # instead of the glob ref, which might be trickier
     # however I really don't know, so time will tell.

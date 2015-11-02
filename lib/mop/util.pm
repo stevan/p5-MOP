@@ -20,7 +20,7 @@ sub IS_CLASS_CLOSED   { no strict 'refs'; no warnings 'once'; ${$_[0] . '::IS_CL
 sub FETCH_CLASS_SLOTS { no strict 'refs'; no warnings 'once'; %{$_[0] . '::HAS'}         }
 
 ## ------------------------------------------------------------------
-## OBJECT INITIALIZATION AND DESTRUCTION 
+## OBJECT INITIALIZATION AND DESTRUCTION
 ## ------------------------------------------------------------------
 
 sub BUILDALL {
@@ -31,7 +31,7 @@ sub BUILDALL {
             $instance->$fully_qualified_name( $proto );
         }
     }
-    return; 
+    return;
 }
 
 sub DEMOLISHALL {
@@ -42,7 +42,7 @@ sub DEMOLISHALL {
             $instance->$fully_qualified_name();
         }
     }
-    return; 
+    return;
 }
 
 ## ------------------------------------------------------------------

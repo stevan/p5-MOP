@@ -16,7 +16,7 @@ BEGIN {
 TODO:
 - test calling ->new on an instance
     - test it under inheritance
-- test overriding ->new 
+- test overriding ->new
     - test that it bypasses the CREATE, BUILD, etc.
 - do more elaborate tests with %HAS
 
@@ -36,7 +36,7 @@ subtest '... simple mop::object test' => sub {
 
     is(blessed $o, 'mop::object', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(!exists $o->{foo}, '... got the expected lack of a slot');
 };
 
@@ -47,7 +47,7 @@ subtest '... simple mop::object subclass test' => sub {
 
     is(blessed $o, 'Foo', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'BAR', '... the expected slot has the expected value');
 };
@@ -59,7 +59,7 @@ subtest '... simple mop::object subclass test w/defaults' => sub {
 
     is(blessed $o, 'Foo', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'FOO', '... the expected slot has the expected value');
 };

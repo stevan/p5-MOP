@@ -27,7 +27,7 @@ TODO:
     our $VERSION   = '0.01';
     our $AUTHORITY = 'cpan:STEVAN';
 
-    BEGIN { 
+    BEGIN {
         mop::internal::util::INSTALL_FINALIZATION_RUNNER( __PACKAGE__ );
 
         my $m = mop::module->new( name => __PACKAGE__ );
@@ -42,8 +42,8 @@ subtest '... testing module is closed already' => sub {
     ok($module->is_closed, '... the module is now closed');
 
     like(
-        exception{ $module->add_finalizer( sub {} ) }, 
-        qr/^\[PANIC] Cannot add a finalizer to a package which has been closed/, 
+        exception{ $module->add_finalizer( sub {} ) },
+        qr/^\[PANIC] Cannot add a finalizer to a package which has been closed/,
         '... unsuccessfully added finalizer'
     );
 };

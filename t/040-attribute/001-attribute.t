@@ -19,7 +19,7 @@ TODO:
     package Foo;
     use strict;
     use warnings;
-    
+
     our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}
 }
 

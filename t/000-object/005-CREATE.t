@@ -27,7 +27,7 @@ TODO:
 =cut
 
 {
-    package Foo; 
+    package Foo;
     use strict;
     use warnings;
     our @ISA; BEGIN { @ISA = ('mop::object') };
@@ -47,7 +47,7 @@ subtest '... simple CREATE test' => sub {
 
     is(blessed $o, 'Foo', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'BAR', '... the expected slot has the expected value');
 };

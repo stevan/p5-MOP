@@ -20,7 +20,7 @@ TODO:
     package Foo;
     use strict;
     use warnings;
-    
+
     our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}
 
     package Bar;
@@ -43,7 +43,7 @@ subtest '... simple mop::attribute test' => sub {
     isa_ok($role, 'mop::object');
 
     my @all_attributes     = $role->all_attributes;
-    my @regular_attributes = $role->attributes;    
+    my @regular_attributes = $role->attributes;
     my @aliased_attributes = $role->aliased_attributes;
 
     is(scalar @all_attributes,     1, '... only one attribute');
@@ -88,7 +88,7 @@ subtest '... simple test when no %HAS is present' => sub {
     ok(!$role->get_attribute('bar'), '... we do not have a bar attribute');
 
     ok(!$role->has_attribute_alias('bar'), '... we do not have a bar attribute');
-    ok(!$role->get_attribute_alias('bar'), '... we do not have a bar attribute');    
+    ok(!$role->get_attribute_alias('bar'), '... we do not have a bar attribute');
 };
 
 subtest '... simple mop::attribute test with aliases' => sub {
@@ -97,7 +97,7 @@ subtest '... simple mop::attribute test with aliases' => sub {
     isa_ok($role, 'mop::object');
 
     my @all_attributes     = $role->all_attributes;
-    my @regular_attributes = $role->attributes;    
+    my @regular_attributes = $role->attributes;
     my @aliased_attributes = $role->aliased_attributes;
 
     is(scalar @all_attributes,     2, '... only one attribute');

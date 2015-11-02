@@ -1,10 +1,10 @@
 ## ----------------------------------------------
 ## NOTE:
 ## ----------------------------------------------
-## This is just a temp version for now so that I 
-## can get some Devel::Cover stats on the test 
-## suite, it will need to include the deps in the 
-## cpanfile as well as handle any C/XS stuff. For 
+## This is just a temp version for now so that I
+## can get some Devel::Cover stats on the test
+## suite, it will need to include the deps in the
+## cpanfile as well as handle any C/XS stuff. For
 ## now it is best to just punt on doing anything
 ## useful in here.
 ## - SL
@@ -18,8 +18,8 @@ use ExtUtils::MakeMaker 6.30;
 
 my %WriteMakefileArgs = (
     'NAME'               => 'mop',
-    'VERSION'            => '0.01',    
-    'DISTNAME'           => 'mop',      
+    'VERSION'            => '0.01',
+    'DISTNAME'           => 'mop',
     'ABSTRACT'           => ' Yet Another Mop Prototype',
     'AUTHOR'             => 'Stevan Little',
     'BUILD_REQUIRES'     => {},
@@ -33,11 +33,11 @@ my %WriteMakefileArgs = (
     'NORECURS'           => 1,
     'PREREQ_PM'  => {
         # core ....
-        'B'                  => 0, 
+        'B'                  => 0,
         'Symbol'             => 0,
         'Scalar::Util'       => 0,
-        
-        # things to be replaced 
+
+        # things to be replaced
         # by XS at some point
         'Devel::Hook'        => 0, # needed to access the UNITCHECK AV
         'Devel::GlobalPhase' => 0, # needed to access global phase
@@ -45,7 +45,7 @@ my %WriteMakefileArgs = (
 
         # tests ..
         'Test::More'         => 0,
-        'Test::Fatal'        => 0,        
+        'Test::Fatal'        => 0,
 
         # gonna need these later ...
 #        'Devel::CallParser' => '0',

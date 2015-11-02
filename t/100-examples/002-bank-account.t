@@ -27,7 +27,7 @@ TODO:
 
     sub balance { $_[0]->{balance} }
 
-    sub deposit { 
+    sub deposit {
         my ($self, $amount) = @_;
         $self->{balance} += $amount;
     }

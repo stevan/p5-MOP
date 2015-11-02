@@ -21,8 +21,8 @@ our @DOES; BEGIN { @DOES = 'mop::module' }; # to be composed later ...
 our $IS_CLOSED;
 BEGIN {
     # FIXME:
-    # Poor mans role composition, this will suffice 
-    # for now, until I have enough infrastructure to 
+    # Poor mans role composition, this will suffice
+    # for now, until I have enough infrastructure to
     # be able to actually do the composition.
     # - SL
 
@@ -45,7 +45,7 @@ BEGIN {
     $IS_CLOSED = 1;
 }
 
-# other roles 
+# other roles
 
 sub roles {
     my ($self) = @_;
@@ -77,7 +77,7 @@ sub does_role {
 
     # then try the harder way next ...
     foreach my $role ( @roles ) {
-        return 1 
+        return 1
             if mop::role->new( name => $role )
                         ->does_role( $to_test );
     }
@@ -90,10 +90,10 @@ sub does_role {
 
 # NOTE:
 # ponder removing the required_methods logic from here
-# this is something that could be investigated at the 
+# this is something that could be investigated at the
 # class FINALIZATION time and then the IS_ABSTRACT flag
 # is set. We need to do this for inheritance anyway, so
-# we might as well handle it them, then we can assume 
+# we might as well handle it them, then we can assume
 # that the package is in a consistent state.
 #
 # see also: "__NOTES__.txt/Do we want to check abstract-ness via required methods?"
@@ -105,25 +105,25 @@ sub is_abstract {
     # if you have required methods, you are abstract
     # that is a hard enforced rule here ...
     my $default = scalar $self->required_methods ? 1 : 0;
-    # if there is no $IS_ABSTRACT variable, return the 
-    # calculated default, but if there is an $IS_ABSTRACT 
-    # variable, only allow a true value to override the 
+    # if there is no $IS_ABSTRACT variable, return the
+    # calculated default, but if there is an $IS_ABSTRACT
+    # variable, only allow a true value to override the
     # calculated default
     my $is_abstract = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', 'SCALAR' );
     return $default unless $is_abstract;
     return $$is_abstract ? 1 : $default;
-    # this approach should allow someone to create 
+    # this approach should allow someone to create
     # an abstract class even if they do not have any
-    # required methods, but also keep the strict 
-    # checking of required methods as a indicator 
-    # of abstract-ness    
-    
+    # required methods, but also keep the strict
+    # checking of required methods as a indicator
+    # of abstract-ness
+
 }
 
 sub set_is_abstract {
     my ($self, $value) = @_;
     die '[PANIC] Cannot set a package to be abstract which has been closed'
-        if $self->is_closed;    
+        if $self->is_closed;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
     return;
 }
@@ -159,29 +159,29 @@ sub methods {
             # if our class has roles, then non-local
             # methods *might* be valid, so ...
 
-            # if we don't have roles, then 
-            # it can't be valid, so we don't 
+            # if we don't have roles, then
+            # it can't be valid, so we don't
             # want it
             next unless @roles;
 
-            # if we do have roles, but our 
+            # if we do have roles, but our
             # method was not aliased from one
             # of them, then we don't want it.
             next unless $method->was_aliased_from( @roles );
 
-            # if we are here then we have 
-            # a non-required method that is 
-            # not from the local class, it 
+            # if we are here then we have
+            # a non-required method that is
+            # not from the local class, it
             # has roles and was aliased from
             # one of them, which means we want
             # to keep it, so we let it fall through
         }
 
-        # if we are here then we have 
-        # a non-required method that is 
-        # either from the local class, 
-        # or is not from a local class, 
-        # but has fallen through our 
+        # if we are here then we have
+        # a non-required method that is
+        # either from the local class,
+        # or is not from a local class,
+        # but has fallen through our
         # conditional above.
 
         push @methods => $method;
@@ -198,7 +198,7 @@ sub aliased_methods {
 }
 
 # just the required methods (locality be damned)
-# NOTE: 
+# NOTE:
 # We don't care where are required method comes from
 # just that one exists, so aliasing is not part of the
 # criteria here.
@@ -208,23 +208,23 @@ sub required_methods {
     return grep { $_->is_required } $self->all_methods
 }
 
-# required methods 
+# required methods
 
-# NOTE: 
+# NOTE:
 # there is no real heavy need to use the mop::method API
 # below because 1) it is not needed, and 2) the mop::method
 # API is really just an information shim, it does not perform
 # much in the way of actions. From my point of view, the below
-# operations are mostly stash manipulation functions and so 
+# operations are mostly stash manipulation functions and so
 # therefore belong here in the continuim of responsibility/
 # ownership.
 #
-## The only argument that could likely be made is for the 
-## mop::method API to handle creating the NULL CV for the 
-## add_required_method, but that would require us to pass in 
+## The only argument that could likely be made is for the
+## mop::method API to handle creating the NULL CV for the
+## add_required_method, but that would require us to pass in
 ## a mop::method instance, which would be silly since we never
-## need it anyway. 
-# 
+## need it anyway.
+#
 # - SL
 
 sub requires_method {
@@ -242,13 +242,13 @@ sub get_required_method {
 
     # check these two easy cases first ...
     return unless exists $stash->{ $name };
-    return unless mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } ); 
+    return unless mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 
     # now we grab the CV ...
-    my $method = mop::method->new( 
-        body => mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) 
+    my $method = mop::method->new(
+        body => mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' )
     );
-    # and make sure it is local, and 
+    # and make sure it is local, and
     # then return the method ...
     return $method if $method->origin_class eq $class;
     # or return nothing ...
@@ -262,9 +262,9 @@ sub add_required_method {
 
     # if we already have a glob there ...
     if ( my $glob = $self->stash->{ $name } ) {
-        # and if we have a NULL CV in it, just return 
+        # and if we have a NULL CV in it, just return
         return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob );
-        # and if we don't and we have a CODE slot, we 
+        # and if we don't and we have a CODE slot, we
         # need to die because this doesn't make sense
         die "[PANIC] Cannot add a required method ($name) when there is a regular method already there"
             if defined *{ $glob }{CODE};
@@ -273,7 +273,7 @@ sub add_required_method {
     # if we get here, then we
     # just create a null CV
     mop::internal::util::CREATE_NULL_CV( $self->name, $name );
-    
+
     return;
 }
 
@@ -291,8 +291,8 @@ sub delete_required_method {
             return;
         }
         else {
-            # and if we have a CV slot, but it doesn't have 
-            # a NULL CV in it, then we need to die because 
+            # and if we have a CV slot, but it doesn't have
+            # a NULL CV in it, then we need to die because
             # this doesn't make sense
             die "[PANIC] Cannot delete a required method ($name) when there is a regular method already there"
                 if defined *{ $glob }{CODE};
@@ -306,7 +306,7 @@ sub delete_required_method {
     return;
 }
 
-# methods 
+# methods
 
 sub has_method {
     my $self  = $_[0];
@@ -318,12 +318,12 @@ sub has_method {
     return 0 unless exists $stash->{ $name };
     return 0 if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 
-    # now we grab the CV and make sure it is 
+    # now we grab the CV and make sure it is
     # local, and return accordingly
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
         my $method = mop::method->new( body => $code );
         my @roles  = $self->roles;
-        # and make sure it is local, and 
+        # and make sure it is local, and
         # then return accordingly
         return $method->origin_class eq $class
             || (@roles && $method->was_aliased_from( @roles ));
@@ -347,9 +347,9 @@ sub get_method {
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
         my $method = mop::method->new( body => $code );
         my @roles  = $self->roles;
-        # and make sure it is local, and 
+        # and make sure it is local, and
         # then return accordingly
-        return $method 
+        return $method
             if $method->origin_class eq $class
             || (@roles && $method->was_aliased_from( @roles ));
     }
@@ -362,7 +362,7 @@ sub add_method {
     my ($self, $name, $code) = @_;
     die "[PANIC] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    
+
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
     return;
 }
@@ -376,8 +376,8 @@ sub delete_method {
     if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, ...
         if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
-            # then we need to die because this 
-            # shouldn't happen, we should only 
+            # then we need to die because this
+            # shouldn't happen, we should only
             # delete regular methods.
             die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
         }
@@ -385,27 +385,27 @@ sub delete_method {
             # if we don't have a code slot ...
             return unless defined *{ $glob }{CODE};
 
-            # we need to make sure it is local, and 
-            # otherwise, error accordingly 
+            # we need to make sure it is local, and
+            # otherwise, error accordingly
             my $method = mop::method->new( body => *{ $glob }{CODE} );
             my @roles  = $self->roles;
 
-            # if the method has not come from 
-            # the local class, we need to see 
-            # if it was added from a role 
+            # if the method has not come from
+            # the local class, we need to see
+            # if it was added from a role
             if ($method->origin_class ne $self->name) {
 
-                # if it came from a role, then it is 
+                # if it came from a role, then it is
                 # okay to be deleted, but if it didn't
-                # then we have an error cause they are 
-                # trying to delete an alias using the 
+                # then we have an error cause they are
+                # trying to delete an alias using the
                 # regular method method
                 unless ( $method->was_aliased_from( @roles ) ) {
                     die "[PANIC] Cannot delete a regular method ($name) when there is an aliased method already there"
                 }
             }
 
-            # but if we have a regular method, then we 
+            # but if we have a regular method, then we
             # can just delete the CV from the glob
             mop::internal::util::REMOVE_CV_FROM_GLOB( $self->stash, $name );
         }
@@ -428,9 +428,9 @@ sub get_method_alias {
     # now we grab the CV ...
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
         my $method = mop::method->new( body => $code );
-        # and make sure it is not local, and 
+        # and make sure it is not local, and
         # then return accordingly
-        return $method 
+        return $method
             if $method->origin_class ne $class;
     }
 
@@ -440,7 +440,7 @@ sub get_method_alias {
 
 # NOTE:
 # Should aliasing be aloud even after a class is closed?
-# Probably not, but it might not be a bad idea to at 
+# Probably not, but it might not be a bad idea to at
 # least discuss in more detail what happens when a class
 # is actually closed.
 # - SL
@@ -449,7 +449,7 @@ sub alias_method {
     my ($self, $name, $code) = @_;
     die "[PANIC] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
-    
+
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
     return;
 }
@@ -463,8 +463,8 @@ sub delete_method_alias {
     if ( my $glob = $self->stash->{ $name } ) {
         # and if we have a NULL CV in it, ...
         if ( mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob ) ) {
-            # then we need to die because this 
-            # shouldn't happen, we should only 
+            # then we need to die because this
+            # shouldn't happen, we should only
             # delete regular methods.
             die "[PANIC] Cannot delete an aliased method ($name) when there is a required method already there";
         }
@@ -472,14 +472,14 @@ sub delete_method_alias {
             # if we don't have a code slot ...
             return unless defined *{ $glob }{CODE};
 
-            # we need to make sure it is local, and 
-            # otherwise, error accordingly 
+            # we need to make sure it is local, and
+            # otherwise, error accordingly
             my $method = mop::method->new( body => *{ $glob }{CODE} );
 
             die "[PANIC] Cannot delete an aliased method ($name) when there is a regular method already there"
                 if $method->origin_class eq $self->name;
 
-            # but if we have a regular method, then we 
+            # but if we have a regular method, then we
             # can just delete the CV from the glob
             mop::internal::util::REMOVE_CV_FROM_GLOB( $self->stash, $name );
         }
@@ -497,7 +497,7 @@ sub has_method_alias {
     return 0 unless exists $stash->{ $name };
     return 0 if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 
-    # now we grab the CV and make sure it is 
+    # now we grab the CV and make sure it is
     # local, and return accordingly
     if ( my $code = mop::internal::util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
         return mop::method->new( body => $code )->origin_class ne $class;
@@ -510,8 +510,8 @@ sub has_method_alias {
 ## Attributes
 
 ## FIXME:
-## The same problem we had methods needs to be fixed with 
-## attributes, just checking the origin_class v. class is 
+## The same problem we had methods needs to be fixed with
+## attributes, just checking the origin_class v. class is
 ## not enough, we need to check aliasing as well.
 ## - SL
 
@@ -520,11 +520,11 @@ sub all_attributes {
     my $self = shift;
     my $has = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
     return unless $has;
-    return map { 
-        mop::attribute->new( 
-            name        => $_, 
-            initializer => $has->{ $_ } 
-        ) 
+    return map {
+        mop::attribute->new(
+            name        => $_,
+            initializer => $has->{ $_ }
+        )
     } keys %$has;
 }
 
@@ -545,43 +545,43 @@ sub aliased_attributes {
 ## regular ...
 
 sub has_attribute {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
     return unless $has;
     return unless exists $has->{ $name };
-    
-    return mop::attribute->new( 
-        name        => $name, 
+
+    return mop::attribute->new(
+        name        => $name,
         initializer => $has->{ $name }
     )->origin_class eq $class;
 }
 
 sub get_attribute {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
     return unless $has;
     return unless exists $has->{ $name };
-    
-    my $attribute = mop::attribute->new( 
-        name        => $name, 
+
+    my $attribute = mop::attribute->new(
+        name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attribute 
+    return $attribute
         if $attribute->origin_class eq $class;
 
     return;
 }
 
 sub add_attribute {
-    my $self        = $_[0]; 
-    my $name        = $_[1];    
+    my $self        = $_[0];
+    my $name        = $_[1];
 
     die "[PANIC] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
@@ -591,7 +591,7 @@ sub add_attribute {
     my $class       = $self->name;
     my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
 
-    die '[PANIC] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')' 
+    die '[PANIC] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')'
         if $attr->origin_class ne $class;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -603,8 +603,8 @@ sub add_attribute {
 }
 
 sub delete_attribute {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
 
@@ -612,15 +612,15 @@ sub delete_attribute {
         if $self->is_closed;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
-    
+
     return unless $has;
     return unless exists $has->{ $name };
 
     die "[PANIC] Cannot delete a regular attribute ($name) when there is an aliased attribute already there"
-        if mop::attribute->new( 
-            name        => $name, 
-            initializer => $has->{ $name } 
-        )->origin_class ne $class;    
+        if mop::attribute->new(
+            name        => $name,
+            initializer => $has->{ $name }
+        )->origin_class ne $class;
 
     delete $has->{ $name };
 
@@ -628,43 +628,43 @@ sub delete_attribute {
 }
 
 sub has_attribute_alias {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
     return unless $has;
     return unless exists $has->{ $name };
-    
-    return mop::attribute->new( 
-        name        => $name, 
+
+    return mop::attribute->new(
+        name        => $name,
         initializer => $has->{ $name }
     )->origin_class ne $class;
 }
 
 sub get_attribute_alias {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
     return unless $has;
     return unless exists $has->{ $name };
-    
-    my $attribute = mop::attribute->new( 
-        name        => $name, 
+
+    my $attribute = mop::attribute->new(
+        name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attribute 
+    return $attribute
         if $attribute->origin_class ne $class;
 
     return;
 }
 
 sub alias_attribute {
-    my $self        = $_[0]; 
-    my $name        = $_[1];    
+    my $self        = $_[0];
+    my $name        = $_[1];
 
     die "[PANIC] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
@@ -674,7 +674,7 @@ sub alias_attribute {
     my $class       = $self->name;
     my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
 
-    die '[PANIC] Attribute is from the local class (' . $class . '), it should be from a different class' 
+    die '[PANIC] Attribute is from the local class (' . $class . '), it should be from a different class'
         if $attr->origin_class eq $class;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -686,8 +686,8 @@ sub alias_attribute {
 }
 
 sub delete_attribute_alias {
-    my $self  = $_[0]; 
-    my $name  = $_[1];    
+    my $self  = $_[0];
+    my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
 
@@ -695,15 +695,15 @@ sub delete_attribute_alias {
         if $self->is_closed;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
-    
+
     return unless $has;
     return unless exists $has->{ $name };
 
     die "[PANIC] Cannot delete an attribute alias ($name) when there is an regular attribute already there"
-        if mop::attribute->new( 
-            name        => $name, 
-            initializer => $has->{ $name } 
-        )->origin_class eq $class;    
+        if mop::attribute->new(
+            name        => $name,
+            initializer => $has->{ $name }
+        )->origin_class eq $class;
 
     delete $has->{ $name };
 
@@ -751,7 +751,7 @@ that it also has all the methods from that package as well.
 
 =back
 
-=head2 Attributes 
+=head2 Attributes
 
 =over 4
 

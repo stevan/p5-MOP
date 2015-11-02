@@ -31,8 +31,8 @@ BEGIN {
 
     # NOTE:
     # so apparently the overload
-    # will pass more values to the 
-    # subroutines then just the 
+    # will pass more values to the
+    # subroutines then just the
     # instance, no idea why though
     # it is mostly just garbage.
     # - SL

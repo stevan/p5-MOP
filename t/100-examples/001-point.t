@@ -13,7 +13,7 @@ BEGIN {
 =pod
 
 TODO:
-- test constructors with data 
+- test constructors with data
     - for both Point and Point3D
 - test some meta info
 
@@ -75,7 +75,7 @@ TODO:
         my ($self) = @_;
         my $data = $self->next::method;
         $self->{'z'} = 0;
-    }    
+    }
 
     sub pack {
         my ($self) = @_;
@@ -144,7 +144,7 @@ subtest '... meta test' => sub {
     my @Point_methods = qw[
         x set_x
         y set_y
-        pack 
+        pack
         clear
     ];
 
@@ -161,19 +161,19 @@ subtest '... meta test' => sub {
 
         is_deeply($Point->mro, [ 'Point', 'mop::object' ], '... got the expected mro');
         is_deeply([ $Point->superclasses ], [ 'mop::object' ], '... got the expected superclasses');
-        
+
         foreach ( @Point_methods ) {
             ok($Point->has_method( $_ ), '... Point has method ' . $_);
 
             my $m = $Point->get_method( $_ );
             isa_ok($m, 'mop::method');
             is($m->name, $_, '... got the right method name (' . $_ . ')');
-            ok(!$m->is_required, '... the ' . $_ . ' method is not a required method'); 
+            ok(!$m->is_required, '... the ' . $_ . ' method is not a required method');
             is($m->origin_class, 'Point', '... the ' . $_ . ' method was defined in Point class')
         }
 
         ok(Point->can( $_ ), '... Point can call method ' . $_)
-            foreach @mop_object_methods, @Point_methods;        
+            foreach @mop_object_methods, @Point_methods;
 
     };
 

@@ -19,7 +19,7 @@ TODO:
     package Foo;
     use strict;
     use warnings;
-    
+
     sub foo { 'Foo::foo' }
 }
 

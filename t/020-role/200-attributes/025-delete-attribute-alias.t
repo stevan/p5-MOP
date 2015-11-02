@@ -22,7 +22,7 @@ TODO:
     use strict;
     use warnings;
 
-    our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}   
+    our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}
 
     package Bar;
     use strict;
@@ -34,7 +34,7 @@ TODO:
     use strict;
     use warnings;
 
-    our %HAS; BEGIN { %HAS = ( %Foo::HAS, baz => sub { 'Baz::baz' } )}        
+    our %HAS; BEGIN { %HAS = ( %Foo::HAS, baz => sub { 'Baz::baz' } )}
 }
 
 subtest '... simple deleting an attribute alias test' => sub {
@@ -43,7 +43,7 @@ subtest '... simple deleting an attribute alias test' => sub {
     isa_ok($role, 'mop::object');
 
     my @all_attributes     = $role->all_attributes;
-    my @regular_attributes = $role->attributes;    
+    my @regular_attributes = $role->attributes;
     my @aliased_attributes = $role->aliased_attributes;
 
     is(scalar @all_attributes,     2, '... two attributes');

@@ -14,7 +14,7 @@ BEGIN {
 
 TODO:
 - test the mop::util::IS_CLASS_ABSTRACT function here as well
-    - the two APIs (mop::util & mop-OO) should have 
+    - the two APIs (mop::util & mop-OO) should have
       the same end result
 - test setting abstract-ness from the Role API as well
 
@@ -39,17 +39,17 @@ TODO:
 
     package Gorch;
     use strict;
-    use warnings; 
+    use warnings;
 
-    our $IS_ABSTRACT; BEGIN { $IS_ABSTRACT = 0 };    
+    our $IS_ABSTRACT; BEGIN { $IS_ABSTRACT = 0 };
 
     package Bling;
     use strict;
-    use warnings; 
+    use warnings;
 
     sub baz;
 
-    our $IS_ABSTRACT; BEGIN { $IS_ABSTRACT = 0 };      
+    our $IS_ABSTRACT; BEGIN { $IS_ABSTRACT = 0 };
 }
 
 subtest '... testing is_abstract' => sub {
@@ -60,7 +60,7 @@ subtest '... testing is_abstract' => sub {
 
     is($role->name, 'Foo', '... got the expected name');
     ok($role->is_abstract, '... the role is abstract');
-    ok(mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is abstract');  
+    ok(mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is abstract');
 };
 
 subtest '... testing setting a role to be abstract' => sub {
@@ -138,19 +138,19 @@ subtest '... testing some edge cases ' => sub {
         exception { $role->set_is_abstract(0) },
         undef,
         '... was able to set the abstract flag without issue'
-    );    
+    );
 
     ok(!$role->is_abstract, '... the role is not abstract (because we marked it as not being so)');
-    ok(!mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is (not) abstract according to the package');    
+    ok(!mop::util::IS_CLASS_ABSTRACT($role->name), '... the role is (not) abstract according to the package');
 
     # close it ...
     $role->set_is_closed(1);
 
     like(
-        exception { $role->set_is_abstract(1) }, 
-        qr/^\[PANIC\] Cannot set a package to be abstract which has been closed/, 
+        exception { $role->set_is_abstract(1) },
+        qr/^\[PANIC\] Cannot set a package to be abstract which has been closed/,
         '... set the roles correctly'
-    );    
+    );
 };
 
 done_testing;

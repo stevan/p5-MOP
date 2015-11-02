@@ -27,11 +27,11 @@ TODO:
 
     package Foo;
     use strict;
-    use warnings;   
+    use warnings;
 
     our $bling = 100;
 
-    sub foo { 'Foo::foo' }  
+    sub foo { 'Foo::foo' }
 
     sub bar;
 
@@ -47,7 +47,7 @@ subtest '... testing deleting method' => sub {
     isa_ok($Foo, 'mop::object');
 
     ok($Foo->has_method('foo'), '... [foo] method to get');
-    ok($Foo->get_method('foo'), '... [foo] method to get');    
+    ok($Foo->get_method('foo'), '... [foo] method to get');
 
     ok(!$Foo->requires_method('foo'), '... the [foo] method is not required');
     ok(!$Foo->get_required_method('foo'), '... the [foo] method is not required');
@@ -106,10 +106,10 @@ subtest '... testing deleting a method that is actually a required method' => su
         exception { $Foo->delete_method('bar') },
         qr/^\[PANIC\] Cannot delete a regular method \(bar\) when there is a required method already there/,
         '... failed adding the required method successfully'
-    ); 
+    );
 
     ok($Foo->requires_method('bar'), '... this method is not required');
-    ok(!$Foo->has_method('bar'), '... this method is not a regular method');    
+    ok(!$Foo->has_method('bar'), '... this method is not a regular method');
 };
 
 subtest '... testing deleting a method that is actually an aliased method' => sub {
@@ -124,10 +124,10 @@ subtest '... testing deleting a method that is actually an aliased method' => su
         exception { $Foo->delete_method('baz') },
         qr/^\[PANIC\] Cannot delete a regular method \(baz\) when there is an aliased method already there/,
         '... failed adding the aliased method successfully'
-    ); 
+    );
 
     ok($Foo->has_method_alias('baz'), '... this method is still an alias');
-    ok(!$Foo->has_method('baz'), '... this method is not a regular method');    
+    ok(!$Foo->has_method('baz'), '... this method is not a regular method');
 };
 
 subtest '... testing exception when role is closed' => sub {

@@ -19,15 +19,15 @@ our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
 
 sub CREATE {
     my ($class, $args) = @_;
-    my $name = $args->{name} 
+    my $name = $args->{name}
         || die '[MISSING_ARG] You must specify a package name';
     {
         no strict 'refs';
         # get a ref to to the stash itself ...
         my $stash = \%{ $name . '::' };
-        # and then a ref to that, because we 
-        # need to bless it and do not want to 
-        # bless the actual stash if we can 
+        # and then a ref to that, because we
+        # need to bless it and do not want to
+        # bless the actual stash if we can
         # avoid it.
         return bless \$stash => $class;
     }
@@ -37,10 +37,10 @@ sub CREATE {
 
 sub stash {
     my ($self) = @_;
-    return $$self; # returns the direct HASH ref of the stash 
+    return $$self; # returns the direct HASH ref of the stash
 }
 
-# identity 
+# identity
 
 sub name {
     my ($self) = @_;
@@ -71,9 +71,9 @@ sub is_closed {
 }
 
 # NOTE:
-# It should be possible to re-open the class, so we don't need 
-# to guard the set_is_closed method ti check if the class has 
-# been closed or not. We might at a later point want to change 
+# It should be possible to re-open the class, so we don't need
+# to guard the set_is_closed method ti check if the class has
+# been closed or not. We might at a later point want to change
 # this and make the re-opening more of a deeper internal thing.
 # - SL
 
@@ -89,14 +89,14 @@ sub finalizers {
     my ($self) = @_;
     my $finalizers = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
     return unless $finalizers;
-    return @$finalizers;    
+    return @$finalizers;
 }
 
 sub has_finalizers {
     my ($self) = @_;
     my $finalizers = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
     return 0 unless $finalizers;
-    return !! scalar @$finalizers;    
+    return !! scalar @$finalizers;
 }
 
 sub add_finalizer {
@@ -136,35 +136,35 @@ mop::module - a more structured `package`
 
 =head1 DESCRIPTION
 
-The idea of a module is really just a formalized convention for 
-using packages. It provides ways to access information (name, 
+The idea of a module is really just a formalized convention for
+using packages. It provides ways to access information (name,
 version, authority) as well  as adds two concepts.
 
 =head2 Closing a module
 
-When a module is closed, it should no longer be altered, this 
+When a module is closed, it should no longer be altered, this
 being Perl we only guarantee this through our own API.
 
 =head2 Finalization hooks
 
-These are simply callbacks that are associated with a module and 
-are expected to be called at UNITCHECK time. The callbacks are 
-run in FIFO order, but no attempt is made by the mop to govern 
-the module loading order. 
+These are simply callbacks that are associated with a module and
+are expected to be called at UNITCHECK time. The callbacks are
+run in FIFO order, but no attempt is made by the mop to govern
+the module loading order.
 
 =head1 METHODS
 
 =over 4
 
-=item C<stash>   
+=item C<stash>
 
 =back
 
 =head2 Identity
 
-=over 4         
+=over 4
 
-=item C<name>             
+=item C<name>
 
 =item C<version>
 

@@ -31,7 +31,7 @@ BEGIN {
     use strict;
     use warnings;
 
-    our @DOES = ('Foo');  
+    our @DOES = ('Foo');
 
     {
         no warnings 'once';
@@ -39,7 +39,7 @@ BEGIN {
         *baz = \&Foo::baz;
     }
 
-    sub bar { 'Bar::bar' }    
+    sub bar { 'Bar::bar' }
 }
 
 subtest '... testing all-methods' => sub {
@@ -47,7 +47,7 @@ subtest '... testing all-methods' => sub {
     isa_ok($role, 'mop::role');
 
     is($role->name, 'Foo', '... got the right name');
-    
+
     my @all_methods = sort { $a->name cmp $b->name } $role->all_methods;
     is(scalar @all_methods, 2, '... only got two elements in the list');
 
@@ -61,7 +61,7 @@ subtest '... testing all-methods' => sub {
 
     is($required_methods[0]->body, $all_methods[0]->body, '... the required method matches');
     is($methods[0]->body,          $all_methods[1]->body, '... the method matches');
-    
+
     subtest '... testing required method object (Foo::baz)' => sub {
 
         my @m = ($all_methods[0]);
@@ -75,8 +75,8 @@ subtest '... testing all-methods' => sub {
             ok($m->is_required, '... the method is required');
             is($m->origin_class, 'Foo', '... the method is not aliased');
             like(
-                exception { $m->body->() }, 
-                qr/^Undefined subroutine \&Foo\:\:baz called/, 
+                exception { $m->body->() },
+                qr/^Undefined subroutine \&Foo\:\:baz called/,
                 '... got the expected exception from calling the required sub'
             );
         }
@@ -115,7 +115,7 @@ subtest '... testing all-methods' => sub {
 subtest '... testing all-methods (with aliased one)' => sub {
     my $role = mop::role->new( name => 'Bar' );
     isa_ok($role, 'mop::role');
-    
+
     is($role->name, 'Bar', '... got the right name');
 
     my @all_methods = sort { $a->name cmp $b->name } $role->all_methods;
@@ -168,14 +168,14 @@ subtest '... testing all-methods (with aliased one)' => sub {
             isnt($m->origin_class, 'Bar', '... the method is aliased');
             is($m->origin_class, 'Foo', '... the method is aliased');
             like(
-                exception { $m->body->() }, 
-                qr/^Undefined subroutine \&Foo\:\:baz called/, 
+                exception { $m->body->() },
+                qr/^Undefined subroutine \&Foo\:\:baz called/,
                 '... got the expected exception from calling the required sub'
             );
         }
-        
+
         ok(!$role->has_method('baz'), '... we do not have a method by this name');
-        ok(!$role->get_method('baz'), '... we do not have a method by this name');        
+        ok(!$role->get_method('baz'), '... we do not have a method by this name');
         ok(!$role->has_method_alias('baz'), '... we do not have an aliased method by this name');
         ok($role->requires_method('baz'), '... we do have a required method by this name');
         ok(!$role->get_required_method('baz'), '... we do NOT have a required method by this name in the locak class');

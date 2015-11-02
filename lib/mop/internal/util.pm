@@ -9,7 +9,7 @@ use mop::module;
 
 use B                  (); # nasty stuff, all nasty stuff
 use Sub::Name          (); # handling some sub stuff
-use Symbol             (); # creating the occasional symbol 
+use Symbol             (); # creating the occasional symbol
 use Devel::Hook        (); # need this for accessing the UNITCHECK's AV
 use Devel::GlobalPhase (); # need this for checking what global phase we are in
 
@@ -22,19 +22,19 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub GET_GLOB_SLOT {
     my ($stash, $name, $slot) = @_;
-    # do my best to not autovivify, and 
+    # do my best to not autovivify, and
     # return undef if not
     return unless exists $stash->{ $name };
-    # occasionally we need to auto-inflate 
+    # occasionally we need to auto-inflate
     # the optimized version of a required
     # method, its annoying, but the XS side
-    # should not have to care about this so 
+    # should not have to care about this so
     # it can be removed eventually.
     if ( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) {
         B::svref_2object( $stash )->NAME->can( $name );
     }
     # return the reference stored in the glob
-    # which might be undef, but that can be 
+    # which might be undef, but that can be
     # handled by the caller
     return *{ $stash->{ $name } }{ $slot };
 }
@@ -46,9 +46,9 @@ sub SET_GLOB_SLOT {
     {
         no strict 'refs';
         no warnings 'once';
-        # get the name of the stash, we could have 
-        # passed this in, but it is easy to get in 
-        # XS, and so we can punt that down the road 
+        # get the name of the stash, we could have
+        # passed this in, but it is easy to get in
+        # XS, and so we can punt that down the road
         # for the time being
         my $pkg = B::svref_2object( $stash )->NAME;
         *{ $pkg . '::' . $name } = $value_ref;
@@ -60,12 +60,12 @@ sub SET_GLOB_SLOT {
 ## CV/Glob introspection
 ## ------------------------------------------------------------------
 
-sub DOES_GLOB_HAVE_NULL_CV {    
+sub DOES_GLOB_HAVE_NULL_CV {
     my ($glob) = @_;
     # NOTE:
     # If the glob eq -1 that means it may well be a null sub
-    # this seems to be some kind of artifact of an optimization 
-    # perhaps, I really don't know, it is odd. It should not 
+    # this seems to be some kind of artifact of an optimization
+    # perhaps, I really don't know, it is odd. It should not
     # need to be dealt with in XS, it seems to be a Perl language
     # level thing.
     # - SL
@@ -74,7 +74,7 @@ sub DOES_GLOB_HAVE_NULL_CV {
     if ( my $code = *{ $glob }{CODE} ) {
         # if it is a CV and the ROOT is a NULL op ...
         my $op = B::svref_2object( $code );
-        return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL'); 
+        return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
     }
     # if we had no CODE slot, it can't be a NULL CV ...
     return 0;
@@ -82,8 +82,8 @@ sub DOES_GLOB_HAVE_NULL_CV {
 
 sub CREATE_NULL_CV {
     my ($in_pkg, $name) = @_;
-    # this just tries to eval the NULL CV into 
-    # place, it is ugly, but works for now 
+    # this just tries to eval the NULL CV into
+    # place, it is ugly, but works for now
     eval "sub ${in_pkg}::${name}; 1;" or do { die $@ };
     return;
 }
@@ -104,13 +104,13 @@ sub INSTALL_CV {
 sub REMOVE_CV_FROM_GLOB {
     my ($stash, $name) = @_;
     # find the glob we are looking for
-    # which might not exist, in which 
+    # which might not exist, in which
     # case we do nothing ....
     if ( my $glob = $stash->{ $name } ) {
-        # once we find it, extract all the 
-        # slots we need, note the missing 
-        # CODE slot since we don't need 
-        # that in our new glob ... 
+        # once we find it, extract all the
+        # slots we need, note the missing
+        # CODE slot since we don't need
+        # that in our new glob ...
         my %to_save;
         foreach my $slot (qw[ SCALAR ARRAY HASH FORMAT IO ]) {
             if ( my $val = *{ $glob }{ $slot } ) {
@@ -119,14 +119,14 @@ sub REMOVE_CV_FROM_GLOB {
         }
         # replace the old glob with a new one ...
         $stash->{ $name } = Symbol::gensym();
-        # now go about constructing our new 
+        # now go about constructing our new
         # glob by restoring the other slots
         {
             no strict 'refs';
             no warnings 'once';
-            # get the name of the stash, we could have 
-            # passed this in, but it is easy to get in 
-            # XS, and so we can punt that down the road 
+            # get the name of the stash, we could have
+            # passed this in, but it is easy to get in
+            # XS, and so we can punt that down the road
             # for the time being
             my $pkg = B::svref_2object( $stash )->NAME;
             foreach my $type ( keys %to_save ) {
@@ -143,7 +143,7 @@ sub REMOVE_CV_FROM_GLOB {
 ## ------------------------------------------------------------------
 
 # NOTE:
-# Not hugely happy with the approach of this, but it 
+# Not hugely happy with the approach of this, but it
 # is a start, we can improve on it as we use it.
 # - SL
 
@@ -152,7 +152,7 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
     my %supported = map { $_ => undef } @_;
 
     {
-        no strict 'refs'; 
+        no strict 'refs';
 
         # NOTE:
         # this will effectively be shared package
@@ -181,11 +181,11 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
 }
 
 ## ------------------------------------------------------------------
-## Class finalization 
+## Class finalization
 ## ------------------------------------------------------------------
 
-# We need to have this so that Perl::MinimumVersion 
-# will know it needs v5.10 or later, otherwise our 
+# We need to have this so that Perl::MinimumVersion
+# will know it needs v5.10 or later, otherwise our
 # usage of Devel::Hook hides this.
 UNITCHECK {}
 
@@ -193,13 +193,13 @@ UNITCHECK {}
 # This feature is here simply because we need
 # to run the FINALIZE blocks in FIFO order
 # and the raw UNITCHECK blocks run in LIFO order
-# which can present issues when more then one 
+# which can present issues when more then one
 # class/role is in a single compiliation unit
 # and the later class/role depends on a former
 # class/role to have been finalized.
 #
 # It is important to note that UNITCHECK, while
-# compilation unit specific, is *not* package 
+# compilation unit specific, is *not* package
 # specific, so we need to manage the per-package
 # stuff on our own (see mop::module)
 #
@@ -209,20 +209,20 @@ sub INSTALL_FINALIZATION_RUNNER {
     my $GLOBAL_PHASE = Devel::GlobalPhase::global_phase();
     my $pkg          = shift;
     # NOTE:
-    # this check is imperfect, ideally things 
-    # will always happen completely at compile 
+    # this check is imperfect, ideally things
+    # will always happen completely at compile
     # time, for which the ${^GLOBAL_PHASE} check
-    # is correct, but this does not work for 
+    # is correct, but this does not work for
     # code created with eval STRING, in this case ...
-    die "[PANIC] To late to install finalization runner for <$pkg>, current-phase: ($GLOBAL_PHASE)" 
-        unless $GLOBAL_PHASE eq 'START' 
+    die "[PANIC] To late to install finalization runner for <$pkg>, current-phase: ($GLOBAL_PHASE)"
+        unless $GLOBAL_PHASE eq 'START'
             # we check the caller, and climb
-            # far enough up the stack to work 
+            # far enough up the stack to work
             # reasonably correctly for our common
             # use cases (at least the ones we have
             # right now). That said, it is fragile
-            # at best and will break if you aren't 
-            # that number of stack frames away from 
+            # at best and will break if you aren't
+            # that number of stack frames away from
             # an eval STRING;
             || (caller(3))[3] eq '(eval)';
 
@@ -238,11 +238,11 @@ sub INSTALL_FINALIZATION_RUNNER {
 sub APPLY_ROLES {
     my ($meta, $roles, %opts) = @_;
 
-    die "[mop::PANIC] You must specify what type of object you want roles applied `to`" 
+    die "[mop::PANIC] You must specify what type of object you want roles applied `to`"
         unless exists $opts{to};
 
     foreach my $r ( $meta->roles ) {
-        die "[mop::PANIC] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")" 
+        die "[mop::PANIC] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")"
             unless scalar grep { $r eq $_ } @$roles;
     }
 
@@ -265,7 +265,7 @@ sub APPLY_ROLES {
     }
 
     my (
-        $methods, 
+        $methods,
         $method_conflicts,
         $required_methods
     ) = COMPOSE_ALL_ROLE_METHODS( @meta_roles );
@@ -276,13 +276,13 @@ sub APPLY_ROLES {
         # and the conflicts are not satisfied by the composing class ...
         && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts)
         # and the class is not declared abstract ....
-        && !$meta->is_abstract; 
+        && !$meta->is_abstract;
 
-    # check the required method set and 
-    # see if what we are composing into 
-    # happens to fulfill them 
+    # check the required method set and
+    # see if what we are composing into
+    # happens to fulfill them
     foreach my $name ( keys %$required_methods ) {
-        delete $required_methods->{ $name } 
+        delete $required_methods->{ $name }
             if $meta->name->can( $name );
     }
 
@@ -298,9 +298,9 @@ sub APPLY_ROLES {
         $meta->alias_method( $name, $methods->{ $name } );
     }
 
-    # if we still have keys in $required, it is 
-    # because we are a role (class would have 
-    # died above), so we can just stuff in the 
+    # if we still have keys in $required, it is
+    # because we are a role (class would have
+    # died above), so we can just stuff in the
     # required methods ...
     $meta->add_required_method( $_ ) for keys %$required_methods;
 
@@ -315,7 +315,7 @@ sub COMPOSE_ALL_ROLE_ATTRIBUTES {
     foreach my $role ( @roles ) {
         foreach my $attr ( $role->attributes ) {
             my $name = $attr->name;
-            # if we have one already, but 
+            # if we have one already, but
             # it is not the same refaddr ...
             if ( exists $attributes{ $name } && $attributes{ $name } != $attr->initializer ) {
                 # mark it as a conflict ...
@@ -326,7 +326,7 @@ sub COMPOSE_ALL_ROLE_ATTRIBUTES {
             # if we don't have it already ...
             else {
                 # make a note of it
-                $attributes{ $name } = $attr->initializer;    
+                $attributes{ $name } = $attr->initializer;
             }
         }
     }
@@ -337,8 +337,8 @@ sub COMPOSE_ALL_ROLE_ATTRIBUTES {
 
 # TODO:
 # We should track the name of the role
-# where the required method was composed 
-# from, as well as the two classes in 
+# where the required method was composed
+# from, as well as the two classes in
 # which a method conflicted.
 # - SL
 sub COMPOSE_ALL_ROLE_METHODS {
@@ -358,9 +358,9 @@ sub COMPOSE_ALL_ROLE_METHODS {
         # and every method in that role ...
         foreach my $m ( $r->methods ) {
             my $name = $m->name;
-            # if we have already seen the method, 
+            # if we have already seen the method,
             # but it is not the same refaddr
-            # it is a conflict, which means:            
+            # it is a conflict, which means:
             if ( exists $methods{ $name } && $methods{ $name } != $m->body  ) {
                 # we need to add it to our required-method map
                 $required{ $name } = undef;
@@ -373,15 +373,15 @@ sub COMPOSE_ALL_ROLE_METHODS {
             else {
                 # add it to the method map
                 $methods{ $name } = $m->body;
-                # and remove it from the required-method map 
-                delete $required{ $name } 
+                # and remove it from the required-method map
+                delete $required{ $name }
                     # if it actually exists in it, and ...
                     if exists $required{ $name }
                     # is not also a conflict ...
                     && not exists $conflicts{ $name };
             }
         }
-    }  
+    }
 
     #use Data::Dumper;
     #warn Dumper [ [ map { $_->name } @roles ], \%methods, \%conflicts, \%required ];

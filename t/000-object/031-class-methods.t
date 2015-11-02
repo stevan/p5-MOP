@@ -11,13 +11,13 @@ BEGIN {
 
 =pod
 
-This just tests that instance methods called 
-as class methods behave as we expect, which 
+This just tests that instance methods called
+as class methods behave as we expect, which
 is to say, they croak about strings not being
 hash refs.
 
 If in the future we decide to improve on the
-handling of this error we can test it here, 
+handling of this error we can test it here,
 but this serves as our baseline.
 
 =cut

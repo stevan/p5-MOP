@@ -25,7 +25,7 @@ TODO:
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
     sub bar { 'Foo::Bar' }
 }

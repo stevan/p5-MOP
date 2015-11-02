@@ -16,7 +16,7 @@ my $Attribute = mop::attribute->new( name => 'foo', initializer => \&init_foo );
 isa_ok($Attribute, 'mop::attribute');
 
 my @METHODS = qw[
-    new 
+    new
     name
     initializer
     origin_class

@@ -22,13 +22,13 @@ TODO:
     use strict;
     use warnings;
 
-    our $foo_initializer = sub { 'Foo::foo' };    
+    our $foo_initializer = sub { 'Foo::foo' };
 
     package Bar;
     use strict;
     use warnings;
 
-    our $bar_initializer = sub { 'Bar::bar' };    
+    our $bar_initializer = sub { 'Bar::bar' };
 
     our %HAS;
 }
@@ -39,7 +39,7 @@ subtest '... simple adding an attribute alias test' => sub {
     isa_ok($role, 'mop::object');
 
     my @all_attributes     = $role->all_attributes;
-    my @regular_attributes = $role->attributes;    
+    my @regular_attributes = $role->attributes;
     my @aliased_attributes = $role->aliased_attributes;
 
     is(scalar @all_attributes,     0, '... no attributes');
@@ -73,7 +73,7 @@ subtest '... simple adding an attribute test (when %HAS is present)' => sub {
     isa_ok($role, 'mop::object');
 
     my @all_attributes     = $role->all_attributes;
-    my @regular_attributes = $role->attributes;    
+    my @regular_attributes = $role->attributes;
     my @aliased_attributes = $role->aliased_attributes;
 
     is(scalar @all_attributes,     0, '... no attributes');

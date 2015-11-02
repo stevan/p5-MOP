@@ -28,7 +28,7 @@ TODO:
 {
     package Foo;
     use strict;
-    use warnings;     
+    use warnings;
 }
 
 subtest '... testing basics' => sub {
@@ -37,7 +37,7 @@ subtest '... testing basics' => sub {
     isa_ok($Foo, 'mop::object');
 
     ok(!$Foo->has_method('foo'), '... no [foo] method to get');
-    ok(!$Foo->get_method('foo'), '... no [foo] method to get');    
+    ok(!$Foo->get_method('foo'), '... no [foo] method to get');
 
     ok(!$Foo->requires_method('foo'), '... the [foo] method is not required');
     ok(!$Foo->get_required_method('foo'), '... the [foo] method is not required');
@@ -62,7 +62,7 @@ subtest '... testing basics' => sub {
 
     subtest '... test the method object as well' => sub {
         my $m = $Foo->get_method('foo');
-        ok($m, '... got [foo] method now');  
+        ok($m, '... got [foo] method now');
         isa_ok($m, 'mop::method');
 
         is($m->name, 'foo', '... got the name we expected');

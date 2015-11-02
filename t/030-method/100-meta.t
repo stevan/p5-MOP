@@ -17,7 +17,7 @@ sub foo { 'FOO' }
     isa_ok($Method, 'mop::method');
 
     my @METHODS = qw[
-        new 
+        new
 
         body
 
@@ -44,7 +44,7 @@ sub foo { 'FOO' }
     isa_ok($Method, 'mop::method');
 
     my @METHODS = qw[
-        new 
+        new
 
         body
 

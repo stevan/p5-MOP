@@ -57,11 +57,11 @@ BEGIN {
         $self->less_than($other) || $self->equal_to($other);
     }
 
-    BEGIN { 
+    BEGIN {
         mop::internal::util::APPLY_ROLES(
-            mop::role->new( name => __PACKAGE__ ), 
-            \@DOES, 
-            to => 'role' 
+            mop::role->new( name => __PACKAGE__ ),
+            \@DOES,
+            to => 'role'
         )
     }
 
@@ -89,11 +89,11 @@ BEGIN {
         sprintf '$%0.2f USD' => $self->{amount};
     }
 
-    BEGIN { 
+    BEGIN {
         mop::internal::util::APPLY_ROLES(
-            mop::role->new( name => __PACKAGE__ ), 
-            \@DOES, 
-            to => 'role' 
+            mop::role->new( name => __PACKAGE__ ),
+            \@DOES,
+            to => 'role'
         )
     }
 }

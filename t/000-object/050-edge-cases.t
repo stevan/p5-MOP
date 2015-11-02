@@ -20,7 +20,7 @@ subtest '... calling ->new on instance' => sub {
 
     my $o = mop::object->new;
     isa_ok($o, 'mop::object');
-    
+
     my $o2;
     is(exception { $o2 = $o->new }, undef, '... no expection calling ->new on instance');
     isnt($o, $o2, '... we got a new instance');
@@ -32,11 +32,11 @@ subtest '... calling ->new on instance' => sub {
     use warnings;
 
     our @ISA; BEGIN { @ISA = ('mop::object') }
-    our %HAS; BEGIN { 
+    our %HAS; BEGIN {
         %HAS = (
             test1 => sub { 'Foo::test1' },
             test2 => sub { 'Foo::test2' },
-        ) 
+        )
     }
 
     sub test1 { $_[0]->{test1} }

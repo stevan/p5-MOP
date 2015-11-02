@@ -25,30 +25,30 @@ TODO:
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
     package Bar;
     use strict;
     use warnings;
 
     our $VERSION   = '0.02';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
-    our @DOES = ('Foo');    
+    our @DOES = ('Foo');
 
     package Baz;
     use strict;
     use warnings;
 
     our $VERSION   = '0.03';
-    our $AUTHORITY = 'cpan:STEVAN';   
+    our $AUTHORITY = 'cpan:STEVAN';
 
     package Gorch;
     use strict;
     use warnings;
 
     our $VERSION   = '0.04';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 }
 
 subtest '... testing basics' => sub {
@@ -83,9 +83,9 @@ subtest '... testing simple role relationships' => sub {
     is($role->authority, 'cpan:STEVAN', '... got the expected authority');
 
     ok(!$role->is_abstract, '... the role is not abstract');
-    
+
     is_deeply([ $role->roles ], ['Foo'], '... this role does no roles');
-  
+
     ok($role->does_role('Foo'), '... we do the role Foo');
     ok(!$role->does_role('Bar'), '... we do not do the role Bar (ourselves)');
 };
@@ -132,8 +132,8 @@ subtest '... testing setting roles (on closed class)' => sub {
     $role->set_is_closed(1);
 
     like(
-        exception { $role->set_roles('Bar') }, 
-        qr/^\[PANIC\] Cannot add roles to a package which has been closed/, 
+        exception { $role->set_roles('Bar') },
+        qr/^\[PANIC\] Cannot add roles to a package which has been closed/,
         '... set the roles correctly'
     );
 

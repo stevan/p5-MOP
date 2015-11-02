@@ -11,9 +11,9 @@ BEGIN {
 
 =pod
 
-This test just confirms the expected behavior 
+This test just confirms the expected behavior
 of next::method and that nothing we did altered
-it. 
+it.
 
 =cut
 

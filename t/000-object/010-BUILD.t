@@ -42,7 +42,7 @@ TODO:
     sub collect {
         my ($self, $stuff) = @_;
         push @{ $self->{collector} } => $stuff;
-    }    
+    }
 
     package Bar;
     use strict;
@@ -73,7 +73,7 @@ subtest '... simple BUILD test' => sub {
 
     is(blessed $foo, 'Foo', '... got the expected class name');
     is(reftype $foo, 'HASH', '... got the expected default repr type');
-    
+
     is_deeply($foo->collector, ['Foo'], '... got the expected collection');
 
     subtest '... making sure BUILD creates new values' => sub {
@@ -93,7 +93,7 @@ subtest '... complex BUILD test' => sub {
     is_deeply($bar->collector, ['Foo', 'Bar'], '... got the expected collection');
 
     subtest '... making sure BUILD creates new values' => sub {
-        isnt( $foo->collector, $bar->collector, '... we have two different array refs' );    
+        isnt( $foo->collector, $bar->collector, '... we have two different array refs' );
     };
 };
 

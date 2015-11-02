@@ -19,7 +19,7 @@ ok($Class->does_role('mop::role'), '... mop::class does mop::role');
 ok($Class->does_role('mop::module'), '... mop::class does mop::module');
 
 my @METHODS = qw[
-    CREATE 
+    CREATE
 
     stash
 
@@ -44,7 +44,7 @@ my @METHODS = qw[
     all_attributes
         attributes
             has_attribute
-            add_attribute    
+            add_attribute
             get_attribute
             delete_attribute
 
@@ -71,7 +71,7 @@ my @METHODS = qw[
             add_method
             get_method
             delete_method
-        
+
         aliased_methods
             has_method_alias
             alias_method

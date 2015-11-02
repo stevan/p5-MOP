@@ -22,14 +22,14 @@ TODO:
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
     package Foo::MopObjectBaseClass;
     use strict;
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
     our @ISA; BEGIN { @ISA = ('mop::object') }
 
@@ -38,27 +38,27 @@ TODO:
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
-    our @ISA; BEGIN { @ISA = ('Foo::NoBaseClass') }    
+    our @ISA; BEGIN { @ISA = ('Foo::NoBaseClass') }
 
     package Foo::VeryDerived;
     use strict;
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
-    our @ISA; BEGIN { @ISA = ('Foo::WithSuperclass') }        
+    our @ISA; BEGIN { @ISA = ('Foo::WithSuperclass') }
 
     package Foo::WithMultiple;
     use strict;
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
-    our @ISA; BEGIN { @ISA = ('Foo::WithSuperclass', 'Foo::MopObjectBaseClass') }        
+    our @ISA; BEGIN { @ISA = ('Foo::WithSuperclass', 'Foo::MopObjectBaseClass') }
 }
 
 subtest '... testing the superclass methods' => sub {

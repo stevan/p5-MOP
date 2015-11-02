@@ -22,14 +22,14 @@ TODO:
     use strict;
     use warnings;
 
-    BEGIN { 
-        mop::internal::util::INSTALL_CODE_ATTRIBUTE_HANDLER( 
+    BEGIN {
+        mop::internal::util::INSTALL_CODE_ATTRIBUTE_HANDLER(
             __PACKAGE__, qw[
                 Bar
             ]
         );
     }
-    
+
     sub foo : Bar { 'Foo::foo' }
 }
 

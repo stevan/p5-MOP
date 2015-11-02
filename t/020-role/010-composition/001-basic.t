@@ -25,7 +25,7 @@ TODO:
 
     package Bar;
     use strict;
-    use warnings;    
+    use warnings;
 
     sub bar { 'Bar::bar' }
 
@@ -35,11 +35,11 @@ TODO:
 
     our @DOES; BEGIN { @DOES = ('Foo', 'Bar') }
 
-    BEGIN { 
+    BEGIN {
         mop::internal::util::APPLY_ROLES(
-            mop::role->new( name => __PACKAGE__ ), 
-            \@DOES, 
-            to => 'role' 
+            mop::role->new( name => __PACKAGE__ ),
+            \@DOES,
+            to => 'role'
         )
     }
 }

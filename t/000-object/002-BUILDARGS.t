@@ -14,7 +14,7 @@ BEGIN {
 =pod
 
 TODO:
-- test for some failure conditions where BUILDARGS 
+- test for some failure conditions where BUILDARGS
   does not behave properly
     - returns something other then HASH ref
 - test inherited custom BUILDARGS
@@ -25,7 +25,7 @@ TODO:
 =cut
 
 {
-    package Foo::NoInheritance; 
+    package Foo::NoInheritance;
     use strict;
     use warnings;
     our @ISA; BEGIN { @ISA = ('mop::object') };
@@ -36,7 +36,7 @@ TODO:
         return { foo => $bar }
     }
 
-    package Foo::WithInheritance::NextMethod; 
+    package Foo::WithInheritance::NextMethod;
     use strict;
     use warnings;
     our @ISA; BEGIN { @ISA = ('mop::object') };
@@ -47,7 +47,7 @@ TODO:
         return $class->next::method( foo => $bar )
     }
 
-    package Foo::WithInheritance::SUPER; 
+    package Foo::WithInheritance::SUPER;
     use strict;
     use warnings;
     our @ISA; BEGIN { @ISA = ('mop::object') };
@@ -66,7 +66,7 @@ subtest '... simple BUILDARGS test w/out inheritance' => sub {
 
     is(blessed $o, 'Foo::NoInheritance', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'BAR', '... the expected slot has the expected value');
 };
@@ -78,7 +78,7 @@ subtest '... simple BUILDARGS test w/ inheritance and next::method' => sub {
 
     is(blessed $o, 'Foo::WithInheritance::NextMethod', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'BAR', '... the expected slot has the expected value');
 };
@@ -90,7 +90,7 @@ subtest '... simple BUILDARGS test w/ inheritance and SUPER' => sub {
 
     is(blessed $o, 'Foo::WithInheritance::SUPER', '... got the expected class name');
     is(reftype $o, 'HASH', '... got the expected default repr type');
-    
+
     ok(exists $o->{foo}, '... got the expected slot');
     is($o->{foo}, 'BAR', '... the expected slot has the expected value');
 };

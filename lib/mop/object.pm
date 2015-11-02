@@ -17,7 +17,7 @@ our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
 sub new {
     my $class = shift;
        $class = Scalar::Util::blessed( $class ) if ref $class;
-    die "[ABSTRACT] Cannot create an instance of '$class', it is abstract" 
+    die "[ABSTRACT] Cannot create an instance of '$class', it is abstract"
         if mop::util::IS_CLASS_ABSTRACT( $class );
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
@@ -41,12 +41,12 @@ sub BUILDARGS {
 
 sub CREATE {
     my $class = $_[0];
-    my $proto = $_[1];        
-    my $self  = {};    
+    my $proto = $_[1];
+    my $self  = {};
     my %slots = mop::util::FETCH_CLASS_SLOTS( $class );
 
-    $self->{ $_ } = exists $proto->{ $_ } 
-        ? $proto->{ $_ } 
+    $self->{ $_ } = exists $proto->{ $_ }
+        ? $proto->{ $_ }
         : $slots{ $_ }->( $self, $proto )
             foreach keys %slots;
 
@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-mop::object 
+mop::object
 
 =head1 SYNPOSIS
 
@@ -79,21 +79,21 @@ mop::object
         our %HAS = (
 
             ## Required
-            # this attribute is required because if 
-            # it is not supplied, the initialiser below 
+            # this attribute is required because if
+            # it is not supplied, the initialiser below
             # will run, which will die
             name   => sub { die 'name is required' },
 
             ## Optional w/ Default
-            # this attribute has a default value 
+            # this attribute has a default value
             age    => sub { 0 },
 
             ## Optional w/out Default
             # this attribute has no defualt value
             # and is not required, however we need
-            # to still have an empty sub since we 
+            # to still have an empty sub since we
             # use that sub to locate the "home" package
-            # of a given attribute (useful when 
+            # of a given attribute (useful when
             # attributes are inherited or composed in
             # via roles)
             gender => sub {},
@@ -116,52 +116,52 @@ mop::object
 
 =head1 DESCRIPTION
 
-This module provides a protocol for object construction and 
-destruction that aims to be simple and complete. 
+This module provides a protocol for object construction and
+destruction that aims to be simple and complete.
 
 =head1 METHODS
 
 =head2 C<new ($class, @args)>
 
-This is the entry point for object construction, from here the 
+This is the entry point for object construction, from here the
 C<@args> are passed into C<BUILDARGS>.
 
 =head2 C<BUILDARGS ($class, @args)>
 
-This method takes the original C<@args> to the C<new> constructor 
-and is expected to turn them into a canonical form, which is a 
+This method takes the original C<@args> to the C<new> constructor
+and is expected to turn them into a canonical form, which is a
 HASH ref of name/value pairs. This form is considered a prototype
-candidate for the instance and is then passed to C<CREATE> and 
-should be a (shallow) copy of what was contained in C<@args>. 
+candidate for the instance and is then passed to C<CREATE> and
+should be a (shallow) copy of what was contained in C<@args>.
 
 =head2 C<CREATE ($class, $proto)>
 
 This method receives the C<$proto> candidate from C<BUILDARGS> and
-constructs from it a blessed instance using the C<%HAS> hash in the 
-C<$class>. 
+constructs from it a blessed instance using the C<%HAS> hash in the
+C<$class>.
 
-This newly blessed instance is then initialized by calling all the 
+This newly blessed instance is then initialized by calling all the
 available C<BUILD> methods in the correct (reverse mro) order.
 
 =head2 C<BUILD ($self, $proto)>
 
-This is an optional initialization method which recieves the blessed 
-instance as well as the prototype candidate. There are no restirctions 
-as to what this method can do other then just common sense. 
+This is an optional initialization method which recieves the blessed
+instance as well as the prototype candidate. There are no restirctions
+as to what this method can do other then just common sense.
 
-It is worth noting that because we call all the C<BUILD> methods 
-found in the object hierarchy, this return values of these methods 
+It is worth noting that because we call all the C<BUILD> methods
+found in the object hierarchy, this return values of these methods
 are completly ignored.
 
 =head2 C<DEMOLISH ($self)>
 
-This is an optional destruction method, similar to C<BUILD>, all 
+This is an optional destruction method, similar to C<BUILD>, all
 available C<DEMOLISH> methods are called in the correct (mro) order
-by C<DESTROY>. 
+by C<DESTROY>.
 
 =head2 C<DESTROY ($self)>
 
-The sole function of this method is to kick off the call to all the 
+The sole function of this method is to kick off the call to all the
 C<DEMOLISH> methods during destruction.
 
 =cut

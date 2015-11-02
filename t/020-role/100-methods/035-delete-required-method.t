@@ -23,7 +23,7 @@ TODO:
 {
     package Foo;
     use strict;
-    use warnings;  
+    use warnings;
 
     our $bling = 100;
 
@@ -38,7 +38,7 @@ subtest '... testing deleting method alias' => sub {
     isa_ok($Foo, 'mop::object');
 
     ok(!$Foo->has_method('foo'), '... [foo] method to get');
-    ok(!$Foo->get_method('foo'), '... [foo] method to get');    
+    ok(!$Foo->get_method('foo'), '... [foo] method to get');
 
     ok($Foo->requires_method('foo'), '... the [foo] method is not required');
     ok($Foo->get_required_method('foo'), '... the [foo] method is not required');
@@ -97,13 +97,13 @@ subtest '... testing deleting a required method that is actually a reqular metho
         exception { $Foo->delete_required_method('bar') },
         qr/^\[PANIC\] Cannot delete a required method \(bar\) when there is a regular method already there/,
         '... added the required method successfully'
-    ); 
+    );
 
     ok(!$Foo->requires_method('bar'), '... this method is still not required');
     ok($Foo->has_method('bar'), '... this method is a regular method');
 
-    is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');     
-    is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');     
+    is(exception { Foo->bar }, undef, '... and the method still behaves as we expect');
+    is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');
 };
 
 subtest '... testing exception when role is closed' => sub {

@@ -22,13 +22,13 @@ TODO:
     use warnings;
 
     our $VERSION   = '0.01';
-    our $AUTHORITY = 'cpan:STEVAN';  
+    our $AUTHORITY = 'cpan:STEVAN';
 
     package Bar;
     use strict;
     use warnings;
 
-    our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }   
+    our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
 }
 
 subtest '... testing adding superclass successfully' => sub {
@@ -48,7 +48,7 @@ subtest '... testing adding superclass successfully' => sub {
     );
 
     is_deeply([ $c->superclasses ], [ 'mop::object' ], '... got a superclass now');
-    is_deeply($c->mro, [ 'Foo',  'mop::object' ], '... got more in the mro now');    
+    is_deeply($c->mro, [ 'Foo',  'mop::object' ], '... got more in the mro now');
 
     ok(Foo->can('new'), '... we now have a `new` method in Foo');
 
