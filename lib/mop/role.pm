@@ -63,9 +63,8 @@ sub set_roles {
 }
 
 sub does_role {
-    my $self    = $_[0];
-    my $to_test = $_[1];
-    my @roles   = $self->roles;
+    my ($self, $to_test) = @_;
+    my @roles = $self->roles;
 
     # no roles, will never match ...
     return 0 unless @roles;
@@ -194,7 +193,7 @@ sub methods {
 sub aliased_methods {
     my $self  = shift;
     my $class = $self->name;
-    return grep { not($_->is_required) && $_->origin_class ne $class } $self->all_methods
+    return grep { (!$_->is_required) && $_->origin_class ne $class } $self->all_methods
 }
 
 # just the required methods (locality be damned)

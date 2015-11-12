@@ -72,7 +72,7 @@ sub was_aliased_from {
 
 sub get_code_attributes {
     my ($self) = @_;
-    attributes::get( $self->body );
+    return attributes::get( $self->body );
 }
 
 1;

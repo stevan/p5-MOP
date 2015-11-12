@@ -69,7 +69,7 @@ sub DOES_GLOB_HAVE_NULL_CV {
     # need to be dealt with in XS, it seems to be a Perl language
     # level thing.
     # - SL
-    return 1 if $glob eq -1;
+    return 1 if $glob eq '-1';
     # next lets see if we have a CODE slot ...
     if ( my $code = *{ $glob }{CODE} ) {
         # if it is a CV and the ROOT is a NULL op ...
@@ -94,11 +94,14 @@ sub INSTALL_CV {
     die "[PANIC] You must specify a boolean value for `set_subname` option"
         if not exists $opts{set_subname};
 
-    no strict 'refs';
-    no warnings 'once', 'redefine';
+    {
+        no strict 'refs';
+        no warnings 'once', 'redefine';
 
-    my $fullname =  $in_pkg.'::'.$name;
-    *{$fullname} = $opts{set_subname} ? Sub::Name::subname($fullname, $code) : $code;
+        my $fullname =  $in_pkg.'::'.$name;
+        *{$fullname} = $opts{set_subname} ? Sub::Name::subname($fullname, $code) : $code;
+    }
+    return;
 }
 
 sub REMOVE_CV_FROM_GLOB {
@@ -229,6 +232,7 @@ sub INSTALL_FINALIZATION_RUNNER {
     push @{ Devel::Hook::_get_unitcheck_array() } => (
         sub { mop::module->new( name => $pkg )->run_all_finalizers }
     );
+    return;
 }
 
 ## ------------------------------------------------------------------
@@ -378,7 +382,7 @@ sub COMPOSE_ALL_ROLE_METHODS {
                     # if it actually exists in it, and ...
                     if exists $required{ $name }
                     # is not also a conflict ...
-                    && not exists $conflicts{ $name };
+                    && !exists $conflicts{ $name };
             }
         }
     }
