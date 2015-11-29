@@ -18,8 +18,6 @@ use mop::class;
 use mop::attribute;
 use mop::method;
 
-use mop::util ();
-
 1;
 
 __END__

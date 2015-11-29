@@ -1,13 +1,11 @@
 package mop::object;
 
-use v5.10;
+use 5.006;
 
 use strict;
 use warnings;
 
 use Scalar::Util ();
-
-use mop::util;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -18,10 +16,10 @@ sub new {
     my $class = shift;
        $class = Scalar::Util::blessed( $class ) if ref $class;
     die "[ABSTRACT] Cannot create an instance of '$class', it is abstract"
-        if mop::util::IS_CLASS_ABSTRACT( $class );
+        if mop::object::util::IS_CLASS_ABSTRACT( $class );
     my $proto = $class->BUILDARGS( @_ );
     my $self  = $class->CREATE( $proto );
-    $self->can('BUILD') && mop::util::BUILDALL( $self, $proto );
+    $self->can('BUILD') && mop::object::util::BUILDALL( $self, $proto );
     return $self;
 }
 
@@ -43,7 +41,7 @@ sub CREATE {
     my $class = $_[0];
     my $proto = $_[1];
     my $self  = {};
-    my %slots = mop::util::FETCH_CLASS_SLOTS( $class );
+    my %slots = mop::object::util::FETCH_CLASS_SLOTS( $class );
 
     $self->{ $_ } = exists $proto->{ $_ }
         ? $proto->{ $_ }
@@ -54,7 +52,49 @@ sub CREATE {
 }
 
 sub DESTROY {
-    $_[0]->can('DEMOLISH') && mop::util::DEMOLISHALL( $_[0] );
+    $_[0]->can('DEMOLISH') && mop::object::util::DEMOLISHALL( $_[0] );
+    return;
+}
+
+package mop::object::util;
+
+use 5.006;
+
+use strict;
+use warnings;
+
+use Scalar::Util ();
+
+our $VERSION   = '0.01';
+our $AUTHORITY = 'cpan:STEVAN';
+
+our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+
+BEGIN { $] >= 5.010 ? eval 'use mro' : eval 'use MRO::Compat' }
+
+sub IS_CLASS_ABSTRACT { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_ABSTRACT'} }
+sub IS_CLASS_CLOSED   { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_CLOSED'}   }
+sub FETCH_CLASS_SLOTS { no strict 'refs'; no warnings 'once'; return %{$_[0] . '::HAS'}         }
+
+sub BUILDALL {
+    my ($instance, $proto) = @_;
+    foreach my $super ( reverse @{ mro::get_linear_isa( Scalar::Util::blessed( $instance ) ) } ) {
+        my $fully_qualified_name = $super . '::BUILD';
+        if ( defined &{ $fully_qualified_name } ) {
+            $instance->$fully_qualified_name( $proto );
+        }
+    }
+    return;
+}
+
+sub DEMOLISHALL {
+    my ($instance) = @_;
+    foreach my $super ( @{ mro::get_linear_isa( Scalar::Util::blessed( $instance ) ) } ) {
+        my $fully_qualified_name = $super . '::DEMOLISH';
+        if ( defined &{ $fully_qualified_name } ) {
+            $instance->$fully_qualified_name();
+        }
+    }
     return;
 }
 
