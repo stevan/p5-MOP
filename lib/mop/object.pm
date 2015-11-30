@@ -1,7 +1,5 @@
 package mop::object;
 
-use 5.006;
-
 use strict;
 use warnings;
 
@@ -57,8 +55,6 @@ sub DESTROY {
 }
 
 package mop::object::util;
-
-use 5.006;
 
 use strict;
 use warnings;

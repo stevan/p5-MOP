@@ -1,7 +1,5 @@
 package mop::internal::util;
 
-use v5.10;
-
 use strict;
 use warnings;
 
@@ -186,11 +184,6 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
 ## ------------------------------------------------------------------
 ## Class finalization
 ## ------------------------------------------------------------------
-
-# We need to have this so that Perl::MinimumVersion
-# will know it needs v5.10 or later, otherwise our
-# usage of Devel::Hook hides this.
-UNITCHECK {}
 
 # NOTE:
 # This feature is here simply because we need
