@@ -31,7 +31,7 @@ package CheckingAccount {
 
     extends 'BankAccount';
 
-    has 'overdraft_account' => ( is => 'ro', default => sub { undef } );
+    has 'overdraft_account' => ( is => 'ro' );
 
     sub withdraw ($self, $amount) {
 
