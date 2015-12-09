@@ -3,8 +3,16 @@ package mop;
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
-our $AUTHORITY = 'cpan:STEVAN';
+our $VERSION;
+our $AUTHORITY;
+
+use Devel::CallParser;
+use XSLoader;
+BEGIN {
+    $VERSION   = '0.01';
+    $AUTHORITY = 'cpan:STEVAN';
+    XSLoader::load( __PACKAGE__, $VERSION );
+}
 
 use mop::object;
 

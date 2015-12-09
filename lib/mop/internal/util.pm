@@ -227,6 +227,44 @@ sub INSTALL_FINALIZATION_RUNNER {
 }
 
 ## ------------------------------------------------------------------
+## Misc.
+## ------------------------------------------------------------------
+
+## Inheriting required methods
+
+sub INHERIT_REQUIRED_METHODS {
+    my ($meta) = @_;
+    foreach my $super ( map { mop::role->new( name => $_ ) } $meta->superclasses ) {
+        foreach my $required_method ( $super->required_methods ) {
+            $meta->add_required_method( $required_method->name )
+        }
+    }
+    return;
+}
+
+## Attribute gathering ...
+
+# NOTE:
+# The %HAS variable will cache things much like
+# the package stash method/cache works. It will
+# be possible to distinguish the local attributes
+# from the inherited ones because the default sub
+# will have a different stash name.
+
+sub GATHER_ALL_ATTRIBUTES {
+    my ($meta) = @_;
+    foreach my $super ( map { mop::role->new( name => $_ ) } @{ $meta->mro } ) {
+        foreach my $attr ( $super->attributes ) {
+            $meta->alias_attribute( $attr->name, $attr->initializer )
+                unless $meta->has_attribute( $attr->name )
+                    || $meta->has_attribute_alias( $attr->name );
+        }
+    }
+    return;
+}
+
+
+## ------------------------------------------------------------------
 ## Role application and composition
 ## ------------------------------------------------------------------
 

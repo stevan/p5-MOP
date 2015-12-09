@@ -1,17 +1,3 @@
-## ----------------------------------------------
-## NOTE:
-## ----------------------------------------------
-## This is just a temp version for now so that I
-## can get some Devel::Cover stats on the test
-## suite, it will need to include the deps in the
-## cpanfile as well as handle any C/XS stuff. For
-## now it is best to just punt on doing anything
-## useful in here.
-## - SL
-## ----------------------------------------------
-
-use v5.10;
-
 use strict;
 use warnings;
 use ExtUtils::MakeMaker 6.30;
@@ -24,10 +10,10 @@ my %WriteMakefileArgs = (
     'AUTHOR'             => 'Stevan Little',
     'BUILD_REQUIRES'     => {},
     'CONFIGURE_REQUIRES' => {
-#        'Devel::CallParser' => '0',
+        'Devel::CallParser' => '0',
         'ExtUtils::MakeMaker' => '6.30'
     },
-#    'INC'                => '-Isrc/c',
+    'INC'                => '-Isrc/c',
     'EXE_FILES'          => [],
     'LICENSE'            => 'perl',
     'NORECURS'           => 1,
@@ -48,22 +34,22 @@ my %WriteMakefileArgs = (
         'Test::Fatal'        => 0,
 
         # gonna need these later ...
-#        'Devel::CallParser' => '0',
-#        'XSLoader'          => '0',
+        'Devel::CallParser' => '0',
+        'XSLoader'          => '0',
     },
-    'clean'              => { FILES => 'cover_db/ nytprof/' }, # callparser1.h' },
+    'clean'              => { FILES => 'cover_db/ nytprof/ callparser1.h' },
     'test'               => { RECURSIVE_TEST_FILES => 1 },
 );
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
 
-#use File::Spec::Functions 'abs2rel';
-#use Devel::CallParser 'callparser1_h', 'callparser_linkable';
-#open my $fh, '>', 'callparser1.h' or die "Couldn't write to callparser1.h";
-#$fh->print(callparser1_h);
-#my @linkable = map { abs2rel($_) } callparser_linkable;
-#unshift @linkable, '$(BASEEXT)$(OBJ_EXT)' if @linkable;
-#$WriteMakefileArgs{OBJECT} = join(' ', @linkable) if @linkable;
+use File::Spec::Functions 'abs2rel';
+use Devel::CallParser 'callparser1_h', 'callparser_linkable';
+open my $fh, '>', 'callparser1.h' or die "Couldn't write to callparser1.h";
+$fh->print(callparser1_h);
+my @linkable = map { abs2rel($_) } callparser_linkable;
+unshift @linkable, '$(BASEEXT)$(OBJ_EXT)' if @linkable;
+$WriteMakefileArgs{OBJECT} = join(' ', @linkable) if @linkable;
 
 WriteMakefile(%WriteMakefileArgs);

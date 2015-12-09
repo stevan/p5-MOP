@@ -6,3 +6,7 @@ nytprof*
 Makefile
 Makefile.old
 cover_db
+callparser1.h
+mop.bs
+mop.c
+mop.o
