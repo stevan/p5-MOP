@@ -7,6 +7,6 @@ Makefile
 Makefile.old
 cover_db
 callparser1.h
-mop.bs
+*.bs
+*.o
 mop.c
-mop.o
