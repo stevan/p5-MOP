@@ -85,9 +85,7 @@ static OP *parser_callback(pTHX_ GV *namegv, SV *psobj, U32 *flagsp) {
 // END: Shameless Steal from Parse::Keyword
 /* ======================================================= */
 
-MODULE = mop  PACKAGE = mop
-
-MODULE = mop  PACKAGE = mop::internal::util::syntax
+MODULE = Moxie  PACKAGE = Moxie::Util::Syntax
 
 # NOTE:
 # Everything in this package has been stolen from

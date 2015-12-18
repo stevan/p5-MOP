@@ -5,16 +5,25 @@ use v5.20;
 use strict;
 use warnings;
 
+our $VERSION;
+our $AUTHORITY;
+
+use Devel::CallParser;
+use XSLoader;
+BEGIN {
+    $VERSION   = '0.01';
+    $AUTHORITY = 'cpan:STEVAN';
+    XSLoader::load( __PACKAGE__, $VERSION );
+}
+
 use experimental 'signatures', 'postderef';
 
 use Module::Runtime ();
 
 use mop;
 use mop::internal::util;
-use mop::internal::util::syntax;
 
-our $VERSION   = '0.01';
-our $AUTHORITY = 'cpan:STEVAN';
+use Moxie::Util::Syntax;
 
 sub mop::object::DOES ($self, $role) {
     my $class = ref $self || $self;
@@ -95,7 +104,7 @@ sub import {
         warnings->unimport('experimental::postderef');
 
         # import has, extend and with keyword
-        mop::internal::util::syntax::setup_keyword_handler(
+        Moxie::Util::Syntax::setup_keyword_handler(
             ($caller, 'has') => sub {
                 my ($name, %traits) = @_;
 
@@ -121,7 +130,7 @@ sub import {
             }
         );
 
-        mop::internal::util::syntax::setup_keyword_handler(
+        Moxie::Util::Syntax::setup_keyword_handler(
             ($caller, 'extends') => sub {
                 my @isa = @_;
                 Module::Runtime::use_package_optimistically( $_ ) foreach @isa;
@@ -133,7 +142,7 @@ sub import {
             }
         );
 
-        mop::internal::util::syntax::setup_keyword_handler(
+        Moxie::Util::Syntax::setup_keyword_handler(
             ($caller, 'with') => sub {
                 my @does = @_;
                 Module::Runtime::use_package_optimistically( $_ ) foreach @does;
@@ -163,7 +172,7 @@ sub import {
                 );
             }
 
-            mop::internal::util::syntax::teardown_keyword_handler( $meta->name, $_ )
+            Moxie::Util::Syntax::teardown_keyword_handler( $meta->name, $_ )
                 foreach qw[ with has extends ];
 
             $meta->set_is_closed(1);

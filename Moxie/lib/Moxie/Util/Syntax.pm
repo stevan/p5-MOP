@@ -1,4 +1,4 @@
-package mop::internal::util::syntax;
+package Moxie::Util::Syntax;
 
 use strict;
 use warnings;
@@ -22,9 +22,9 @@ sub setup_keyword_handler {
         no strict 'refs';
         *{"${pkg}::${method}"} = $cv;
     }
-    mop::internal::util::syntax::install_keyword_handler(
+    Moxie::Util::Syntax::install_keyword_handler(
         $cv, sub {
-            my $stmt = mop::internal::util::syntax::parse_full_statement;
+            my $stmt = Moxie::Util::Syntax::parse_full_statement;
             my $resp = $handler->( $stmt->() );
             $resp = sub {()} unless $resp && ref $resp eq 'CODE';
             return ($resp, 1);
