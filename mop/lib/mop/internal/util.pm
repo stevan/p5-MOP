@@ -239,6 +239,8 @@ sub INHERIT_REQUIRED_METHODS {
             $meta->add_required_method( $required_method->name )
         }
     }
+    $meta->set_is_abstract(1)
+        if $meta->required_methods;
     return;
 }
 
