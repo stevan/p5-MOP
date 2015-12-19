@@ -23,6 +23,7 @@ use Module::Runtime ();
 use mop;
 use mop::internal::util;
 
+use Moxie::Util;
 use Moxie::Util::Syntax;
 
 sub mop::object::DOES ($self, $role) {
@@ -156,11 +157,11 @@ sub import {
 
             if ( $meta->isa('mop::class') ) {
                 # make sure to 'inherit' the required methods ...
-                mop::internal::util::INHERIT_REQUIRED_METHODS( $meta );
+                Moxie::Util::INHERIT_REQUIRED_METHODS( $meta );
 
                 # this is an optimization to pre-populate the
                 # cache for all the attributes
-                mop::internal::util::GATHER_ALL_ATTRIBUTES( $meta );
+                Moxie::Util::GATHER_ALL_ATTRIBUTES( $meta );
             }
 
             # apply roles ...
