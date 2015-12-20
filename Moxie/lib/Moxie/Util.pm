@@ -13,6 +13,7 @@ sub INHERIT_REQUIRED_METHODS {
     foreach my $super ( map { mop::role->new( name => $_ ) } $meta->superclasses ) {
         foreach my $required_method ( $super->required_methods ) {
             $meta->add_required_method( $required_method->name )
+                unless $meta->has_method( $required_method->name );
         }
     }
     $meta->set_is_abstract(1)
