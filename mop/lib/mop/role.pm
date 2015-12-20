@@ -529,7 +529,12 @@ sub all_attributes {
 sub attributes {
     my $self  = shift;
     my $class = $self->name;
-    return grep { $_->origin_class eq $class } $self->all_attributes
+    my @roles = $self->roles;
+    return grep {
+        $_->origin_class eq $class
+            ||
+        $_->was_aliased_from( @roles )
+    } $self->all_attributes
 }
 
 # just the non-local attributes
@@ -550,10 +555,14 @@ sub has_attribute {
     return unless $has;
     return unless exists $has->{ $name };
 
-    return mop::attribute->new(
+    my @roles = $self->roles;
+    my $attr  = mop::attribute->new(
         name        => $name,
         initializer => $has->{ $name }
-    )->origin_class eq $class;
+    );
+
+    return $attr->origin_class eq $class
+        || (@roles && $attr->was_aliased_from( @roles ));
 }
 
 sub get_attribute {
@@ -565,13 +574,15 @@ sub get_attribute {
     return unless $has;
     return unless exists $has->{ $name };
 
-    my $attribute = mop::attribute->new(
+    my @roles = $self->roles;
+    my $attr  = mop::attribute->new(
         name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attribute
-        if $attribute->origin_class eq $class;
+    return $attr
+        if $attr->origin_class eq $class
+        || (@roles && $attr->was_aliased_from( @roles ));
 
     return;
 }
