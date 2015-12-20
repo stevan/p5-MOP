@@ -1,12 +1,13 @@
 use strict;
 use warnings;
-use ExtUtils::MakeMaker 6.30;
+
+use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
     'NAME'               => 'mop',
     'VERSION'            => '0.01',
     'DISTNAME'           => 'mop',
-    'ABSTRACT'           => ' Yet Another Mop Prototype',
+    'ABSTRACT'           => 'Yet Another Mop Prototype',
     'AUTHOR'             => 'Stevan Little',
     'BUILD_REQUIRES'     => {},
     'EXE_FILES'          => [],
@@ -31,8 +32,5 @@ my %WriteMakefileArgs = (
     'clean'              => { FILES => 'cover_db/ nytprof/' },
     'test'               => { RECURSIVE_TEST_FILES => 1 },
 );
-
-delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
-  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
 
 WriteMakefile(%WriteMakefileArgs);
