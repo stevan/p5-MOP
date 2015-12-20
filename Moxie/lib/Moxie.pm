@@ -35,7 +35,7 @@ sub mop::object::DOES ($self, $role) {
     # test just the local (and composed) roles first ...
     return 1 if $meta->does_role( $role );
     # then check the inheritance hierarchy next ...
-    return 1 if scalar grep { mop::class->new( name => $_ )->does_role( $role ) } $meta->mro;
+    return 1 if scalar grep { mop::class->new( name => $_ )->does_role( $role ) } @{ $meta->mro };
     return 0;
 }
 
