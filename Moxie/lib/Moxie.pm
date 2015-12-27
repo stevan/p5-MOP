@@ -16,8 +16,7 @@ BEGIN {
     XSLoader::load( __PACKAGE__, $VERSION );
 }
 
-use experimental 'signatures', 'postderef';
-
+use experimental    (); # need this later when we load features
 use Module::Runtime ();
 
 use mop;
@@ -26,7 +25,8 @@ use mop::internal::util;
 use Moxie::Util;
 use Moxie::Util::Syntax;
 
-sub mop::object::DOES ($self, $role) {
+sub mop::object::DOES {
+    my ($self, $role) = @_;
     my $class = ref $self || $self;
     # if we inherit from this, we are good ...
     return 1 if $class->isa( $role );
@@ -97,12 +97,16 @@ sub import {
         warnings->import;
 
         # turn on signatures ...
-        feature->import('signatures');
-        warnings->unimport('experimental::signatures');
-
-        # turn on postfixderef ...
-        feature->import('postderef');
-        warnings->unimport('experimental::postderef');
+        experimental->import($_) foreach qw[
+            signatures
+            postderef
+            postderef_qq
+            current_sub
+            lexical_subs
+            refaliasing
+            say
+            state
+        ];
 
         # import has, extend and with keyword
         Moxie::Util::Syntax::setup_keyword_handler(
