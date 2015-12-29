@@ -96,17 +96,22 @@ sub import {
         strict->import;
         warnings->import;
 
-        # turn on signatures ...
+        # turn on signatures and more
         experimental->import($_) foreach qw[
             signatures
+
             postderef
             postderef_qq
+
             current_sub
             lexical_subs
-            refaliasing
+
             say
             state
         ];
+
+        # turn on refaliasing if we have it ...
+        experimental->import('refaliasing') if $] >= 5.022;
 
         # import has, extend and with keyword
         Moxie::Util::Syntax::setup_keyword_handler(
