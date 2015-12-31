@@ -26,11 +26,14 @@ TODO:
         mop::internal::util::INSTALL_CODE_ATTRIBUTE_HANDLER(
             __PACKAGE__, qw[
                 Bar
+                Baz
             ]
         );
     }
 
     sub foo : Bar { 'Foo::foo' }
+
+    sub bar : Baz;
 }
 
 subtest '... simple mop::method test' => sub {
@@ -48,6 +51,25 @@ subtest '... simple mop::method test' => sub {
     is_deeply(
         [ $m->get_code_attributes ],
         [ 'Bar' ],
+        '... got the attributes we expected'
+    );
+};
+
+subtest '... simple mop::method test' => sub {
+    my $m = mop::method->new( body => \&Foo::bar );
+    isa_ok($m, 'mop::object');
+    isa_ok($m, 'mop::method');
+
+    is($m->name, 'bar', '... got the name we expected');
+    is($m->origin_class, 'Foo', '... got the origin class we expected');
+    is($m->body, \&Foo::bar, '... got the body we expected');
+    ok($m->is_required, '... the method is required');
+
+    ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
+
+    is_deeply(
+        [ $m->get_code_attributes ],
+        [ 'Baz' ],
         '... got the attributes we expected'
     );
 };
