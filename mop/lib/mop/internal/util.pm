@@ -205,11 +205,6 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
     return;
 }
 
-sub GET_CODE_ATTRIBUTES {
-    my ($code) = @_;
-    attributes::get( $code );
-}
-
 ## ------------------------------------------------------------------
 ## Class finalization
 ## ------------------------------------------------------------------
