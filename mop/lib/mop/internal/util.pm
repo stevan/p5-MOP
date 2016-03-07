@@ -18,6 +18,26 @@ our $AUTHORITY = 'cpan:STEVAN';
 ## Basic Glob access
 ## ------------------------------------------------------------------
 
+sub GET_NAME {
+    my ($stash) = @_;
+    B::svref_2object( $stash )->NAME
+}
+
+sub GET_STASH_NAME {
+    my ($stash) = @_;
+    B::svref_2object( $stash )->STASH->NAME
+}
+
+sub GET_GLOB_NAME {
+    my ($stash) = @_;
+    B::svref_2object( $stash )->GV->NAME
+}
+
+sub GET_GLOB_STASH_NAME {
+    my ($stash) = @_;
+    B::svref_2object( $stash )->GV->STASH->NAME
+}
+
 sub GET_GLOB_SLOT {
     my ($stash, $name, $slot) = @_;
     # do my best to not autovivify, and
@@ -55,6 +75,12 @@ sub SET_GLOB_SLOT {
 ## ------------------------------------------------------------------
 ## CV/Glob introspection
 ## ------------------------------------------------------------------
+
+sub IS_CV_NULL {
+    my ($cv) = @_;
+    my $op = B::svref_2object( $cv );
+    return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
+}
 
 sub DOES_GLOB_HAVE_NULL_CV {
     my ($glob) = @_;
@@ -177,6 +203,11 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
     }
 
     return;
+}
+
+sub GET_CODE_ATTRIBUTES {
+    my ($code) = @_;
+    attributes::get( $code );
 }
 
 ## ------------------------------------------------------------------

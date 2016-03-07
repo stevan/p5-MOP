@@ -3,10 +3,11 @@ package mop::method;
 use strict;
 use warnings;
 
-use B          ();
 use attributes ();
 
 use mop::object;
+
+use mop::internal::util;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -30,7 +31,7 @@ sub CREATE {
 
 sub name {
     my ($self) = @_;
-    return B::svref_2object( $self->body )->GV->NAME
+    return mop::internal::util::GET_GLOB_NAME( $self->body )
 }
 
 sub body {
@@ -40,8 +41,7 @@ sub body {
 
 sub is_required {
     my ($self) = @_;
-    my $op = B::svref_2object( $self->body );
-    return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
+    mop::internal::util::IS_CV_NULL( $self->body );
 }
 
 sub origin_class {
@@ -56,7 +56,7 @@ sub origin_class {
     # which seem to be compiled in main:: even
     # when I am expecting it not to be.
     # - SL
-    return B::svref_2object( $self->body )->GV->STASH->NAME
+    return mop::internal::util::GET_GLOB_STASH_NAME( $self->body )
 }
 
 sub was_aliased_from {

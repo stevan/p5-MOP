@@ -3,9 +3,9 @@ package mop::attribute;
 use strict;
 use warnings;
 
-use B ();
-
 use mop::object;
+
+use mop::internal::util;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -48,7 +48,7 @@ sub origin_class {
     # instead of the glob ref, which might be trickier
     # however I really don't know, so time will tell.
     # - SL
-    return B::svref_2object( $self->initializer )->STASH->NAME
+    return mop::internal::util::GET_STASH_NAME( $self->initializer );
 }
 
 sub was_aliased_from {

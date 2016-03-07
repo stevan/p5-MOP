@@ -3,8 +3,6 @@ package mop::module;
 use strict;
 use warnings;
 
-use B ();
-
 use mop::object;
 use mop::internal::util;
 
@@ -43,7 +41,7 @@ sub stash {
 
 sub name {
     my ($self) = @_;
-    return B::svref_2object( $self->stash )->NAME
+    return mop::internal::util::GET_NAME( $self->stash );
 }
 
 sub version {
