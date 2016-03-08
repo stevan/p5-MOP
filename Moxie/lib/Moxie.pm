@@ -194,19 +194,42 @@ sub import {
 # TODO:
 # Move this to a mop::traits module, like in p5-mop-redux
 BEGIN {
+    $TRAITS{'predicate'} = sub {
+        my ($m, $a, $method_name) = @_;
+        my $slot = $a->name;
+        $m->add_method( $method_name => sub { defined $_[0]->{ $slot } } );
+    };
+
+    $TRAITS{'clearer'} = sub {
+        my ($m, $a, $method_name) = @_;
+        my $slot = $a->name;
+        $m->add_method( $method_name => sub { undef $_[0]->{ $slot } } );
+    };
+
+    $TRAITS{'reader'} = sub {
+        my ($m, $a, $method_name) = @_;
+        my $slot = $a->name;
+        $m->add_method( $method_name => sub {
+            die "Cannot assign to `$slot`, it is a readonly attribute" if scalar @_ != 1;
+            $_[0]->{ $slot };
+        });
+    };
+
+    $TRAITS{'writer'} = sub {
+        my ($m, $a, $method_name) = @_;
+        my $slot = $a->name;
+        $m->add_method( $method_name => sub {
+            $_[0]->{ $slot } = $_[1] if $_[1];
+            $_[0]->{ $slot };
+        });
+    };
+
     $TRAITS{'is'} = sub {
         my ($m, $a, $type) = @_;
-        my $slot = $a->name;
         if ( $type eq 'ro' ) {
-            $m->add_method( $slot => sub {
-                die "Cannot assign to `$slot`, it is a readonly attribute" if scalar @_ != 1;
-                $_[0]->{ $slot };
-            });
+            $TRAITS{'reader'}->( $m, $a, $a->name );
         } elsif ( $type eq 'rw' ) {
-            $m->add_method( $slot => sub {
-                $_[0]->{ $slot } = $_[1] if $_[1];
-                $_[0]->{ $slot };
-            });
+            $TRAITS{'writer'}->( $m, $a, $a->name );
         } else {
             die "[mop::PANIC] Got strange option ($type) to trait (is)";
         }

@@ -25,17 +25,12 @@ package BinaryTree {
     extends 'mop::object';
 
     has 'node'   => ( is => 'rw' );
-    has 'parent' => ( is => 'ro' );
-    has 'left';
-    has 'right';
+    has 'parent' => ( is => 'ro', predicate => 'has_parent' );
+    has 'left'   => ( predicate => 'has_left'  );
+    has 'right'  => ( predicate => 'has_right' );
 
-    sub has_parent ($self) { defined $self->{parent} }
-
-    sub left     ($self) { $self->{left} //= ref($self)->new( parent => $self ) }
-    sub has_left ($self) { defined $self->{left} }
-
-    sub right     ($self) { $self->{right} //= ref($self)->new( parent => $self ) }
-    sub has_right ($self) { defined $self->{right} }
+    sub left  ($self) { $self->{left}  //= ref($self)->new( parent => $self ) }
+    sub right ($self) { $self->{right} //= ref($self)->new( parent => $self ) }
 }
 
 #my $parent_attr = mop::meta('BinaryTree')->get_attribute('$!parent');

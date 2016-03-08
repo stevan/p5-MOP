@@ -17,7 +17,7 @@ package Foo {
     extends 'mop::object';
 
     has 'bar' => (default => sub { 100 });
-    
+
     sub bar ($self) { $self->{bar} }
 
     sub has_bar   ($self)     { defined $self->{bar} }
@@ -26,9 +26,25 @@ package Foo {
     sub clear_bar ($self)     { undef $self->{bar}   }
 }
 
-{
-    my $foo = Foo->new;
-    ok( $foo->isa( 'Foo' ), '... the object is from class Foo' );
+package Foo::Auto {
+    use Moxie;
+
+    extends 'mop::object';
+
+    has 'bar' => (
+        is        => 'ro',
+        writer    => 'set_bar',
+        predicate => 'has_bar',
+        clearer   => 'clear_bar',
+        default   => sub { 100 }
+    );
+
+    sub init_bar ($self) { $self->{bar} = 200 }
+}
+
+foreach my $foo ( Foo->new, Foo::Auto->new ) {
+    ok( $foo->isa( 'mop::object' ), '... the object is from class mop::object' );
+    ok( $foo->isa( 'Foo' ) || $foo->isa( 'Foo::Auto' ), '... the object is from class Foo or Foo::Auto' );
 
     ok($foo->has_bar, '... a bar is set');
     is($foo->bar, 100, '... values are defined');
@@ -47,9 +63,9 @@ package Foo {
     is($foo->bar, undef, '... values has been cleared');
 }
 
-{
-    my $foo = Foo->new( bar => 10 );
-    ok( $foo->isa( 'Foo' ), '... the object is from class Foo' );
+foreach my $foo ( Foo->new( bar => 10 ), Foo::Auto->new( bar => 10 ) ) {
+    ok( $foo->isa( 'mop::object' ), '... the object is from class mop::object' );
+    ok( $foo->isa( 'Foo' ) || $foo->isa( 'Foo::Auto' ), '... the object is from class Foo or Foo::Auto' );
 
     ok($foo->has_bar, '... a bar is set');
     is($foo->bar, 10, '... values are initialized via the constructor');

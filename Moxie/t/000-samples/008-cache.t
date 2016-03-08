@@ -37,14 +37,11 @@ package Cache {
     extends 'mop::object';
 
     has 'fetcher' => (required => 1);
-    has 'data';
+    has 'data'    => ( predicate => 'has_data', clearer => 'clear' );
 
     sub data ($self) {
         $self->{data} //= $self->_fetch_data;
     }
-
-    sub has_data ($self) { defined $self->{data} }
-    sub clear    ($self) { undef $self->{data} }
 
     sub _fetch_data ($self) { $self->{fetcher}->() }
 }

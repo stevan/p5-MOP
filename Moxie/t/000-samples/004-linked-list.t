@@ -83,16 +83,9 @@ package LinkedListNode {
 
     extends 'mop::object';
 
-    has 'previous';
-    has 'next';
-    has 'value';
-
-    sub get_previous ($self)     { $self->{previous} }
-    sub get_next     ($self)     { $self->{next} }
-    sub get_value    ($self)     { $self->{value} }
-    sub set_previous ($self, $x) { $self->{previous} = $x; }
-    sub set_next     ($self, $x) { $self->{next} = $x; }
-    sub set_value    ($self, $x) { $self->{value} = $x; }
+    has 'previous' => ( reader => 'get_previous', writer => 'set_previous' );
+    has 'next'     => ( reader => 'get_next',     writer => 'set_next'     );
+    has 'value'    => ( reader => 'get_value',    writer => 'set_value'    );
 
     sub detach { @{ $_[0] }{ 'previous', 'next' } = (undef) x 2; $_[0] }
 }
