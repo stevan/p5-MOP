@@ -58,6 +58,29 @@ sub authority {
     return $$authority;
 }
 
+# exports
+
+sub export {
+    my ($self) = @_;
+    my $export = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'EXPORT', 'ARRAY' );
+    return unless $export;
+    return @$export;
+}
+
+sub export_ok {
+    my ($self) = @_;
+    my $export_ok = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'EXPORT_OK', 'ARRAY' );
+    return unless $export_ok;
+    return @$export_ok;
+}
+
+sub export_tags {
+    my ($self) = @_;
+    my $export_tags = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'EXPORT_TAGS', 'HASH' );
+    return unless $export_tags;
+    return %$export_tags;
+}
+
 # closed-ness
 
 sub is_closed {
@@ -135,7 +158,22 @@ mop::module - a more structured `package`
 
 The idea of a module is really just a formalized convention for
 using packages. It provides ways to access information (name,
-version, authority) as well  as adds two concepts.
+version, authority and exports) as well as adds two concepts.
+
+=over 4
+
+=item C<$VERSION>
+
+=item C<$AUTHORITY>
+
+=item C<@EXPORT>
+
+=item C<@EXPORT_OK>
+
+=item C<%EXPORT_TAGS>
+
+=back
+
 
 =head2 Closing a module
 
