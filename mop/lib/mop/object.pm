@@ -153,7 +153,8 @@ mop::object
 =head1 DESCRIPTION
 
 This module provides a protocol for object construction and
-destruction that aims to be simple and complete.
+destruction that aims to be as simple as possible while still
+being complete.
 
 =head1 METHODS
 
