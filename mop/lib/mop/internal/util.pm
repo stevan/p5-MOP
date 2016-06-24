@@ -234,7 +234,7 @@ sub INSTALL_FINALIZATION_RUNNER {
     # time, for which the ${^GLOBAL_PHASE} check
     # is correct, but this does not work for
     # code created with eval STRING, in this case ...
-    die "[PANIC] To late to install finalization runner for <$pkg>, current-phase: ($GLOBAL_PHASE)"
+    die "[PANIC] Too late to install finalization runner for <$pkg>, current-phase: ($GLOBAL_PHASE)"
         unless $GLOBAL_PHASE eq 'START'
             # we check the caller, and climb
             # far enough up the stack to work
