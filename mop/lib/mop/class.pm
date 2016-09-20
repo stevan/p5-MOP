@@ -18,7 +18,7 @@ our @ISA;  BEGIN { @ISA  = 'mop::object' };
 our @DOES; BEGIN { @DOES = 'mop::role' }; # to be composed later ...
 
 our $IS_CLOSED;
-BEGIN {
+UNITCHECK {
     # apply them roles  ...
     mop::internal::util::APPLY_ROLES(
         mop::role->new( name => __PACKAGE__ ),

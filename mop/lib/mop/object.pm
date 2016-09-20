@@ -8,7 +8,7 @@ use Scalar::Util ();
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 
 sub new {
     my $class = shift;
@@ -64,7 +64,7 @@ use Scalar::Util ();
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 
 BEGIN { $] >= 5.010 ? eval 'use mro' : eval 'use MRO::Compat' }
 

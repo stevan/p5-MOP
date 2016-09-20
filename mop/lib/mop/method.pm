@@ -14,7 +14,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'mop::object' };
 
-our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 
 sub CREATE {
     my ($class, $args) = @_;

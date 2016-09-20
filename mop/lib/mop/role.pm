@@ -17,7 +17,7 @@ our @ISA;  BEGIN { @ISA  = 'mop::object' };
 our @DOES; BEGIN { @DOES = 'mop::module' }; # to be composed later ...
 
 our $IS_CLOSED;
-BEGIN {
+UNITCHECK {
     # FIXME:
     # Poor mans role composition, this will suffice
     # for now, until I have enough infrastructure to

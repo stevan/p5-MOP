@@ -11,7 +11,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'mop::object' };
 
-our $IS_CLOSED; BEGIN { $IS_CLOSED = 1 }
+our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 
 sub CREATE {
     my ($class, $args) = @_;
@@ -173,7 +173,6 @@ version, authority and exports) as well as adds two concepts.
 =item C<%EXPORT_TAGS>
 
 =back
-
 
 =head2 Closing a module
 
