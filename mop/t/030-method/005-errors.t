@@ -20,13 +20,13 @@ subtest '... simple mop::method error test' => sub {
 
     like(
         exception { mop::method->new },
-        qr/^\[MISSING_ARG\] You must specify a method body/,
+        qr/^\[ARGS\] You must specify a method body/,
         '... got the expection we expected'
     );
 
     like(
         exception { mop::method->new( body => [] ) },
-        qr/^\[INVALID_ARG\] The body specified must be a CODE reference/,
+        qr/^\[ARGS\] The body specified must be a CODE reference/,
         '... got the expection we expected'
     );
 };

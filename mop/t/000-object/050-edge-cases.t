@@ -72,13 +72,13 @@ subtest '... funkier BUILDARGS' => sub {
 
     like(
         exception { mop::object->new([]) },
-        qr/^\[PANIC\] expected a HASH reference but got a ARRAY\(0x.*\)/,
+        qr/^\[ARGS\] expected a HASH reference but got a ARRAY\(0x.*\)/,
         '... error case when incorrect type of args is passed in'
     );
 
     like(
         exception { mop::object->new(10) },
-        qr/^\[PANIC\] expected an even sized list reference but instead got 1 element\(s\)/,
+        qr/^\[ARGS\] expected an even sized list reference but instead got 1 element\(s\)/,
         '... error case when incorrect number of args is passed in'
     );
 

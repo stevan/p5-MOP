@@ -24,12 +24,12 @@ sub new {
 sub BUILDARGS {
     shift;
     if ( scalar @_ == 1 && ref $_[0] ) {
-        die '[PANIC] expected a HASH reference but got a ' . $_[0]
+        die '[ARGS] expected a HASH reference but got a ' . $_[0]
             unless ref $_[0] eq 'HASH';
         return +{ %{ $_[0] } };
     }
     else {
-        die '[PANIC] expected an even sized list reference but instead got ' . (scalar @_) . ' element(s)'
+        die '[ARGS] expected an even sized list reference but instead got ' . (scalar @_) . ' element(s)'
             unless ((scalar @_) % 2) == 0;
         return +{ @_ };
     }

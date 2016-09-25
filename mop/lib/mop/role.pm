@@ -54,7 +54,7 @@ sub roles {
 
 sub set_roles {
     my ($self, @roles) = @_;
-    die '[PANIC] Cannot add roles to a package which has been closed'
+    die '[CLOSED] Cannot add roles to a package which has been closed'
         if $self->is_closed;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'DOES', \@roles );
     return;
@@ -119,7 +119,7 @@ sub is_abstract {
 
 sub set_is_abstract {
     my ($self, $value) = @_;
-    die '[PANIC] Cannot set a package to be abstract which has been closed'
+    die '[CLOSED] Cannot set a package to be abstract which has been closed'
         if $self->is_closed;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
     return;
@@ -254,7 +254,7 @@ sub get_required_method {
 
 sub add_required_method {
     my ($self, $name) = @_;
-    die "[PANIC] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     # if we already have a glob there ...
@@ -263,7 +263,7 @@ sub add_required_method {
         return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $glob );
         # and if we don't and we have a CODE slot, we
         # need to die because this doesn't make sense
-        die "[PANIC] Cannot add a required method ($name) when there is a regular method already there"
+        die "[CONFLICT] Cannot add a required method ($name) when there is a regular method already there"
             if defined *{ $glob }{CODE};
     }
 
@@ -276,7 +276,7 @@ sub add_required_method {
 
 sub delete_required_method {
     my ($self, $name) = @_;
-    die "[PANIC] Cannot delete method requirement ($name) from (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot delete method requirement ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     # check if we have a stash entry for $name ...
@@ -291,7 +291,7 @@ sub delete_required_method {
             # and if we have a CV slot, but it doesn't have
             # a NULL CV in it, then we need to die because
             # this doesn't make sense
-            die "[PANIC] Cannot delete a required method ($name) when there is a regular method already there"
+            die "[CONFLICT] Cannot delete a required method ($name) when there is a regular method already there"
                 if defined *{ $glob }{CODE};
 
             # if we have the glob, but no CV slot (NULL or otherwise)
@@ -357,7 +357,7 @@ sub get_method {
 
 sub add_method {
     my ($self, $name, $code) = @_;
-    die "[PANIC] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
@@ -366,7 +366,7 @@ sub add_method {
 
 sub delete_method {
     my ($self, $name) = @_;
-    die "[PANIC] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     # check if we have a stash entry for $name ...
@@ -376,7 +376,7 @@ sub delete_method {
             # then we need to die because this
             # shouldn't happen, we should only
             # delete regular methods.
-            die "[PANIC] Cannot delete a regular method ($name) when there is a required method already there";
+            die "[CONFLICT] Cannot delete a regular method ($name) when there is a required method already there";
         }
         else {
             # if we don't have a code slot ...
@@ -398,7 +398,7 @@ sub delete_method {
                 # trying to delete an alias using the
                 # regular method method
                 unless ( $method->was_aliased_from( @roles ) ) {
-                    die "[PANIC] Cannot delete a regular method ($name) when there is an aliased method already there"
+                    die "[CONFLICT] Cannot delete a regular method ($name) when there is an aliased method already there"
                 }
             }
 
@@ -444,7 +444,7 @@ sub get_method_alias {
 
 sub alias_method {
     my ($self, $name, $code) = @_;
-    die "[PANIC] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
@@ -453,7 +453,7 @@ sub alias_method {
 
 sub delete_method_alias {
     my ($self, $name) = @_;
-    die "[PANIC] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     # check if we have a stash entry for $name ...
@@ -463,7 +463,7 @@ sub delete_method_alias {
             # then we need to die because this
             # shouldn't happen, we should only
             # delete regular methods.
-            die "[PANIC] Cannot delete an aliased method ($name) when there is a required method already there";
+            die "[CONFLICT] Cannot delete an aliased method ($name) when there is a required method already there";
         }
         else {
             # if we don't have a code slot ...
@@ -473,7 +473,7 @@ sub delete_method_alias {
             # otherwise, error accordingly
             my $method = mop::method->new( body => *{ $glob }{CODE} );
 
-            die "[PANIC] Cannot delete an aliased method ($name) when there is a regular method already there"
+            die "[CONFLICT] Cannot delete an aliased method ($name) when there is a regular method already there"
                 if $method->origin_class eq $self->name;
 
             # but if we have a regular method, then we
@@ -591,7 +591,7 @@ sub add_attribute {
     my $self        = $_[0];
     my $name        = $_[1];
 
-    die "[PANIC] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     my $initializer = $_[2];
@@ -599,7 +599,7 @@ sub add_attribute {
     my $class       = $self->name;
     my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
 
-    die '[PANIC] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')'
+    die '[ERROR] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')'
         if $attr->origin_class ne $class;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -616,7 +616,7 @@ sub delete_attribute {
     my $stash = $self->stash;
     my $class = $self->name;
 
-    die "[PANIC] Cannot delete an attribute ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot delete an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -624,7 +624,7 @@ sub delete_attribute {
     return unless $has;
     return unless exists $has->{ $name };
 
-    die "[PANIC] Cannot delete a regular attribute ($name) when there is an aliased attribute already there"
+    die "[CONFLICT] Cannot delete a regular attribute ($name) when there is an aliased attribute already there"
         if mop::attribute->new(
             name        => $name,
             initializer => $has->{ $name }
@@ -674,7 +674,7 @@ sub alias_attribute {
     my $self        = $_[0];
     my $name        = $_[1];
 
-    die "[PANIC] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     my $initializer = $_[2];
@@ -682,7 +682,7 @@ sub alias_attribute {
     my $class       = $self->name;
     my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
 
-    die '[PANIC] Attribute is from the local class (' . $class . '), it should be from a different class'
+    die '[CONFLICT] Attribute is from the local class (' . $class . '), it should be from a different class'
         if $attr->origin_class eq $class;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -699,7 +699,7 @@ sub delete_attribute_alias {
     my $stash = $self->stash;
     my $class = $self->name;
 
-    die "[PANIC] Cannot delete an attribute alias ($name) to (" . $self->name . ") because it has been closed"
+    die "[CLOSED] Cannot delete an attribute alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -707,7 +707,7 @@ sub delete_attribute_alias {
     return unless $has;
     return unless exists $has->{ $name };
 
-    die "[PANIC] Cannot delete an attribute alias ($name) when there is an regular attribute already there"
+    die "[CONFLICT] Cannot delete an attribute alias ($name) when there is an regular attribute already there"
         if mop::attribute->new(
             name        => $name,
             initializer => $has->{ $name }

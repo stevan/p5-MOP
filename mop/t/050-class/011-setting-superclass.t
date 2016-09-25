@@ -64,7 +64,7 @@ subtest '... testing adding superclass un-successfully' => sub {
 
     like(
         exception { $c->set_superclasses('mop::object') },
-        qr/^\[PANIC\] Cannot add superclasses to a package which has been closed/,
+        qr/^\[CLOSED\] Cannot add superclasses to a package which has been closed/,
         '... was not able to set the superclass effectively'
     );
 

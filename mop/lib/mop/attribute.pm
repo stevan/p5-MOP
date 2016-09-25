@@ -17,11 +17,11 @@ our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 sub CREATE {
     my ($class, $args) = @_;
 
-    die '[MISSING_ARG] You must specify an attribute name'
+    die '[ARGS] You must specify an attribute name'
         unless $args->{name};
-    die '[MISSING_ARG] You must specify an attribute initializer'
+    die '[ARGS] You must specify an attribute initializer'
         unless $args->{initializer};
-    die '[INVALID_ARG] The initializer specified must be a CODE reference'
+    die '[ARGS] The initializer specified must be a CODE reference'
         unless ref $args->{initializer} eq 'CODE';
 
     return bless {

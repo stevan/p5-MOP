@@ -19,9 +19,9 @@ our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 sub CREATE {
     my ($class, $args) = @_;
 
-    die '[MISSING_ARG] You must specify a method body'
+    die '[ARGS] You must specify a method body'
         unless $args->{body};
-    die '[INVALID_ARG] The body specified must be a CODE reference'
+    die '[ARGS] The body specified must be a CODE reference'
         unless ref $args->{body} eq 'CODE';
 
     my $body = $args->{body};

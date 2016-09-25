@@ -67,7 +67,7 @@ subtest '... testing errors after closed' => sub {
     my $f3 = sub {};
     like(
         exception{ $module->add_finalizer( $f3 ) },
-        qr/^\[PANIC] Cannot add a finalizer to a package which has been closed/,
+        qr/^\[CLOSED] Cannot add a finalizer to a package which has been closed/,
         '... unsuccessfully added finalizer'
     );
 

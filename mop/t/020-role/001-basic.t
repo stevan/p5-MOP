@@ -133,7 +133,7 @@ subtest '... testing setting roles (on closed class)' => sub {
 
     like(
         exception { $role->set_roles('Bar') },
-        qr/^\[PANIC\] Cannot add roles to a package which has been closed/,
+        qr/^\[CLOSED\] Cannot add roles to a package which has been closed/,
         '... set the roles correctly'
     );
 

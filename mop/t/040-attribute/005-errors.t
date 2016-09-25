@@ -20,19 +20,19 @@ subtest '... simple mop::attribute error test' => sub {
 
     like(
         exception { mop::attribute->new },
-        qr/^\[MISSING_ARG\] You must specify an attribute name/,
+        qr/^\[ARGS\] You must specify an attribute name/,
         '... got the expection we expected'
     );
 
     like(
         exception { mop::attribute->new( name => 'foo' ) },
-        qr/^\[MISSING_ARG\] You must specify an attribute initializer/,
+        qr/^\[ARGS\] You must specify an attribute initializer/,
         '... got the expection we expected'
     );
 
     like(
         exception { mop::attribute->new( name => 'foo', initializer => [] ) },
-        qr/^\[INVALID_ARG\] The initializer specified must be a CODE reference/,
+        qr/^\[ARGS\] The initializer specified must be a CODE reference/,
         '... got the expection we expected'
     );
 };

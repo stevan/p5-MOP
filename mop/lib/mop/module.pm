@@ -121,7 +121,7 @@ sub has_finalizers {
 
 sub add_finalizer {
     my ($self, $finalizer) = @_;
-    die '[PANIC] Cannot add a finalizer to a package which has been closed'
+    die '[CLOSED] Cannot add a finalizer to a package which has been closed'
         if $self->is_closed;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'FINALIZERS', [ $self->finalizers, $finalizer ] );
     return;

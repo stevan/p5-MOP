@@ -148,7 +148,7 @@ subtest '... testing some edge cases ' => sub {
 
     like(
         exception { $role->set_is_abstract(1) },
-        qr/^\[PANIC\] Cannot set a package to be abstract which has been closed/,
+        qr/^\[CLOSED\] Cannot set a package to be abstract which has been closed/,
         '... set the roles correctly'
     );
 };

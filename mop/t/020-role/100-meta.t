@@ -87,13 +87,13 @@ is($Role->get_method('name')->body, \&mop::role::name, '... got the expected val
 
 like(
     exception { $Role->add_method('foo' => sub {}) },
-    qr/^\[PANIC\] Cannot add a method \(foo\) to \(mop\:\:role\) because it has been closed/,
+    qr/^\[CLOSED\] Cannot add a method \(foo\) to \(mop\:\:role\) because it has been closed/,
     '... got the expected exception from ->add_method'
 );
 
 like(
     exception { $Role->delete_method('name') },
-    qr/^\[PANIC\] Cannot delete method \(name\) from \(mop\:\:role\) because it has been closed/,
+    qr/^\[CLOSED\] Cannot delete method \(name\) from \(mop\:\:role\) because it has been closed/,
     '... got the expected exception from ->delete_method'
 );
 
@@ -125,13 +125,13 @@ is($Role->name, 'mop::role', '... got the expected value from ->name');
 
 like(
     exception { $Role->add_method('foo' => sub {}) },
-    qr/^\[PANIC\] Cannot add a method \(foo\) to \(mop\:\:role\) because it has been closed/,
+    qr/^\[CLOSED\] Cannot add a method \(foo\) to \(mop\:\:role\) because it has been closed/,
     '... got the expected exception from ->add_method'
 );
 
 like(
     exception { $Role->delete_method('name') },
-    qr/^\[PANIC\] Cannot delete method \(name\) from \(mop\:\:role\) because it has been closed/,
+    qr/^\[CLOSED\] Cannot delete method \(name\) from \(mop\:\:role\) because it has been closed/,
     '... got the expected exception from ->delete_method'
 );
 

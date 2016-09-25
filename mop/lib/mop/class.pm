@@ -39,7 +39,7 @@ sub superclasses {
 
 sub set_superclasses {
     my ($self, @superclasses) = @_;
-    die '[PANIC] Cannot add superclasses to a package which has been closed'
+    die '[CLOSED] Cannot add superclasses to a package which has been closed'
         if $self->is_closed;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
     return;

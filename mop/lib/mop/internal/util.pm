@@ -113,7 +113,7 @@ sub CREATE_NULL_CV {
 sub INSTALL_CV {
     my ($in_pkg, $name, $code, %opts) = @_;
 
-    die "[PANIC] You must specify a boolean value for `set_subname` option"
+    die "[ERROR] You must specify a boolean value for `set_subname` option"
         if not exists $opts{set_subname};
 
     {
@@ -259,11 +259,11 @@ sub INSTALL_FINALIZATION_RUNNER {
 sub APPLY_ROLES {
     my ($meta, $roles, %opts) = @_;
 
-    die "[mop::PANIC] You must specify what type of object you want roles applied `to`"
+    die "[ARG] You must specify what type of object you want roles applied `to`"
         unless exists $opts{to};
 
     foreach my $r ( $meta->roles ) {
-        die "[mop::PANIC] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")"
+        die "[ERROR] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")"
             unless scalar grep { $r eq $_ } @$roles;
     }
 
@@ -274,12 +274,12 @@ sub APPLY_ROLES {
         $attr_conflicts
     ) = COMPOSE_ALL_ROLE_ATTRIBUTES( @meta_roles );
 
-    die "[mop::PANIC] There should be no conflicting attributes when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")"
+    die "[CONFLICT] There should be no conflicting attributes when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")"
         if scalar keys %$attr_conflicts;
 
     foreach my $name ( keys %$attributes ) {
         # if we have an attribute already by that name ...
-        die "[mop::PANIC] Role Conflict, cannot compose attribute ($name) into (" . $meta->name . ") because ($name) already exists"
+        die "[CONFLICT] Role Conflict, cannot compose attribute ($name) into (" . $meta->name . ") because ($name) already exists"
             if $meta->has_attribute( $name );
         # otherwise alias it ...
         $meta->alias_attribute( $name, $attributes->{ $name } );
@@ -291,7 +291,7 @@ sub APPLY_ROLES {
         $required_methods
     ) = COMPOSE_ALL_ROLE_METHODS( @meta_roles );
 
-    die "[mop::PANIC] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into the class (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")"
+    die "[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into the class (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")"
         if $opts{to} eq 'class'           # if we are composing into a class ...
         && (scalar keys %$method_conflicts) # and we have any conflicts ...
         # and the conflicts are not satisfied by the composing class ...
@@ -307,7 +307,7 @@ sub APPLY_ROLES {
             if $meta->name->can( $name );
     }
 
-    die "[mop::PANIC] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")"
+    die "[CONFLICT] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")"
         if $opts{to} eq 'class'           # if we are composing into a class ...
         && scalar keys %$required_methods # and we have required methods ...
         && !$meta->is_abstract;           # and the class is not abstract ...
