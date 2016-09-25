@@ -66,7 +66,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 
-BEGIN { $] >= 5.010 ? eval 'use mro' : eval 'use MRO::Compat' }
+BEGIN {
+    eval('use ' . ($] >= 5.010 ? 'mro' : 'MRO::Compat'));
+    die $@ if $@;
+}
 
 sub IS_CLASS_ABSTRACT { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_ABSTRACT'} }
 sub IS_CLASS_CLOSED   { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_CLOSED'}   }
