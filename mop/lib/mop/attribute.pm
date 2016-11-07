@@ -53,6 +53,10 @@ sub origin_class {
 
 sub was_aliased_from {
     my ($self, @classnames) = @_;
+
+    die '[ARGS] You must specify at least one classname'
+        if scalar( @classnames ) == 0;
+
     my $class = $self->origin_class;
     foreach my $candidate ( @classnames ) {
         return 1 if $candidate eq $class;

@@ -16,7 +16,7 @@ our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 sub CREATE {
     my ($class, $args) = @_;
     my $name = $args->{name}
-        || die '[MISSING_ARG] You must specify a package name';
+        || die '[ARGS] You must specify a package name';
     my $stash;
     {
         # get a ref to to the stash itself ...
@@ -99,6 +99,8 @@ sub is_closed {
 
 sub set_is_closed {
     my ($self, $value) = @_;
+    die '[ARGS] You must specify a value to set'
+        unless defined $value;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_CLOSED', $value ? \1 : \0 );
     return;
 }
@@ -123,6 +125,10 @@ sub add_finalizer {
     my ($self, $finalizer) = @_;
     die '[CLOSED] Cannot add a finalizer to a package which has been closed'
         if $self->is_closed;
+
+    die '[ARGS] You must specify a finalizer CODE reference to add'
+        unless $finalizer && ref $finalizer eq 'CODE';
+
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'FINALIZERS', [ $self->finalizers, $finalizer ] );
     return;
 }

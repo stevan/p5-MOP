@@ -38,6 +38,10 @@ sub BUILDARGS {
 sub CREATE {
     my $class = $_[0];
     my $proto = $_[1];
+
+    die '[ARGS] You must specify an instance prototype as a HASH ref'
+        unless $proto && ref $proto eq 'HASH';
+
     my $self  = {};
     my %slots = mop::object::util::FETCH_CLASS_SLOTS( $class );
 
@@ -71,12 +75,16 @@ BEGIN {
     die $@ if $@;
 }
 
-sub IS_CLASS_ABSTRACT { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_ABSTRACT'} }
-sub IS_CLASS_CLOSED   { no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_CLOSED'}   }
-sub FETCH_CLASS_SLOTS { no strict 'refs'; no warnings 'once'; return %{$_[0] . '::HAS'}         }
+sub IS_CLASS_ABSTRACT { die '[ARGS] You must specify a class name' unless defined $_[0]; no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_ABSTRACT'} }
+sub IS_CLASS_CLOSED   { die '[ARGS] You must specify a class name' unless defined $_[0]; no strict 'refs'; no warnings 'once'; return ${$_[0] . '::IS_CLOSED'}   }
+sub FETCH_CLASS_SLOTS { die '[ARGS] You must specify a class name' unless defined $_[0]; no strict 'refs'; no warnings 'once'; return %{$_[0] . '::HAS'}         }
 
 sub BUILDALL {
     my ($instance, $proto) = @_;
+
+    die '[ARGS] You must specify an instance prototype as a HASH ref'
+        unless $proto && ref $proto eq 'HASH';
+
     foreach my $super ( reverse @{ mro::get_linear_isa( Scalar::Util::blessed( $instance ) ) } ) {
         my $fully_qualified_name = $super . '::BUILD';
         if ( defined &{ $fully_qualified_name } ) {

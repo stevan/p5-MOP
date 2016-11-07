@@ -56,12 +56,18 @@ sub set_roles {
     my ($self, @roles) = @_;
     die '[CLOSED] Cannot add roles to a package which has been closed'
         if $self->is_closed;
+    die '[ARGS] You must specify at least one role'
+        if scalar( @roles ) == 0;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'DOES', \@roles );
     return;
 }
 
 sub does_role {
     my ($self, $to_test) = @_;
+
+    die '[ARGS] You must specify a role'
+        unless $to_test;
+
     my @roles = $self->roles;
 
     # no roles, will never match ...
@@ -121,6 +127,8 @@ sub set_is_abstract {
     my ($self, $value) = @_;
     die '[CLOSED] Cannot set a package to be abstract which has been closed'
         if $self->is_closed;
+    die '[ARGS] You must specify a value to set'
+        unless defined $value;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
     return;
 }
@@ -228,6 +236,9 @@ sub requires_method {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
+    die '[ARGS] You must specify the name of the required method to look for'
+        unless $name;
+
     return 0 unless exists $stash->{ $name };
     return mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 }
@@ -236,6 +247,9 @@ sub get_required_method {
     my $class = $_[0]->name;
     my $stash = $_[0]->stash;
     my $name  = $_[1];
+
+    die '[ARGS] You must specify the name of the required method to get'
+        unless $name;
 
     # check these two easy cases first ...
     return unless exists $stash->{ $name };
@@ -256,6 +270,9 @@ sub add_required_method {
     my ($self, $name) = @_;
     die "[CLOSED] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+    die '[ARGS] You must specify the name of the required method to add'
+        unless $name;
 
     # if we already have a glob there ...
     if ( my $glob = $self->stash->{ $name } ) {
@@ -278,6 +295,9 @@ sub delete_required_method {
     my ($self, $name) = @_;
     die "[CLOSED] Cannot delete method requirement ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+   die '[ARGS] You must specify the name of the required method to delete'
+        unless $name;
 
     # check if we have a stash entry for $name ...
     if ( my $glob = $self->stash->{ $name } ) {
@@ -311,6 +331,9 @@ sub has_method {
     my $stash = $self->stash;
     my $name  = $_[1];
 
+    die '[ARGS] You must specify the name of the method to look for'
+        unless $name;
+
     # check these two easy cases first ...
     return 0 unless exists $stash->{ $name };
     return 0 if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
@@ -336,6 +359,9 @@ sub get_method {
     my $stash = $self->stash;
     my $name  = $_[1];
 
+    die '[ARGS] You must specify the name of the method to get'
+        unless $name;
+
     # check the easy cases first ...
     return unless exists $stash->{ $name };
     return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
@@ -360,6 +386,12 @@ sub add_method {
     die "[CLOSED] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
+    die '[ARGS] You must specify the name of the method to add'
+        unless $name;
+
+    die '[ARGS] You must specify a CODE reference to add as a method'
+        unless $code && ref $code eq 'CODE';
+
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
     return;
 }
@@ -368,6 +400,9 @@ sub delete_method {
     my ($self, $name) = @_;
     die "[CLOSED] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+    die '[ARGS] You must specify the name of the method to delete'
+        unless $name;
 
     # check if we have a stash entry for $name ...
     if ( my $glob = $self->stash->{ $name } ) {
@@ -418,6 +453,9 @@ sub get_method_alias {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
+    die '[ARGS] You must specify the name of the method alias to look for'
+        unless $name;
+
     # check the easy cases first ...
     return unless exists $stash->{ $name };
     return if mop::internal::util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
@@ -447,6 +485,12 @@ sub alias_method {
     die "[CLOSED] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
+    die '[ARGS] You must specify the name of the method alias to add'
+        unless $name;
+
+    die '[ARGS] You must specify a CODE reference to add as a method alias'
+        unless $code && ref $code eq 'CODE';
+
     mop::internal::util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
     return;
 }
@@ -455,6 +499,9 @@ sub delete_method_alias {
     my ($self, $name) = @_;
     die "[CLOSED] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+    die '[ARGS] You must specify the name of the method alias to remove'
+        unless $name;
 
     # check if we have a stash entry for $name ...
     if ( my $glob = $self->stash->{ $name } ) {
@@ -489,6 +536,9 @@ sub has_method_alias {
     my $class = $_[0]->name;
     my $stash = $_[0]->stash;
     my $name  = $_[1];
+
+    die '[ARGS] You must specify the name of the method alias to look for'
+        unless $name;
 
     # check these two easy cases first ...
     return 0 unless exists $stash->{ $name };
@@ -552,6 +602,9 @@ sub has_attribute {
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
+    die '[ARGS] You must specify the name of the attribute to look for'
+        unless $name;
+
     return unless $has;
     return unless exists $has->{ $name };
 
@@ -570,6 +623,9 @@ sub get_attribute {
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    die '[ARGS] You must specify the name of the attribute to get'
+        unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
@@ -590,14 +646,20 @@ sub get_attribute {
 sub add_attribute {
     my $self        = $_[0];
     my $name        = $_[1];
+    my $initializer = $_[2];
 
     die "[CLOSED] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
-    my $initializer = $_[2];
-    my $stash       = $self->stash;
-    my $class       = $self->name;
-    my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
+    die '[ARGS] You must specify the name of the attribute to add'
+        unless $name;
+
+    die '[ARGS] You must specify an initializer CODE reference to associate with the attribute'
+        unless $initializer && ref $initializer eq 'CODE';
+
+    my $stash = $self->stash;
+    my $class = $self->name;
+    my $attr  = mop::attribute->new( name => $name, initializer => $initializer );
 
     die '[ERROR] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')'
         if $attr->origin_class ne $class;
@@ -618,6 +680,9 @@ sub delete_attribute {
 
     die "[CLOSED] Cannot delete an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+    die '[ARGS] You must specify the name of the attribute to delete'
+        unless $name;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
 
@@ -641,6 +706,9 @@ sub has_attribute_alias {
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
+    die '[ARGS] You must specify the name of the attribute alias to look for'
+        unless $name;
+
     return unless $has;
     return unless exists $has->{ $name };
 
@@ -655,6 +723,9 @@ sub get_attribute_alias {
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = mop::internal::util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
+
+    die '[ARGS] You must specify the name of the attribute alias to get'
+        unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
@@ -673,14 +744,20 @@ sub get_attribute_alias {
 sub alias_attribute {
     my $self        = $_[0];
     my $name        = $_[1];
+    my $initializer = $_[2];
 
     die "[CLOSED] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
 
-    my $initializer = $_[2];
-    my $stash       = $self->stash;
-    my $class       = $self->name;
-    my $attr        = mop::attribute->new( name => $name, initializer => $initializer );
+    die '[ARGS] You must specify the name of the attribute alias to add'
+        unless $name;
+
+    die '[ARGS] You must specify an initializer CODE reference to associate with the attribute alias'
+        unless $initializer && ref $initializer eq 'CODE';
+
+    my $stash = $self->stash;
+    my $class = $self->name;
+    my $attr  = mop::attribute->new( name => $name, initializer => $initializer );
 
     die '[CONFLICT] Attribute is from the local class (' . $class . '), it should be from a different class'
         if $attr->origin_class eq $class;
@@ -701,6 +778,9 @@ sub delete_attribute_alias {
 
     die "[CLOSED] Cannot delete an attribute alias ($name) to (" . $self->name . ") because it has been closed"
         if $self->is_closed;
+
+    die '[ARGS] You must specify the name of the attribute alias to delete'
+        unless $name;
 
     my $has = mop::internal::util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
 

@@ -41,6 +41,8 @@ sub set_superclasses {
     my ($self, @superclasses) = @_;
     die '[CLOSED] Cannot add superclasses to a package which has been closed'
         if $self->is_closed;
+    die '[ARGS] You must specify at least one superclass'
+        if scalar( @superclasses ) == 0;
     mop::internal::util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
     return;
 }

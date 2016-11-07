@@ -31,10 +31,4 @@ subtest '... simple mop::method error test' => sub {
     );
 };
 
-subtest '... odd cases' => sub {
-
-    my $m = bless \(my $x = []) => 'mop::method'; # create a "wrong" instance
-    ok(!$m->is_required, '... and this is not a required method');
-};
-
 done_testing;

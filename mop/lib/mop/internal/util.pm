@@ -20,26 +20,42 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub GET_NAME {
     my ($stash) = @_;
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
     B::svref_2object( $stash )->NAME
 }
 
 sub GET_STASH_NAME {
     my ($stash) = @_;
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
     B::svref_2object( $stash )->STASH->NAME
 }
 
 sub GET_GLOB_NAME {
     my ($stash) = @_;
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
     B::svref_2object( $stash )->GV->NAME
 }
 
 sub GET_GLOB_STASH_NAME {
     my ($stash) = @_;
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
     B::svref_2object( $stash )->GV->STASH->NAME
 }
 
 sub GET_GLOB_SLOT {
     my ($stash, $name, $slot) = @_;
+
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
+    die '[ARGS] You must specify a name'
+        unless defined $name;
+    die '[ARGS] You must specify a slot'
+        unless defined $slot;
+
     # do my best to not autovivify, and
     # return undef if not
     return unless exists $stash->{ $name };
@@ -59,6 +75,14 @@ sub GET_GLOB_SLOT {
 
 sub SET_GLOB_SLOT {
     my ($stash, $name, $value_ref) = @_;
+
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
+    die '[ARGS] You must specify a name'
+        unless defined $name;
+    die '[ARGS] You must specify a value REF'
+        unless defined $value_ref;
+
     {
         no strict 'refs';
         no warnings 'once';
@@ -78,12 +102,16 @@ sub SET_GLOB_SLOT {
 
 sub IS_CV_NULL {
     my ($cv) = @_;
+    die '[ARGS] You must specify a CODE reference'
+        unless $cv;
     my $op = B::svref_2object( $cv );
     return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
 }
 
 sub DOES_GLOB_HAVE_NULL_CV {
     my ($glob) = @_;
+    die '[ARGS] You must specify a GLOB'
+        unless $glob;
     # NOTE:
     # If the glob eq -1 that means it may well be a null sub
     # this seems to be some kind of artifact of an optimization
@@ -104,6 +132,10 @@ sub DOES_GLOB_HAVE_NULL_CV {
 
 sub CREATE_NULL_CV {
     my ($in_pkg, $name) = @_;
+    die '[ARGS] You must specify a package name'
+        unless defined $in_pkg;
+    die '[ARGS] You must specify a name'
+        unless defined $name;
     # this just tries to eval the NULL CV into
     # place, it is ugly, but works for now
     eval "sub ${in_pkg}::${name}; 1;" or do { die $@ };
@@ -113,7 +145,13 @@ sub CREATE_NULL_CV {
 sub INSTALL_CV {
     my ($in_pkg, $name, $code, %opts) = @_;
 
-    die "[ERROR] You must specify a boolean value for `set_subname` option"
+    die '[ARGS] You must specify a package name'
+        unless defined $in_pkg;
+    die '[ARGS] You must specify a name'
+        unless defined $name;
+    die '[ARGS] You must specify a CODE reference'
+        unless $code && ref $code eq 'CODE';
+    die "[ARGS] You must specify a boolean value for `set_subname` option"
         if not exists $opts{set_subname};
 
     {
@@ -128,6 +166,12 @@ sub INSTALL_CV {
 
 sub REMOVE_CV_FROM_GLOB {
     my ($stash, $name) = @_;
+
+    die '[ARGS] You must specify a stash'
+        unless $stash && ref $stash eq 'HASH';
+    die '[ARGS] You must specify a name'
+        unless defined $name;
+
     # find the glob we are looking for
     # which might not exist, in which
     # case we do nothing ....
@@ -175,6 +219,11 @@ sub REMOVE_CV_FROM_GLOB {
 sub INSTALL_CODE_ATTRIBUTE_HANDLER {
     my $pkg       = shift;
     my %supported = map { $_ => undef } @_;
+
+    die '[ARGS] You must specify a package'
+        unless $pkg;
+    die '[ARGS] You must specify at least one supported attribute'
+        if scalar( keys %supported ) == 0;
 
     {
         no strict 'refs';
@@ -228,6 +277,8 @@ sub INSTALL_CODE_ATTRIBUTE_HANDLER {
 sub INSTALL_FINALIZATION_RUNNER {
     my $GLOBAL_PHASE = Devel::GlobalPhase::global_phase();
     my $pkg          = shift;
+    die '[ARGS] You must specify a package'
+        unless $pkg;
     # NOTE:
     # this check is imperfect, ideally things
     # will always happen completely at compile
@@ -259,7 +310,11 @@ sub INSTALL_FINALIZATION_RUNNER {
 sub APPLY_ROLES {
     my ($meta, $roles, %opts) = @_;
 
-    die "[ARG] You must specify what type of object you want roles applied `to`"
+    die '[ARGS] You must specify a metaclass to apply roles to'
+        unless Scalar::Util::blessed( $meta );
+    die '[ARGS] You must specify a least one roles to apply as an ARRAY ref'
+        unless $roles && ref $roles eq 'ARRAY' && scalar( @$roles ) != 0;
+    die "[ARGS] You must specify what type of object you want roles applied `to`"
         unless exists $opts{to};
 
     foreach my $r ( $meta->roles ) {
@@ -331,6 +386,9 @@ sub APPLY_ROLES {
 sub COMPOSE_ALL_ROLE_ATTRIBUTES {
     my @roles = @_;
 
+    die '[ARGS] You must specify a least one role to compose attributes in'
+        if scalar( @roles ) == 0;
+
     my (%attributes, %conflicts);
 
     foreach my $role ( @roles ) {
@@ -364,6 +422,9 @@ sub COMPOSE_ALL_ROLE_ATTRIBUTES {
 # - SL
 sub COMPOSE_ALL_ROLE_METHODS {
     my @roles = @_;
+
+    die '[ARGS] You must specify a least one role to compose methods in'
+        if scalar( @roles ) == 0;
 
     my (%methods, %conflicts, %required);
 
