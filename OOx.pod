@@ -103,7 +103,7 @@ constructors to generate default values when they are not supplied.
         our @ISA = ('Point');
         our %HAS = (
             %Point::HAS,
-            y => sub { 0 },
+            z => sub { 0 },
         );
     }
 
