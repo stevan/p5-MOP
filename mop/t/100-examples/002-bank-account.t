@@ -103,13 +103,13 @@ subtest '... testing some meta-information' => sub {
 
     is_deeply(
         mro::get_linear_isa('BankAccount'),
-        [ 'BankAccount', 'mop::object' ],
+        [ 'BankAccount', 'mop::object', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 
     is_deeply(
         mro::get_linear_isa('CheckingAccount'),
-        [ 'CheckingAccount', 'BankAccount', 'mop::object' ],
+        [ 'CheckingAccount', 'BankAccount', 'mop::object', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 

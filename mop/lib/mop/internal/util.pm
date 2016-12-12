@@ -97,6 +97,27 @@ sub SET_GLOB_SLOT {
 }
 
 ## ------------------------------------------------------------------
+## Basic Package level introspection
+## ------------------------------------------------------------------
+
+sub IS_CLASS_ABSTRACT { 
+    die '[ARGS] You must specify a class name' 
+        unless defined $_[0]; 
+    no strict 'refs'; 
+    no warnings 'once'; 
+    return ${$_[0] . '::IS_ABSTRACT'} 
+}
+
+sub IS_CLASS_CLOSED   { 
+    die '[ARGS] You must specify a class name' 
+        unless defined $_[0]; 
+    no strict 'refs'; 
+    no warnings 'once'; 
+    return ${$_[0] . '::IS_CLOSED'}   
+}
+
+
+## ------------------------------------------------------------------
 ## CV/Glob introspection
 ## ------------------------------------------------------------------
 

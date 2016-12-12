@@ -14,7 +14,7 @@ BEGIN {
 
 TODO:
 - test with %HAS values
-- test the mop::object::util::IS_CLASS_ABSTRACT function here as well
+- test the mop::internal::util::IS_CLASS_ABSTRACT function here as well
     - the two APIs (mop::object::util & mop-OO) should have
       the same end result
 

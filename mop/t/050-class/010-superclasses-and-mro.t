@@ -76,7 +76,7 @@ subtest '... testing the superclass methods' => sub {
         isa_ok($c, 'mop::class');
 
         is_deeply([ $c->superclasses ], [ 'mop::object' ], '... got the expected superclasses');
-        is_deeply($c->mro, [ 'Foo::MopObjectBaseClass', 'mop::object' ], '... got the expected things in the mro');
+        is_deeply($c->mro, [ 'Foo::MopObjectBaseClass', 'mop::object', 'UNIVERSAL::Object' ], '... got the expected things in the mro');
     }
 
     {
@@ -100,7 +100,7 @@ subtest '... testing the superclass methods' => sub {
         isa_ok($c, 'mop::class');
 
         is_deeply([ $c->superclasses ], [ 'Foo::WithSuperclass', 'Foo::MopObjectBaseClass' ], '... got the expected superclasses');
-        is_deeply($c->mro, [ 'Foo::WithMultiple', 'Foo::WithSuperclass', 'Foo::NoBaseClass', 'Foo::MopObjectBaseClass', 'mop::object' ], '... got the expected things in the mro');
+        is_deeply($c->mro, [ 'Foo::WithMultiple', 'Foo::WithSuperclass', 'Foo::NoBaseClass', 'Foo::MopObjectBaseClass', 'mop::object', 'UNIVERSAL::Object' ], '... got the expected things in the mro');
     }
 
 };

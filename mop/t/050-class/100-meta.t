@@ -88,7 +88,7 @@ is($Class->authority, 'cpan:STEVAN', '... got the expected value ->authority');
 ok($Class->is_closed,    '... the class has been closed');
 
 is_deeply([ $Class->superclasses ], [ 'mop::object' ], '... got the expected value from ->superclasses');
-is_deeply($Class->mro, [ 'mop::class', 'mop::object' ], '... got the expected value from ->mro');
+is_deeply($Class->mro, [ 'mop::class', 'mop::object', 'UNIVERSAL::Object' ], '... got the expected value from ->mro');
 
 is_deeply([ $Class->roles ], [ 'mop::role' ], '... got the expected value from ->roles');
 

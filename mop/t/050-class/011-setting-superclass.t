@@ -48,7 +48,7 @@ subtest '... testing adding superclass successfully' => sub {
     );
 
     is_deeply([ $c->superclasses ], [ 'mop::object' ], '... got a superclass now');
-    is_deeply($c->mro, [ 'Foo',  'mop::object' ], '... got more in the mro now');
+    is_deeply($c->mro, [ 'Foo',  'mop::object', 'UNIVERSAL::Object' ], '... got more in the mro now');
 
     ok(Foo->can('new'), '... we now have a `new` method in Foo');
 

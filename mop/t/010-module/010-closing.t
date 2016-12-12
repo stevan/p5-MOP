@@ -35,11 +35,11 @@ subtest '... testing closing methods' => sub {
 
     $module->set_is_closed(1);
     ok($module->is_closed, '... the module is now closed');
-    ok(mop::object::util::IS_CLASS_CLOSED($module->name), '... the module is now closed');
+    ok(mop::internal::util::IS_CLASS_CLOSED($module->name), '... the module is now closed');
 
     $module->set_is_closed(0);
     ok(!$module->is_closed, '... the module is no longer closed');
-    ok(!mop::object::util::IS_CLASS_CLOSED($module->name), '... the module is no longer closed');
+    ok(!mop::internal::util::IS_CLASS_CLOSED($module->name), '... the module is no longer closed');
 };
 
 subtest '... testing errors after closed' => sub {
@@ -50,7 +50,7 @@ subtest '... testing errors after closed' => sub {
 
     $module->set_is_closed(1);
     ok($module->is_closed, '... the module is now closed');
-    ok(mop::object::util::IS_CLASS_CLOSED($module->name), '... the module is now closed');
+    ok(mop::internal::util::IS_CLASS_CLOSED($module->name), '... the module is now closed');
 
     my $f = sub {};
     like(

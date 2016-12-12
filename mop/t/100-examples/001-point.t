@@ -93,7 +93,7 @@ subtest '... test an instance of Point' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point'),
-        [ 'Point', 'mop::object' ],
+        [ 'Point', 'mop::object', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 
@@ -117,7 +117,7 @@ subtest '... test an instance of Point3D' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point3D'),
-        [ 'Point3D', 'Point', 'mop::object' ],
+        [ 'Point3D', 'Point', 'mop::object', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 
@@ -159,7 +159,7 @@ subtest '... meta test' => sub {
         isa_ok($Point, 'mop::class');
         isa_ok($Point, 'mop::object');
 
-        is_deeply($Point->mro, [ 'Point', 'mop::object' ], '... got the expected mro');
+        is_deeply($Point->mro, [ 'Point', 'mop::object', 'UNIVERSAL::Object' ], '... got the expected mro');
         is_deeply([ $Point->superclasses ], [ 'mop::object' ], '... got the expected superclasses');
 
         foreach ( @Point_methods ) {

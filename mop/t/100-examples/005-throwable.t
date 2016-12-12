@@ -27,8 +27,8 @@ BEGIN {
                 Devel::StackTrace->new(
                     skip_frames  => 1,
                     frame_filter => sub {
-                        $_[0]->{'caller'}->[3] !~ /^mop\:\:/ &&
-                        $_[0]->{'caller'}->[0] !~ /^mop\:\:/
+                        $_[0]->{'caller'}->[3] !~ /^(mop|UNIVERSAL)\:\:/ &&
+                        $_[0]->{'caller'}->[0] !~ /^(mop|UNIVERSAL)\:\:/
                     }
                 )
             }
