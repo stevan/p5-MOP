@@ -87,7 +87,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->add_method('foo' => sub { 'Foo::foo' } ) },
-        qr/^\[PANIC\] Cannot add a method \(foo\) to \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot add a method \(foo\) to \(Foo\) because it has been closed/,
         '... could not add a method when the class is closed'
     );
 };

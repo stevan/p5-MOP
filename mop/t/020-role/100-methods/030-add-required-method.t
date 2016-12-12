@@ -84,7 +84,7 @@ subtest '... testing overwriting a regular method with a required method (it sho
 
     like(
         exception { $role->add_required_method('bar') },
-        qr/^\[PANIC\] Cannot add a required method \(bar\) when there is a regular method already there/,
+        qr/^\[CONFLICT\] Cannot add a required method \(bar\) when there is a regular method already there/,
         '... added the required method successfully'
     );
 
@@ -150,7 +150,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->add_required_method('foo') },
-        qr/^\[PANIC\] Cannot add a method requirement \(foo\) to \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot add a method requirement \(foo\) to \(Foo\) because it has been closed/,
         '... could not add a required method when the class is closed'
     );
 };

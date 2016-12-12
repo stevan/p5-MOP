@@ -432,7 +432,7 @@ sub delete_method {
                 # then we have an error cause they are
                 # trying to delete an alias using the
                 # regular method method
-                unless ( $method->was_aliased_from( @roles ) ) {
+                unless ( @roles && $method->was_aliased_from( @roles ) ) {
                     die "[CONFLICT] Cannot delete a regular method ($name) when there is an aliased method already there"
                 }
             }
@@ -583,7 +583,7 @@ sub attributes {
     return grep {
         $_->origin_class eq $class
             ||
-        $_->was_aliased_from( @roles )
+        (@roles && $_->was_aliased_from( @roles ))
     } $self->all_attributes
 }
 

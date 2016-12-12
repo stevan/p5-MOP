@@ -92,7 +92,7 @@ subtest '... testing trying to delete attribute alias when it is a regular one' 
 
     like(
         exception { $role->delete_attribute_alias( 'foo' ) },
-        qr/^\[PANIC\] Cannot delete an attribute alias \(foo\) when there is an regular attribute already there/,
+        qr/^\[CONFLICT\] Cannot delete an attribute alias \(foo\) when there is an regular attribute already there/,
         '... could not delete an attribute when the class is closed'
     );
 };
@@ -110,7 +110,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->delete_attribute_alias( 'foo' ) },
-        qr/^\[PANIC\] Cannot delete an attribute alias \(foo\) to \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot delete an attribute alias \(foo\) to \(Foo\) because it has been closed/,
         '... could not delete an attribute when the class is closed'
     );
 };

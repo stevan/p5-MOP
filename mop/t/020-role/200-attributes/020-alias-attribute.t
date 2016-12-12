@@ -108,7 +108,7 @@ subtest '... testing error adding an attribute whose initializer is not correct'
 
     like(
         exception { $role->alias_attribute( foo => $Foo::foo_initializer ) },
-        qr/^\[PANIC\] Attribute is from the local class \(Foo\), it should be from a different class/,
+        qr/^\[CONFLICT\] Attribute is from the local class \(Foo\), it should be from a different class/,
         '... cannot add an initializer that is not from the class'
     );
 };
@@ -126,7 +126,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->alias_attribute( bar => $Bar::bar_initializer ) },
-        qr/^\[PANIC\] Cannot alias an attribute \(bar\) to \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot alias an attribute \(bar\) to \(Foo\) because it has been closed/,
         '... could not alias an attribute when the class is closed'
     );
 };

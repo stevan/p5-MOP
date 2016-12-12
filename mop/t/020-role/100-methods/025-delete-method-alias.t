@@ -99,7 +99,7 @@ subtest '... testing deleting a method alias that is actually a reqular method' 
 
     like(
         exception { $Foo->delete_method_alias('bar') },
-        qr/^\[PANIC\] Cannot delete an aliased method \(bar\) when there is a regular method already there/,
+        qr/^\[CONFLICT\] Cannot delete an aliased method \(bar\) when there is a regular method already there/,
         '... added the required method successfully'
     );
 
@@ -120,7 +120,7 @@ subtest '... testing deleting a method alias that is actually a required method'
 
     like(
         exception { $Foo->delete_method_alias('baz') },
-        qr/^\[PANIC\] Cannot delete an aliased method \(baz\) when there is a required method already there/,
+        qr/^\[CONFLICT\] Cannot delete an aliased method \(baz\) when there is a required method already there/,
         '... failed adding the required method successfully'
     );
 
@@ -141,7 +141,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->delete_method_alias('foo') },
-        qr/^\[PANIC\] Cannot delete method alias \(foo\) from \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot delete method alias \(foo\) from \(Foo\) because it has been closed/,
         '... could not delete a method alias when the class is closed'
     );
 };

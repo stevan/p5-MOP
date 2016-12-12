@@ -95,7 +95,7 @@ subtest '... testing deleting a required method that is actually a reqular metho
 
     like(
         exception { $Foo->delete_required_method('bar') },
-        qr/^\[PANIC\] Cannot delete a required method \(bar\) when there is a regular method already there/,
+        qr/^\[CONFLICT\] Cannot delete a required method \(bar\) when there is a regular method already there/,
         '... added the required method successfully'
     );
 
@@ -119,7 +119,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->delete_required_method('foo') },
-        qr/^\[PANIC\] Cannot delete method requirement \(foo\) from \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot delete method requirement \(foo\) from \(Foo\) because it has been closed/,
         '... could not delete a method requirement when the class is closed'
     );
 };

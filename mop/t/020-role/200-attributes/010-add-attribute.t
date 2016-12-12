@@ -108,7 +108,7 @@ subtest '... testing error adding an attribute whose initializer is not correct'
 
     like(
         exception { $role->add_attribute( foo => sub { 0 } ) },
-        qr/^\[PANIC\] Attribute is not from local \(Foo\)\, it is from \(main\)/,
+        qr/^\[ERROR\] Attribute is not from local \(Foo\)\, it is from \(main\)/,
         '... cannot add an initializer that is not from the class'
     );
 };
@@ -126,7 +126,7 @@ subtest '... testing exception when role is closed' => sub {
 
     like(
         exception { $Foo->add_attribute( foo => $Foo::foo_initializer ) },
-        qr/^\[PANIC\] Cannot add an attribute \(foo\) to \(Foo\) because it has been closed/,
+        qr/^\[CLOSED\] Cannot add an attribute \(foo\) to \(Foo\) because it has been closed/,
         '... could not add an attribute when the class is closed'
     );
 };
