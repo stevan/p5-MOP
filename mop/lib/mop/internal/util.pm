@@ -318,6 +318,7 @@ sub INSTALL_FINALIZATION_RUNNER {
             # an eval STRING;
             || (caller(3))[3] eq '(eval)';
 
+    # Any reason to use private API instead of public here?
     push @{ Devel::Hook::_get_unitcheck_array() } => (
         sub { mop::module->new( name => $pkg )->run_all_finalizers }
     );
