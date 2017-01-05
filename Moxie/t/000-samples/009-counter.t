@@ -7,13 +7,13 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 package Counter {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     use overload (
         '++' => 'inc',

@@ -7,13 +7,13 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 package BankAccount {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'balance' => ( is => 'ro', default => sub { 0 } );
 
@@ -86,13 +86,13 @@ subtest '... testing some meta-information' => sub {
 
     is_deeply(
         mro::get_linear_isa('BankAccount'),
-        [ 'BankAccount', 'mop::object' ],
+        [ 'BankAccount', 'MOP::Object' ],
         '... got the expected linear isa'
     );
 
     is_deeply(
         mro::get_linear_isa('CheckingAccount'),
-        [ 'CheckingAccount', 'BankAccount', 'mop::object' ],
+        [ 'CheckingAccount', 'BankAccount', 'MOP::Object' ],
         '... got the expected linear isa'
     );
 

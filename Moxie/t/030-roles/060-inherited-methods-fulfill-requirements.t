@@ -24,7 +24,7 @@ package Role::Table::RO {
 package Table {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Role::Table';
 
     sub query_by_id { 'Table::query_by_id' }

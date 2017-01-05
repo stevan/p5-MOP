@@ -16,18 +16,18 @@ but it should link back to the same class data.
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 }
 
 my $foo = Foo->new;
 ok( $foo->isa( 'Foo' ), '... the object is from class Foo' );
-ok( $foo->isa( 'mop::object' ), '... the object is derived from class Object' );
+ok( $foo->isa( 'MOP::Object' ), '... the object is derived from class Object' );
 is( Scalar::Util::blessed($foo), 'Foo', '... the class of this object is Foo' );
 
 {
     my $foo2 = Foo->new;
     ok( $foo2->isa( 'Foo' ), '... the object is from class Foo' );
-    ok( $foo2->isa( 'mop::object' ), '... the object is derived from class Object' );
+    ok( $foo2->isa( 'MOP::Object' ), '... the object is derived from class Object' );
     is( Scalar::Util::blessed($foo), 'Foo', '... the class of this object is Foo' );
 
     isnt( $foo, $foo2, '... these are not the same objects' );
@@ -37,7 +37,7 @@ is( Scalar::Util::blessed($foo), 'Foo', '... the class of this object is Foo' );
 package Bar {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'foo';
 
@@ -65,7 +65,7 @@ package Bar {
 package Baz {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar';
 

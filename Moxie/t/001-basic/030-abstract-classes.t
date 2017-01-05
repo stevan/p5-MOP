@@ -5,18 +5,18 @@ use warnings;
 
 use Test::More;
 
-use mop ();
+use MOP ();
 
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     sub bar;
 }
 
-ok(mop::class->new( name => 'Foo' )->requires_method('bar'), '... bar is a required method');
-ok(mop::class->new( name => 'Foo' )->is_abstract, '... Foo is an abstract class');
+ok(MOP::Class->new( name => 'Foo' )->requires_method('bar'), '... bar is a required method');
+ok(MOP::Class->new( name => 'Foo' )->is_abstract, '... Foo is an abstract class');
 
 eval { Foo->new };
 like(
@@ -33,8 +33,8 @@ package Bar {
     sub bar { 'Bar::bar' }
 }
 
-ok(!mop::class->new( name => 'Bar' )->requires_method('bar'), '... bar is a not required method');
-ok(!mop::class->new( name => 'Bar' )->is_abstract, '... Bar is not an abstract class');
+ok(!MOP::Class->new( name => 'Bar' )->requires_method('bar'), '... bar is a not required method');
+ok(!MOP::Class->new( name => 'Bar' )->is_abstract, '... Bar is not an abstract class');
 
 {
     my $bar = eval { Bar->new };
@@ -51,9 +51,9 @@ package Baz {
     sub baz;
 }
 
-ok(!mop::class->new( name => 'Baz' )->requires_method('bar'), '... bar is a not required method');
-ok(mop::class->new( name => 'Baz' )->requires_method('baz'), '... baz is a required method');
-ok(mop::class->new( name => 'Baz' )->is_abstract, '... Baz is an abstract class');
+ok(!MOP::Class->new( name => 'Baz' )->requires_method('bar'), '... bar is a not required method');
+ok(MOP::Class->new( name => 'Baz' )->requires_method('baz'), '... baz is a required method');
+ok(MOP::Class->new( name => 'Baz' )->is_abstract, '... Baz is an abstract class');
 
 eval { Baz->new };
 like(
@@ -68,8 +68,8 @@ package Gorch {
     extends 'Foo';
 }
 
-ok(mop::class->new( name => 'Gorch' )->requires_method('bar'), '... bar is a required method');
-ok(mop::class->new( name => 'Gorch' )->is_abstract, '... Gorch is an abstract class');
+ok(MOP::Class->new( name => 'Gorch' )->requires_method('bar'), '... bar is a required method');
+ok(MOP::Class->new( name => 'Gorch' )->is_abstract, '... Gorch is an abstract class');
 
 eval { Gorch->new };
 like(

@@ -15,13 +15,13 @@ package WithClass {
     use Moxie;
 
     with 'Service';
-}       
+}
 
 package WithParameters {
     use Moxie;
 
     with 'Service';
-} 
+}
 
 package WithDependencies {
     use Moxie;
@@ -29,7 +29,7 @@ package WithDependencies {
     with 'Service';
 }
 
-foreach my $role (map { mop::role->new( name => $_ ) } qw[ 
+foreach my $role (map { MOP::Role->new( name => $_ ) } qw[
     WithClass
     WithParameters
     WithDependencies
@@ -47,10 +47,10 @@ foreach my $role (map { mop::role->new( name => $_ ) } qw[
 {
     local $@;
     eval q[
-        package ConstructorInjection { 
+        package ConstructorInjection {
             use Moxie;
 
-            extends 'mop::object';
+            extends 'MOP::Object';
                with 'WithClass', 'WithParameters', 'WithDependencies';
         }
     ];

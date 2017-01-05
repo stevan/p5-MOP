@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More;
 
-use mop;
+use MOP;
 
 package Foo {
     use Moxie;
@@ -16,7 +16,7 @@ package Foo {
 package Gorch {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Foo';
 
     our $IS_ABSTRACT; BEGIN {
@@ -31,7 +31,7 @@ package Bar {
 }
 
 {
-    my $meta = mop::class->new( name => 'Gorch' );
+    my $meta = MOP::Class->new( name => 'Gorch' );
     ok($meta->is_abstract, '... composing a role with still required methods creates an abstract class');
     is_deeply(
         [ map { $_->name } $meta->required_methods ],
@@ -47,7 +47,7 @@ package Bar {
 }
 
 {
-    my $meta = mop::class->new( name => 'Bar' );
+    my $meta = MOP::Class->new( name => 'Bar' );
     ok($meta->is_abstract, '... composing a role with still required methods creates an abstract class');
     is_deeply(
         [ map { $_->name } $meta->required_methods ],

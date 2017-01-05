@@ -3,14 +3,14 @@ use strict;
 use warnings;
 use Test::More;
 
-use mop;
+use MOP;
 
 our $x;
 
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     sub inc { ++$::x }
     sub dec { --$::x }
@@ -35,7 +35,7 @@ our $y;
 package Bar {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     sub get_y;
 

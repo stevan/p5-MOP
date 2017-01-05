@@ -7,7 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 =pod
@@ -22,7 +22,7 @@ Make the parent a weak-ref ... it is not right now.
 package BinaryTree {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'node'   => ( is => 'rw' );
     has 'parent' => ( is => 'ro', predicate => 'has_parent' );
@@ -33,7 +33,7 @@ package BinaryTree {
     sub right ($self) { $self->{right} //= ref($self)->new( parent => $self ) }
 }
 
-#my $parent_attr = mop::meta('BinaryTree')->get_attribute('$!parent');
+#my $parent_attr = MOP::meta('BinaryTree')->get_attribute('$!parent');
 
 {
     my $t = BinaryTree->new;

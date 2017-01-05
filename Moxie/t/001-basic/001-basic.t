@@ -9,7 +9,7 @@ package Foo {
 
     use Moxie;
 
-    extends 'mop::object';    
+    extends 'MOP::Object';
 
     has 'foo';
     has 'bar';
@@ -30,7 +30,7 @@ package Foo {
 
 is_deeply(
     mro::get_linear_isa('Foo'),
-    [ 'Foo', 'mop::object' ],
+    [ 'Foo', 'MOP::Object' ],
     '... got the expected linear isa'
 );
 

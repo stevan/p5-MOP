@@ -7,13 +7,13 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 package LinkedList {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'head'  => ( is => 'ro' );
     has 'tail'  => ( is => 'ro' );
@@ -81,7 +81,7 @@ package LinkedList {
 package LinkedListNode {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'previous' => ( reader => 'get_previous', writer => 'set_previous' );
     has 'next'     => ( reader => 'get_next',     writer => 'set_next'     );

@@ -14,19 +14,19 @@ use Test::More;
 package Bar {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 }
 
 package Baz {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 }
 
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar' => ( default => sub { Bar->new } );
     has 'baz' => ( default => sub { Baz->new } );

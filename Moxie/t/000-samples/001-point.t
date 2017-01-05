@@ -7,13 +7,13 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 package Point {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'x' => ( is => 'ro', default => sub { 0 } );
     has 'y' => ( is => 'ro', default => sub { 0 } );
@@ -62,7 +62,7 @@ subtest '... test an instance of Point' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point'),
-        [ 'Point', 'mop::object' ],
+        [ 'Point', 'MOP::Object' ],
         '... got the expected linear isa'
     );
 
@@ -86,7 +86,7 @@ subtest '... test an instance of Point3D' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point3D'),
-        [ 'Point3D', 'Point', 'mop::object' ],
+        [ 'Point3D', 'Point', 'MOP::Object' ],
         '... got the expected linear isa'
     );
 
@@ -106,7 +106,7 @@ subtest '... test an instance of Point3D' => sub {
 
 subtest '... meta test' => sub {
 
-    my @mop_object_methods = qw[
+    my @MOP_object_methods = qw[
         new BUILDARGS CREATE DESTROY
     ];
 
@@ -124,25 +124,25 @@ subtest '... meta test' => sub {
 
     subtest '... test Point' => sub {
 
-        my $Point = mop::class->new( name => 'Point' );
-        isa_ok($Point, 'mop::class');
-        isa_ok($Point, 'mop::object');
+        my $Point = MOP::Class->new( name => 'Point' );
+        isa_ok($Point, 'MOP::Class');
+        isa_ok($Point, 'MOP::Object');
 
-        is_deeply($Point->mro, [ 'Point', 'mop::object' ], '... got the expected mro');
-        is_deeply([ $Point->superclasses ], [ 'mop::object' ], '... got the expected superclasses');
+        is_deeply($Point->mro, [ 'Point', 'MOP::Object' ], '... got the expected mro');
+        is_deeply([ $Point->superclasses ], [ 'MOP::Object' ], '... got the expected superclasses');
 
         foreach ( @Point_methods ) {
             ok($Point->has_method( $_ ), '... Point has method ' . $_);
 
             my $m = $Point->get_method( $_ );
-            isa_ok($m, 'mop::method');
+            isa_ok($m, 'MOP::Method');
             is($m->name, $_, '... got the right method name (' . $_ . ')');
             ok(!$m->is_required, '... the ' . $_ . ' method is not a required method');
             is($m->origin_class, 'Point', '... the ' . $_ . ' method was defined in Point class')
         }
 
         ok(Point->can( $_ ), '... Point can call method ' . $_)
-            foreach @mop_object_methods, @Point_methods;
+            foreach @MOP_object_methods, @Point_methods;
 
     };
 

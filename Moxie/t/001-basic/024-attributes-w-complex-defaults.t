@@ -14,9 +14,9 @@ use Test::More;
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
-    has 'bar' => (default => sub { [] }); 
+    has 'bar' => (default => sub { [] });
 
     sub bar ($self) { $self->{bar} }
 

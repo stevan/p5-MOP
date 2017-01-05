@@ -14,7 +14,7 @@ use Test::More;
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar' => (default => sub { 100 });
 
@@ -29,7 +29,7 @@ package Foo {
 package Foo::Auto {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar' => (
         is        => 'ro',
@@ -43,7 +43,7 @@ package Foo::Auto {
 }
 
 foreach my $foo ( Foo->new, Foo::Auto->new ) {
-    ok( $foo->isa( 'mop::object' ), '... the object is from class mop::object' );
+    ok( $foo->isa( 'MOP::Object' ), '... the object is from class MOP::Object' );
     ok( $foo->isa( 'Foo' ) || $foo->isa( 'Foo::Auto' ), '... the object is from class Foo or Foo::Auto' );
 
     ok($foo->has_bar, '... a bar is set');
@@ -64,7 +64,7 @@ foreach my $foo ( Foo->new, Foo::Auto->new ) {
 }
 
 foreach my $foo ( Foo->new( bar => 10 ), Foo::Auto->new( bar => 10 ) ) {
-    ok( $foo->isa( 'mop::object' ), '... the object is from class mop::object' );
+    ok( $foo->isa( 'MOP::Object' ), '... the object is from class MOP::Object' );
     ok( $foo->isa( 'Foo' ) || $foo->isa( 'Foo::Auto' ), '... the object is from class Foo or Foo::Auto' );
 
     ok($foo->has_bar, '... a bar is set');

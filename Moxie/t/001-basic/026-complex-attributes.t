@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More;
 
-use mop;
+use MOP;
 
 =pod
 
@@ -16,13 +16,13 @@ use mop;
 package Bar {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 }
 
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar' => ( default => sub { Bar->new } );
 

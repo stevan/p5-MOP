@@ -12,8 +12,8 @@ and all attribute data in it should be a clone of the
 original data itself, unless you reference something
 that already exists, then it will work as expected.
 
-This also illustrates that everything happens at 
-compile time. 
+This also illustrates that everything happens at
+compile time.
 
 NOTE:
 This test might not be that useful, consider reworking
@@ -27,7 +27,7 @@ our $BAZ; BEGIN { $BAZ = [] };
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has bar => ( default => sub { +{ baz => $::BAZ } } );
 
@@ -50,7 +50,7 @@ is( $foo->bar->{'baz'}, $BAZ, '... these are the same values' );
 package Bar {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has bar => ( default => sub { +{ baz => $::BAZ } } );
 

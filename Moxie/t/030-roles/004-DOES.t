@@ -25,7 +25,7 @@ package Bat {
 package Quux {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Foo', 'Bar';
 }
 
@@ -39,13 +39,13 @@ package Quuux {
 package Xyzzy {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Foo', 'Bat';
 }
 
-ok(Quux->DOES($_),  "... Quux DOES $_")  for qw( Foo Bar         Quux       mop::object UNIVERSAL );
-ok(Quuux->DOES($_), "... Quuux DOES $_") for qw( Foo Bar Baz     Quux Quuux mop::object UNIVERSAL );
-ok(Xyzzy->DOES($_), "... Xyzzy DOES $_") for qw( Foo     Baz Bat      Xyzzy mop::object UNIVERSAL );
+ok(Quux->DOES($_),  "... Quux DOES $_")  for qw( Foo Bar         Quux       MOP::Object UNIVERSAL );
+ok(Quuux->DOES($_), "... Quuux DOES $_") for qw( Foo Bar Baz     Quux Quuux MOP::Object UNIVERSAL );
+ok(Xyzzy->DOES($_), "... Xyzzy DOES $_") for qw( Foo     Baz Bat      Xyzzy MOP::Object UNIVERSAL );
 
 #{ local $TODO = "broken in core perl" if $] < 5.019005;
 #push @UNIVERSAL::ISA, 'Blorg';

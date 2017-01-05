@@ -10,7 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub INHERIT_REQUIRED_METHODS {
     my ($meta) = @_;
-    foreach my $super ( map { mop::role->new( name => $_ ) } $meta->superclasses ) {
+    foreach my $super ( map { MOP::Role->new( name => $_ ) } $meta->superclasses ) {
         foreach my $required_method ( $super->required_methods ) {
             $meta->add_required_method( $required_method->name )
                 unless $meta->has_method( $required_method->name );
@@ -32,7 +32,7 @@ sub INHERIT_REQUIRED_METHODS {
 
 sub GATHER_ALL_ATTRIBUTES {
     my ($meta) = @_;
-    foreach my $super ( map { mop::role->new( name => $_ ) } @{ $meta->mro } ) {
+    foreach my $super ( map { MOP::Role->new( name => $_ ) } @{ $meta->mro } ) {
         foreach my $attr ( $super->attributes ) {
             $meta->alias_attribute( $attr->name, $attr->initializer )
                 unless $meta->has_attribute( $attr->name )

@@ -7,13 +7,13 @@ use Test::More;
 
 =pod
 
-This test is from p5-mop-redux to show an oddity 
-that worked the opposite of what people might 
-expect, which is not the case here, so we keep 
+This test is from p5-MOP-redux to show an oddity
+that worked the opposite of what people might
+expect, which is not the case here, so we keep
 the test, but change what is expected. We keep the
 original comment for posterity.
 
-# NOTE FROM p5-mop-redux TEST 
+# NOTE FROM p5-MOP-redux TEST
 
 This test illustrates how the attributes are
 private and allocated on a per-class basis.
@@ -22,7 +22,7 @@ the methods of the superclass will not get
 the value 'virtually', since the storage is
 class specific.
 
-This is perhaps not ideal, the older p5-mop
+This is perhaps not ideal, the older p5-MOP
 prototype did the opposite and in some ways
 that is more what I think people would expect.
 
@@ -38,7 +38,7 @@ I will just punt until we do the real thing.
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'bar' => (default => sub { 10 });
 
@@ -49,7 +49,7 @@ package FooBar {
     use Moxie;
 
     extends 'Foo';
-    
+
     has 'bar' => (default => sub { 100 });
 
     sub derived_bar ($self) { $self->{bar} }

@@ -8,7 +8,7 @@ use Test::More;
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'foo' => (default => sub{ 'DFOO' } );
     has 'bar' => (required => 1);
@@ -31,7 +31,7 @@ package Foo {
 
 eval { Foo->new };
 like( $@,
-      qr/^\[mop\:\:ERROR\] The attribute \'bar\' is required/,
+      qr/^\[MOP\:\:ERROR\] The attribute \'bar\' is required/,
       'missing required attribute throws an exception'
 );
 
@@ -42,7 +42,7 @@ like( $@,
 #     my $line       = __LINE__ - 2;
 #     like(
 #         $@,
-#         qr/^\[mop\:\:ERROR\] The attribute \'bar\' is required at $local_file line $line/,
+#         qr/^\[MOP\:\:ERROR\] The attribute \'bar\' is required at $local_file line $line/,
 #         'exception should correcly locate the source'
 #     );
 # }

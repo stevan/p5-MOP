@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use mop;
+use MOP;
 
 package Foo {
     use Moxie;
@@ -18,7 +18,7 @@ my $correct_code = q[
     package Bar::Correct {
         use Moxie;
 
-        extends 'mop::object';
+        extends 'MOP::Object';
            with 'Foo';
 
         has 'bar' => ( is => 'ro' );
@@ -29,7 +29,7 @@ my $incorrect_code = q[
     package Bar::Incorrect {
         use Moxie;
 
-        extends 'mop::object';
+        extends 'MOP::Object';
            with 'Foo';
 
         has 'bar';
@@ -39,7 +39,7 @@ my $incorrect_code = q[
 ok(not(do { local $@ = undef; eval $correct_code; $@ }), '... this code compiled correctly');
 like(
     do { local $@ = undef; eval $incorrect_code; $@ },
-    qr/^\[mop\:\:PANIC\] There should be no required methods when composing \(Foo\) into \(Bar\:\:Incorrect\) but instead we found \(bar\)/,
+    qr/^\[MOP\:\:PANIC\] There should be no required methods when composing \(Foo\) into \(Bar\:\:Incorrect\) but instead we found \(bar\)/,
     '... this code failed to compile correctly'
 );
 

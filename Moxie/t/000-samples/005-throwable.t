@@ -7,7 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 BEGIN {
@@ -20,15 +20,15 @@ BEGIN {
 package Throwable {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'message'     => ( is => 'ro', default => sub { '' } );
     has 'stack_trace' => ( is => 'ro', default => sub {
         Devel::StackTrace->new(
             skip_frames  => 1,
             frame_filter => sub {
-                $_[0]->{'caller'}->[3] !~ /^mop\:\:/ &&
-                $_[0]->{'caller'}->[0] !~ /^mop\:\:/
+                $_[0]->{'caller'}->[3] !~ /^MOP\:\:/ &&
+                $_[0]->{'caller'}->[0] !~ /^MOP\:\:/
             }
         )
     });

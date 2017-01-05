@@ -7,7 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 =pod
@@ -34,7 +34,7 @@ BEGIN {
 package Cache {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     has 'fetcher' => (required => 1);
     has 'data'    => ( predicate => 'has_data', clearer => 'clear' );

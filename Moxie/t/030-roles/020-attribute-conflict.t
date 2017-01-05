@@ -19,7 +19,7 @@ package Foo {
             has 'foo';
         }
     ];
-    like("$@", qr/^\[mop\:\:PANIC\] Role Conflict, cannot compose attribute \(foo\) into \(Foo2\) because \(foo\) already exists/, '... got the expected error message (role on role)');
+    like("$@", qr/^\[MOP\:\:PANIC\] Role Conflict, cannot compose attribute \(foo\) into \(Foo2\) because \(foo\) already exists/, '... got the expected error message (role on role)');
     $@ = undef;
 }
 
@@ -36,7 +36,7 @@ package Bar {
             with 'Foo', 'Bar';
         }
     ];
-    like("$@", qr/^\[mop\:\:PANIC\] There should be no conflicting attributes when composing \(Foo, Bar\) into \(FooBar\)/, '... got the expected error message (composite role)');
+    like("$@", qr/^\[MOP\:\:PANIC\] There should be no conflicting attributes when composing \(Foo, Bar\) into \(FooBar\)/, '... got the expected error message (composite role)');
     $@ = undef;
 }
 
@@ -46,13 +46,13 @@ package Bar {
         package FooBaz {
             use Moxie;
 
-            extends 'mop::object';
+            extends 'MOP::Object';
                with 'Foo';
 
             has 'foo';
         }
     ];
-    like("$@", qr/^\[mop\:\:PANIC\] Role Conflict, cannot compose attribute \(foo\) into \(FooBaz\) because \(foo\) already exists/, '... got the expected error message (role on class)');
+    like("$@", qr/^\[MOP\:\:PANIC\] Role Conflict, cannot compose attribute \(foo\) into \(FooBaz\) because \(foo\) already exists/, '... got the expected error message (role on class)');
     $@ = undef;
 }
 

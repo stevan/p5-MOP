@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More;
 
-use mop;
+use MOP;
 
 package Foo {
     use Moxie;
@@ -26,47 +26,47 @@ package Baz {
 package Gorch {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Baz';
 }
 
 {
-    my $baz_meta = mop::role->new( name => 'Baz' );
+    my $baz_meta = MOP::Role->new( name => 'Baz' );
 
     ok( $baz_meta->does_role( 'Foo' ), '... Baz does the Foo role');
 
     my $bar_method = $baz_meta->get_method('bar');
-    ok( $bar_method->isa( 'mop::method' ), '... got a method object' );
+    ok( $bar_method->isa( 'MOP::Method' ), '... got a method object' );
     is( $bar_method->name, 'bar', '... got the method we expected' );
 
     my $baz_method = $baz_meta->get_method('baz');
-    ok( $baz_method->isa( 'mop::method' ), '... got a method object' );
+    ok( $baz_method->isa( 'MOP::Method' ), '... got a method object' );
     is( $baz_method->name, 'baz', '... got the method we expected' );
 
     my $bar_attribute = $baz_meta->get_attribute_alias('bar');
-    ok( $bar_attribute->isa( 'mop::attribute' ), '... got an attribute object' );
+    ok( $bar_attribute->isa( 'MOP::Attribute' ), '... got an attribute object' );
     is( $bar_attribute->name, 'bar', '... got the attribute we expected' );
 
     my $bar_method_alias = $baz_meta->get_method_alias('bar');
-    ok( $bar_method_alias->isa( 'mop::method' ), '... got a method object' );
+    ok( $bar_method_alias->isa( 'MOP::Method' ), '... got a method object' );
     is( $bar_method_alias->name, 'bar', '... got the method we expected' );
 }
 
 {
-    my $gorch_meta = mop::role->new( name => 'Gorch' );
+    my $gorch_meta = MOP::Role->new( name => 'Gorch' );
 
     is_deeply([ $gorch_meta->roles ], [ 'Baz' ], '... got the list of expected roles');
 
     my $bar_method = $gorch_meta->get_method_alias('bar');
-    ok( $bar_method->isa( 'mop::method' ), '... got a method object' );
+    ok( $bar_method->isa( 'MOP::Method' ), '... got a method object' );
     is( $bar_method->name, 'bar', '... got the method we expected' );
 
     my $baz_method = $gorch_meta->get_method_alias('baz');
-    ok( $baz_method->isa( 'mop::method' ), '... got a method object' );
+    ok( $baz_method->isa( 'MOP::Method' ), '... got a method object' );
     is( $baz_method->name, 'baz', '... got the method we expected' );
 
     my $bar_attribute = $gorch_meta->get_attribute_alias('bar');
-    ok( $bar_attribute->isa( 'mop::attribute' ), '... got an attribute object' );
+    ok( $bar_attribute->isa( 'MOP::Attribute' ), '... got an attribute object' );
     is( $bar_attribute->name, 'bar', '... got the attribute we expected' );
 }
 

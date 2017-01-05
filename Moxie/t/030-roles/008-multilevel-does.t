@@ -9,23 +9,23 @@ package Foo {
     use Moxie;
 }
 
-package Bar { 
+package Bar {
     use Moxie;
-    
+
     with 'Foo';
 }
 
 package Baz {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Bar';
 }
 
 ok(Baz->DOES('Bar'), '... Baz DOES Bar');
 ok(Baz->DOES('Foo'), '... Baz DOES Foo');
 
-package R1 { 
+package R1 {
     use Moxie;
 }
 
@@ -33,16 +33,16 @@ package R2 {
     use Moxie;
 }
 
-package R3 { 
+package R3 {
     use Moxie;
-    
+
     with 'R1', 'R2';
 }
 
-package C1 { 
+package C1 {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'R3';
 }
 

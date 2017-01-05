@@ -8,14 +8,14 @@ use Test::More;
 package Foo {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
 
     our $IS_ABSTRACT; BEGIN {
         $IS_ABSTRACT = 1;
     }
 }
 
-ok(mop::class->new( name => 'Foo' )->is_abstract, '... Foo is an abstract class');
+ok(MOP::Class->new( name => 'Foo' )->is_abstract, '... Foo is an abstract class');
 
 eval { Foo->new };
 like(
@@ -30,7 +30,7 @@ package Bar {
     extends 'Foo';
 }
 
-ok(!mop::class->new( name => 'Bar' )->is_abstract, '... Bar is not an abstract class');
+ok(!MOP::Class->new( name => 'Bar' )->is_abstract, '... Bar is not an abstract class');
 
 {
     my $bar = eval { Bar->new };

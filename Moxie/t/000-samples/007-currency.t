@@ -7,7 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
-    use_ok('mop');
+    use_ok('MOP');
 }
 
 BEGIN {
@@ -59,7 +59,7 @@ BEGIN {
     package US::Currency {
         use Moxie;
 
-        extends 'mop::object';
+        extends 'MOP::Object';
            with 'Comparable', 'Printable';
 
         has amount => ( default => sub { 0 } );
@@ -75,9 +75,9 @@ BEGIN {
 
 }
 
-my $Eq         = mop::role->new( name => 'Eq' );
-my $Comparable = mop::role->new( name => 'Comparable');
-my $USCurrency = mop::class->new( name => 'US::Currency');
+my $Eq         = MOP::Role->new( name => 'Eq' );
+my $Comparable = MOP::Role->new( name => 'Comparable');
+my $USCurrency = MOP::Class->new( name => 'US::Currency');
 
 ok($Comparable->does_role( 'Eq' ), '... Comparable does the Eq role');
 

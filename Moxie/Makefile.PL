@@ -19,7 +19,7 @@ my %WriteMakefileArgs = (
     'NORECURS'           => 1,
     'PREREQ_PM'  => {
         # core ....
-        'mop'                => 0,
+        'MOP'                => 0,
         'Module::Runtime'    => 0,
 
         # tests ..

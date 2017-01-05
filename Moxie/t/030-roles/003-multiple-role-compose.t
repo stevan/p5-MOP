@@ -30,31 +30,31 @@ package Baz {
 package Gorch {
     use Moxie;
 
-    extends 'mop::object';
+    extends 'MOP::Object';
        with 'Baz';
 }
 
-ok( mop::role->new(name => 'Baz')->does_role( 'Foo' ), '... Baz does the Foo role');
-ok( mop::role->new(name => 'Baz')->does_role( 'Bar' ), '... Baz does the Foo role');
+ok( MOP::Role->new(name => 'Baz')->does_role( 'Foo' ), '... Baz does the Foo role');
+ok( MOP::Role->new(name => 'Baz')->does_role( 'Bar' ), '... Baz does the Foo role');
 
-my $bar_method = mop::role->new(name => 'Baz')->get_method('bar');
-ok( $bar_method->isa( 'mop::method' ), '... got a method object' );
+my $bar_method = MOP::Role->new(name => 'Baz')->get_method('bar');
+ok( $bar_method->isa( 'MOP::Method' ), '... got a method object' );
 is( $bar_method->name, 'bar', '... got the method we expected' );
 
-my $bar_attribute = mop::role->new(name => 'Baz')->get_attribute('bar');
-ok( $bar_attribute->isa( 'mop::attribute' ), '... got an attribute object' );
+my $bar_attribute = MOP::Role->new(name => 'Baz')->get_attribute('bar');
+ok( $bar_attribute->isa( 'MOP::Attribute' ), '... got an attribute object' );
 is( $bar_attribute->name, 'bar', '... got the attribute we expected' );
 
-my $foo_method = mop::role->new(name => 'Baz')->get_method('foo');
-ok( $foo_method->isa( 'mop::method' ), '... got a method object' );
+my $foo_method = MOP::Role->new(name => 'Baz')->get_method('foo');
+ok( $foo_method->isa( 'MOP::Method' ), '... got a method object' );
 is( $foo_method->name, 'foo', '... got the method we expected' );
 
-my $foo_attribute = mop::role->new(name => 'Baz')->get_attribute('foo');
-ok( $foo_attribute->isa( 'mop::attribute' ), '... got an attribute object' );
+my $foo_attribute = MOP::Role->new(name => 'Baz')->get_attribute('foo');
+ok( $foo_attribute->isa( 'MOP::Attribute' ), '... got an attribute object' );
 is( $foo_attribute->name, 'foo', '... got the attribute we expected' );
 
-my $baz_method = mop::role->new(name => 'Baz')->get_method('baz');
-ok( $baz_method->isa( 'mop::method' ), '... got a method object' );
+my $baz_method = MOP::Role->new(name => 'Baz')->get_method('baz');
+ok( $baz_method->isa( 'MOP::Method' ), '... got a method object' );
 is( $baz_method->name, 'baz', '... got the method we expected' );
 
 my $gorch = Gorch->new;
