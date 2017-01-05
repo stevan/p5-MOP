@@ -1,4 +1,4 @@
-package MOP::Attribute;
+package MOP::Slot;
 
 use strict;
 use warnings;
@@ -15,9 +15,9 @@ our @ISA; BEGIN { @ISA = 'MOP::Object' };
 sub CREATE {
     my ($class, $args) = @_;
 
-    die '[ARGS] You must specify an attribute name'
+    die '[ARGS] You must specify a slot name'
         unless $args->{name};
-    die '[ARGS] You must specify an attribute initializer'
+    die '[ARGS] You must specify a slot initializer'
         unless $args->{initializer};
     die '[ARGS] The initializer specified must be a CODE reference'
         unless ref $args->{initializer} eq 'CODE';
@@ -70,7 +70,7 @@ __END__
 
 =head1 NAME
 
-MOP::Attribute
+MOP::Slot
 
 =head1 SYNPOSIS
 

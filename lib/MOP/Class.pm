@@ -7,7 +7,7 @@ use MOP::Object;
 use MOP::Module;
 use MOP::Role;
 use MOP::Method;
-use MOP::Attribute;
+use MOP::Slot;
 
 use MOP::Internal::Util;
 

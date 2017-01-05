@@ -13,7 +13,7 @@ use MOP::Module;
 use MOP::Role;
 use MOP::Class;
 
-use MOP::Attribute;
+use MOP::Slot;
 use MOP::Method;
 
 1;

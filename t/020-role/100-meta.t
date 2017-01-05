@@ -32,18 +32,18 @@ my @METHODS = qw[
         set_roles
         does_role
 
-    all_attributes
-        attributes
-            has_attribute
-            add_attribute
-            get_attribute
-            delete_attribute
+    all_slots
+        slots
+            has_slot
+            add_slot
+            get_slot
+            delete_slot
 
-        aliased_attributes
-            has_attribute_alias
-            alias_attribute
-            get_attribute_alias
-            delete_attribute_alias
+        aliased_slots
+            has_slot_alias
+            alias_slot
+            get_slot_alias
+            delete_slot_alias
 
     required_methods
         requires_method

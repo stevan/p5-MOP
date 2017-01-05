@@ -67,12 +67,8 @@ Make the parent a weak-ref ... it is not right now.
     ok($t->left->has_parent, '... left has a parent');
     is($t->left->parent, $t, '... and it is us');
 
-    #ok($parent_attr->is_data_in_slot_weak_for($t->left), '... the value is weakened');
-
     ok($t->right->has_parent, '... right has a parent');
     is($t->right->parent, $t, '... and it is us');
-
-    #ok($parent_attr->is_data_in_slot_weak_for($t->right), '... the value is weakened');
 }
 
 package MyBinaryTree {

@@ -13,10 +13,10 @@ BEGIN {
 =pod
 
 TODO:
-- test attribute conflicts
+- test slot conflicts
 
 =cut
 
-diag 'TODO - test attribute conflicts';
+diag 'TODO - test slot conflicts';
 
 done_testing;

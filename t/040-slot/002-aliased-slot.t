@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-    use_ok('MOP::Attribute');
+    use_ok('MOP::Slot');
 }
 
 =pod
@@ -29,18 +29,18 @@ TODO:
     our %HAS; BEGIN { %HAS = ( %Bar::HAS ) }
 }
 
-subtest '... simple aliased MOP::Attribute test' => sub {
-    my $a = MOP::Attribute->new( name => 'bar', initializer => $Foo::HAS{bar} );
+subtest '... simple aliased MOP::Slot test' => sub {
+    my $a = MOP::Slot->new( name => 'bar', initializer => $Foo::HAS{bar} );
     isa_ok($a, 'MOP::Object');
-    isa_ok($a, 'MOP::Attribute');
+    isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');
     is($a->origin_class, 'Bar', '... got the origin class we expected');
     is($a->initializer, $Foo::HAS{bar}, '... equivalant to the initializer we expected');
     is($a->initializer, $Bar::HAS{bar}, '... equivalant to the initializer we expected');
 
-    ok(!$a->was_aliased_from('Foo'), '... the attribute belongs to Foo');
-    ok($a->was_aliased_from('Bar'), '... the attribute belongs to Foo');
+    ok(!$a->was_aliased_from('Foo'), '... the slot belongs to Foo');
+    ok($a->was_aliased_from('Bar'), '... the slot belongs to Foo');
 };
 
 done_testing;

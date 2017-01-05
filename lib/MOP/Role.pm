@@ -6,7 +6,7 @@ use warnings;
 use MOP::Object;
 use MOP::Module;
 use MOP::Method;
-use MOP::Attribute;
+use MOP::Slot;
 
 use MOP::Internal::Util;
 
@@ -527,29 +527,29 @@ sub has_method_alias {
     return 0;
 }
 
-## Attributes
+## Slots
 
 ## FIXME:
 ## The same problem we had methods needs to be fixed with
-## attributes, just checking the origin_class v. class is
+## slots, just checking the origin_class v. class is
 ## not enough, we need to check aliasing as well.
 ## - SL
 
 # get them all; regular & aliased
-sub all_attributes {
+sub all_slots {
     my $self = shift;
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
     return unless $has;
     return map {
-        MOP::Attribute->new(
+        MOP::Slot->new(
             name        => $_,
             initializer => $has->{ $_ }
         )
     } keys %$has;
 }
 
-# just the local attrinites
-sub attributes {
+# just the local slots
+sub slots {
     my $self  = shift;
     my $class = $self->name;
     my @roles = $self->roles;
@@ -557,82 +557,82 @@ sub attributes {
         $_->origin_class eq $class
             ||
         (@roles && $_->was_aliased_from( @roles ))
-    } $self->all_attributes
+    } $self->all_slots
 }
 
-# just the non-local attributes
-sub aliased_attributes {
+# just the non-local slots
+sub aliased_slots {
     my $self  = shift;
     my $class = $self->name;
-    return grep { $_->origin_class ne $class } $self->all_attributes
+    return grep { $_->origin_class ne $class } $self->all_slots
 }
 
 ## regular ...
 
-sub has_attribute {
+sub has_slot {
     my $self  = $_[0];
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    die '[ARGS] You must specify the name of the attribute to look for'
+    die '[ARGS] You must specify the name of the slot to look for'
         unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
 
     my @roles = $self->roles;
-    my $attr  = MOP::Attribute->new(
+    my $slot  = MOP::Slot->new(
         name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attr->origin_class eq $class
-        || (@roles && $attr->was_aliased_from( @roles ));
+    return $slot->origin_class eq $class
+        || (@roles && $slot->was_aliased_from( @roles ));
 }
 
-sub get_attribute {
+sub get_slot {
     my $self  = $_[0];
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    die '[ARGS] You must specify the name of the attribute to get'
+    die '[ARGS] You must specify the name of the slot to get'
         unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
 
     my @roles = $self->roles;
-    my $attr  = MOP::Attribute->new(
+    my $slot  = MOP::Slot->new(
         name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attr
-        if $attr->origin_class eq $class
-        || (@roles && $attr->was_aliased_from( @roles ));
+    return $slot
+        if $slot->origin_class eq $class
+        || (@roles && $slot->was_aliased_from( @roles ));
 
     return;
 }
 
-sub add_attribute {
+sub add_slot {
     my $self        = $_[0];
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    die '[ARGS] You must specify the name of the attribute to add'
+    die '[ARGS] You must specify the name of the slot to add'
         unless $name;
 
-    die '[ARGS] You must specify an initializer CODE reference to associate with the attribute'
+    die '[ARGS] You must specify an initializer CODE reference to associate with the slot'
         unless $initializer && ref $initializer eq 'CODE';
 
     my $stash = $self->stash;
     my $class = $self->name;
-    my $attr  = MOP::Attribute->new( name => $name, initializer => $initializer );
+    my $slot  = MOP::Slot->new( name => $name, initializer => $initializer );
 
-    die '[ERROR] Attribute is not from local (' . $class . '), it is from (' . $attr->origin_class . ')'
-        if $attr->origin_class ne $class;
+    die '[ERROR] Slot is not from local (' . $class . '), it is from (' . $slot->origin_class . ')'
+        if $slot->origin_class ne $class;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
     MOP::Internal::Util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
@@ -642,13 +642,13 @@ sub add_attribute {
     return;
 }
 
-sub delete_attribute {
+sub delete_slot {
     my $self  = $_[0];
     my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
 
-    die '[ARGS] You must specify the name of the attribute to delete'
+    die '[ARGS] You must specify the name of the slot to delete'
         unless $name;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -656,8 +656,8 @@ sub delete_attribute {
     return unless $has;
     return unless exists $has->{ $name };
 
-    die "[CONFLICT] Cannot delete a regular attribute ($name) when there is an aliased attribute already there"
-        if MOP::Attribute->new(
+    die "[CONFLICT] Cannot delete a regular slot ($name) when there is an aliased slot already there"
+        if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
         )->origin_class ne $class;
@@ -667,64 +667,64 @@ sub delete_attribute {
     return;
 }
 
-sub has_attribute_alias {
+sub has_slot_alias {
     my $self  = $_[0];
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    die '[ARGS] You must specify the name of the attribute alias to look for'
+    die '[ARGS] You must specify the name of the slot alias to look for'
         unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
 
-    return MOP::Attribute->new(
+    return MOP::Slot->new(
         name        => $name,
         initializer => $has->{ $name }
     )->origin_class ne $class;
 }
 
-sub get_attribute_alias {
+sub get_slot_alias {
     my $self  = $_[0];
     my $name  = $_[1];
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    die '[ARGS] You must specify the name of the attribute alias to get'
+    die '[ARGS] You must specify the name of the slot alias to get'
         unless $name;
 
     return unless $has;
     return unless exists $has->{ $name };
 
-    my $attribute = MOP::Attribute->new(
+    my $slot = MOP::Slot->new(
         name        => $name,
         initializer => $has->{ $name }
     );
 
-    return $attribute
-        if $attribute->origin_class ne $class;
+    return $slot
+        if $slot->origin_class ne $class;
 
     return;
 }
 
-sub alias_attribute {
+sub alias_slot {
     my $self        = $_[0];
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    die '[ARGS] You must specify the name of the attribute alias to add'
+    die '[ARGS] You must specify the name of the slot alias to add'
         unless $name;
 
-    die '[ARGS] You must specify an initializer CODE reference to associate with the attribute alias'
+    die '[ARGS] You must specify an initializer CODE reference to associate with the slot alias'
         unless $initializer && ref $initializer eq 'CODE';
 
     my $stash = $self->stash;
     my $class = $self->name;
-    my $attr  = MOP::Attribute->new( name => $name, initializer => $initializer );
+    my $slot  = MOP::Slot->new( name => $name, initializer => $initializer );
 
-    die '[CONFLICT] Attribute is from the local class (' . $class . '), it should be from a different class'
-        if $attr->origin_class eq $class;
+    die '[CONFLICT] Slot is from the local class (' . $class . '), it should be from a different class'
+        if $slot->origin_class eq $class;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
     MOP::Internal::Util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
@@ -734,13 +734,13 @@ sub alias_attribute {
     return;
 }
 
-sub delete_attribute_alias {
+sub delete_slot_alias {
     my $self  = $_[0];
     my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
 
-    die '[ARGS] You must specify the name of the attribute alias to delete'
+    die '[ARGS] You must specify the name of the slot alias to delete'
         unless $name;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -748,8 +748,8 @@ sub delete_attribute_alias {
     return unless $has;
     return unless exists $has->{ $name };
 
-    die "[CONFLICT] Cannot delete an attribute alias ($name) when there is an regular attribute already there"
-        if MOP::Attribute->new(
+    die "[CONFLICT] Cannot delete an slot alias ($name) when there is an regular slot already there"
+        if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
         )->origin_class eq $class;
@@ -800,31 +800,31 @@ that it also has all the methods from that package as well.
 
 =back
 
-=head2 Attributes
+=head2 Slots
 
 =over 4
 
-=item C<all_attributes>
+=item C<all_slots>
 
-=item C<attributes>
+=item C<slots>
 
-=item C<has_attribute( $name )>
+=item C<has_slot( $name )>
 
-=item C<get_attribute( $name )>
+=item C<get_slot( $name )>
 
-=item C<add_attribute( $name, &$initializer )>
+=item C<add_slot( $name, &$initializer )>
 
-=item C<delete_attribute( $name )>
+=item C<delete_slot( $name )>
 
-=item C<aliased_attributes>
+=item C<aliased_slots>
 
-=item C<alias_attribute( $name, &$initializer )>
+=item C<alias_slot( $name, &$initializer )>
 
-=item C<has_attribute_alias ( $name )>
+=item C<has_slot_alias ( $name )>
 
-=item C<get_attribute_alias ( $name )>
+=item C<get_slot_alias ( $name )>
 
-=item C<delete_attribute_alias ( $name )>
+=item C<delete_slot_alias ( $name )>
 
 =back
 

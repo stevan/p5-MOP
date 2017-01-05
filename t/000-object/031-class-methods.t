@@ -56,7 +56,7 @@ isa_ok($foo, 'MOP::Object');
     my $result = eval { $foo->bar(10) };
     is($@, "", '... did not die');
     is($result, 11, '... and the method worked');
-    is($foo->bar, 11, '... and the attribute assignment worked');
+    is($foo->bar, 11, '... and the slot assignment worked');
 }
 
 done_testing;

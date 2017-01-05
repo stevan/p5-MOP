@@ -239,19 +239,19 @@ sub APPLY_ROLES {
     my @meta_roles = map { MOP::Role->new( name => $_ ) } @$roles;
 
     my (
-        $attributes,
-        $attr_conflicts
-    ) = COMPOSE_ALL_ROLE_ATTRIBUTES( @meta_roles );
+        $slots,
+        $slot_conflicts
+    ) = COMPOSE_ALL_ROLE_SLOTS( @meta_roles );
 
-    die "[CONFLICT] There should be no conflicting attributes when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")"
-        if scalar keys %$attr_conflicts;
+    die "[CONFLICT] There should be no conflicting slots when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")"
+        if scalar keys %$slot_conflicts;
 
-    foreach my $name ( keys %$attributes ) {
-        # if we have an attribute already by that name ...
-        die "[CONFLICT] Role Conflict, cannot compose attribute ($name) into (" . $meta->name . ") because ($name) already exists"
-            if $meta->has_attribute( $name );
+    foreach my $name ( keys %$slots ) {
+        # if we have a slot already by that name ...
+        die "[CONFLICT] Role Conflict, cannot compose slot ($name) into (" . $meta->name . ") because ($name) already exists"
+            if $meta->has_slot( $name );
         # otherwise alias it ...
-        $meta->alias_attribute( $name, $attributes->{ $name } );
+        $meta->alias_slot( $name, $slots->{ $name } );
     }
 
     my (
@@ -297,34 +297,34 @@ sub APPLY_ROLES {
     return;
 }
 
-sub COMPOSE_ALL_ROLE_ATTRIBUTES {
+sub COMPOSE_ALL_ROLE_SLOTS {
     my @roles = @_;
 
-    die '[ARGS] You must specify a least one role to compose attributes in'
+    die '[ARGS] You must specify a least one role to compose slots in'
         if scalar( @roles ) == 0;
 
-    my (%attributes, %conflicts);
+    my (%slots, %conflicts);
 
     foreach my $role ( @roles ) {
-        foreach my $attr ( $role->attributes ) {
-            my $name = $attr->name;
+        foreach my $slot ( $role->slots ) {
+            my $name = $slot->name;
             # if we have one already, but
             # it is not the same refaddr ...
-            if ( exists $attributes{ $name } && $attributes{ $name } != $attr->initializer ) {
+            if ( exists $slots{ $name } && $slots{ $name } != $slot->initializer ) {
                 # mark it as a conflict ...
                 $conflicts{ $name } = undef;
-                # and remove it from our attribute set ...
-                delete $attributes{ $name };
+                # and remove it from our slot set ...
+                delete $slots{ $name };
             }
             # if we don't have it already ...
             else {
                 # make a note of it
-                $attributes{ $name } = $attr->initializer;
+                $slots{ $name } = $slot->initializer;
             }
         }
     }
 
-    return \%attributes, \%conflicts;
+    return \%slots, \%conflicts;
 }
 
 
