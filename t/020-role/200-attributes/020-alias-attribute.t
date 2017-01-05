@@ -113,22 +113,4 @@ subtest '... testing error adding an attribute whose initializer is not correct'
     );
 };
 
-subtest '... testing exception when role is closed' => sub {
-    my $Foo = MOP::Role->new( name => 'Foo' );
-    isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
-
-    is(
-        exception { $Foo->set_is_closed(1) },
-        undef,
-        '... closed class successfully'
-    );
-
-    like(
-        exception { $Foo->alias_attribute( bar => $Bar::bar_initializer ) },
-        qr/^\[CLOSED\] Cannot alias an attribute \(bar\) to \(Foo\) because it has been closed/,
-        '... could not alias an attribute when the class is closed'
-    );
-};
-
 done_testing;

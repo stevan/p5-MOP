@@ -74,22 +74,4 @@ subtest '... testing basics' => sub {
     };
 };
 
-subtest '... testing exception when role is closed' => sub {
-    my $Foo = MOP::Role->new( name => 'Foo' );
-    isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
-
-    is(
-        exception { $Foo->set_is_closed(1) },
-        undef,
-        '... closed class successfully'
-    );
-
-    like(
-        exception { $Foo->add_method('foo' => sub { 'Foo::foo' } ) },
-        qr/^\[CLOSED\] Cannot add a method \(foo\) to \(Foo\) because it has been closed/,
-        '... could not add a method when the class is closed'
-    );
-};
-
 done_testing;

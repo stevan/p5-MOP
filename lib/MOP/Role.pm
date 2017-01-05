@@ -16,7 +16,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 our @ISA;  BEGIN { @ISA  = 'MOP::Object' };
 our @DOES; BEGIN { @DOES = 'MOP::Module' }; # to be composed later ...
 
-our $IS_CLOSED;
 UNITCHECK {
     # FIXME:
     # Poor mans role composition, this will suffice
@@ -24,18 +23,13 @@ UNITCHECK {
     # be able to actually do the composition.
     # - SL
 
-    *CREATE             = \&MOP::Module::CREATE;
+    *CREATE    = \&MOP::Module::CREATE;
 
-    *stash              = \&MOP::Module::stash;
+    *stash     = \&MOP::Module::stash;
 
-    *name               = \&MOP::Module::name;
-    *version            = \&MOP::Module::version;
-    *authority          = \&MOP::Module::authority;
-
-    *is_closed          = \&MOP::Module::is_closed;
-    *set_is_closed      = \&MOP::Module::set_is_closed;
-
-    $IS_CLOSED = 1;
+    *name      = \&MOP::Module::name;
+    *version   = \&MOP::Module::version;
+    *authority = \&MOP::Module::authority;
 }
 
 # other roles
@@ -49,8 +43,6 @@ sub roles {
 
 sub set_roles {
     my ($self, @roles) = @_;
-    die '[CLOSED] Cannot add roles to a package which has been closed'
-        if $self->is_closed;
     die '[ARGS] You must specify at least one role'
         if scalar( @roles ) == 0;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'DOES', \@roles );
@@ -120,8 +112,6 @@ sub is_abstract {
 
 sub set_is_abstract {
     my ($self, $value) = @_;
-    die '[CLOSED] Cannot set a package to be abstract which has been closed'
-        if $self->is_closed;
     die '[ARGS] You must specify a value to set'
         unless defined $value;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
@@ -263,8 +253,6 @@ sub get_required_method {
 
 sub add_required_method {
     my ($self, $name) = @_;
-    die "[CLOSED] Cannot add a method requirement ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the required method to add'
         unless $name;
@@ -288,8 +276,6 @@ sub add_required_method {
 
 sub delete_required_method {
     my ($self, $name) = @_;
-    die "[CLOSED] Cannot delete method requirement ($name) from (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
    die '[ARGS] You must specify the name of the required method to delete'
         unless $name;
@@ -378,8 +364,6 @@ sub get_method {
 
 sub add_method {
     my ($self, $name, $code) = @_;
-    die "[CLOSED] Cannot add a method ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the method to add'
         unless $name;
@@ -393,8 +377,6 @@ sub add_method {
 
 sub delete_method {
     my ($self, $name) = @_;
-    die "[CLOSED] Cannot delete method ($name) from (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the method to delete'
         unless $name;
@@ -477,8 +459,6 @@ sub get_method_alias {
 
 sub alias_method {
     my ($self, $name, $code) = @_;
-    die "[CLOSED] Cannot add a method alias ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the method alias to add'
         unless $name;
@@ -492,8 +472,6 @@ sub alias_method {
 
 sub delete_method_alias {
     my ($self, $name) = @_;
-    die "[CLOSED] Cannot delete method alias ($name) from (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the method alias to remove'
         unless $name;
@@ -643,9 +621,6 @@ sub add_attribute {
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    die "[CLOSED] Cannot add an attribute ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
-
     die '[ARGS] You must specify the name of the attribute to add'
         unless $name;
 
@@ -672,9 +647,6 @@ sub delete_attribute {
     my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
-
-    die "[CLOSED] Cannot delete an attribute ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the attribute to delete'
         unless $name;
@@ -741,9 +713,6 @@ sub alias_attribute {
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    die "[CLOSED] Cannot alias an attribute ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
-
     die '[ARGS] You must specify the name of the attribute alias to add'
         unless $name;
 
@@ -770,9 +739,6 @@ sub delete_attribute_alias {
     my $name  = $_[1];
     my $stash = $self->stash;
     my $class = $self->name;
-
-    die "[CLOSED] Cannot delete an attribute alias ($name) to (" . $self->name . ") because it has been closed"
-        if $self->is_closed;
 
     die '[ARGS] You must specify the name of the attribute alias to delete'
         unless $name;

@@ -27,9 +27,6 @@ my @METHODS = qw[
     version
     authority
 
-    is_closed
-        set_is_closed
-
     is_abstract
         set_is_abstract
 
@@ -80,8 +77,6 @@ is($Class->name,      'MOP::Class', '... got the expected value from ->name');
 is($Class->version,   '0.01', '... got the expected value from ->version');
 is($Class->authority, 'cpan:STEVAN', '... got the expected value ->authority');
 
-ok($Class->is_closed,    '... the class has been closed');
-
 is_deeply([ $Class->superclasses ], [ 'MOP::Object' ], '... got the expected value from ->superclasses');
 is_deeply($Class->mro, [ 'MOP::Class', 'MOP::Object', 'UNIVERSAL::Object' ], '... got the expected value from ->mro');
 
@@ -90,18 +85,6 @@ is_deeply([ $Class->roles ], [ 'MOP::Role' ], '... got the expected value from -
 is_deeply([ sort map { $_->name } $Class->all_methods ], [ sort @METHODS ], '... got the expected value from ->methods');
 
 is($Class->get_method('superclasses')->body, \&MOP::Class::superclasses, '... got the expected value from ->get_method');
-
-like(
-    exception { $Class->add_method('foo' => sub {}) },
-    qr/^\[CLOSED\] Cannot add a method \(foo\) to \(MOP\:\:Class\) because it has been closed/,
-    '... got the expected exception from ->add_method'
-);
-
-like(
-    exception { $Class->delete_method('superclasses') },
-    qr/^\[CLOSED\] Cannot delete method \(superclasses\) from \(MOP\:\:Class\) because it has been closed/,
-    '... got the expected exception from ->delete_method'
-);
 
 can_ok($Class, 'superclasses');
 is_deeply([ $Class->superclasses ], [ 'MOP::Object' ], '... got the expected value from ->superclasses (still)');

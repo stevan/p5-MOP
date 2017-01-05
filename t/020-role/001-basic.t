@@ -114,33 +114,4 @@ subtest '... testing setting roles' => sub {
     ok($role->does_role('Foo'), '... we do the role Foo (via Bar)');
 };
 
-subtest '... testing setting roles (on closed class)' => sub {
-    my $role = MOP::Role->new( name => 'Gorch' );
-    isa_ok($role, 'MOP::Role');
-    # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
-
-    is($role->name,      'Gorch',         '... got the expected name');
-    is($role->version,   '0.04',        '... got the expected version');
-    is($role->authority, 'cpan:STEVAN', '... got the expected authority');
-
-    ok(!$role->is_abstract, '... the role is not abstract');
-
-    is_deeply([ $role->roles ], [], '... this role does no roles');
-    ok(!$role->does_role('Bar'), '... we do not do the role Bar');
-
-    $role->set_is_closed(1);
-
-    like(
-        exception { $role->set_roles('Bar') },
-        qr/^\[CLOSED\] Cannot add roles to a package which has been closed/,
-        '... set the roles correctly'
-    );
-
-    is_deeply([ $role->roles ], [], '... this role does no roles');
-    ok(!$role->does_role('Bar'), '... we do not do the role Bar');
-
-};
-
-
 done_testing;

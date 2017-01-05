@@ -106,22 +106,4 @@ subtest '... testing deleting a required method that is actually a reqular metho
     is(Foo->bar, 'Foo::bar', '... and the method still behaves as we expect');
 };
 
-subtest '... testing exception when role is closed' => sub {
-    my $Foo = MOP::Role->new( name => 'Foo' );
-    isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
-
-    is(
-        exception { $Foo->set_is_closed(1) },
-        undef,
-        '... closed class successfully'
-    );
-
-    like(
-        exception { $Foo->delete_required_method('foo') },
-        qr/^\[CLOSED\] Cannot delete method requirement \(foo\) from \(Foo\) because it has been closed/,
-        '... could not delete a method requirement when the class is closed'
-    );
-};
-
 done_testing;

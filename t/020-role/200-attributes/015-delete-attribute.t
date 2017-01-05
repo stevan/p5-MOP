@@ -108,22 +108,4 @@ subtest '... testing trying to delete attribute when it is an alias' => sub {
     );
 };
 
-subtest '... testing exception when role is closed' => sub {
-    my $Foo = MOP::Role->new( name => 'Foo' );
-    isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
-
-    is(
-        exception { $Foo->set_is_closed(1) },
-        undef,
-        '... closed class successfully'
-    );
-
-    like(
-        exception { $Foo->delete_attribute( 'foo' ) },
-        qr/^\[CLOSED\] Cannot delete an attribute \(foo\) to \(Foo\) because it has been closed/,
-        '... could not delete an attribute when the class is closed'
-    );
-};
-
 done_testing;

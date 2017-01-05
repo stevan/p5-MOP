@@ -142,15 +142,6 @@ subtest '... testing some edge cases ' => sub {
 
     ok(!$role->is_abstract, '... the role is not abstract (because we marked it as not being so)');
     ok(!MOP::Internal::Util::IS_CLASS_ABSTRACT($role->name), '... the role is (not) abstract according to the package');
-
-    # close it ...
-    $role->set_is_closed(1);
-
-    like(
-        exception { $role->set_is_abstract(1) },
-        qr/^\[CLOSED\] Cannot set a package to be abstract which has been closed/,
-        '... set the roles correctly'
-    );
 };
 
 done_testing;

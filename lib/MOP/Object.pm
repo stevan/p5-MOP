@@ -11,7 +11,6 @@ use MOP::Internal::Util;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our $IS_CLOSED; UNITCHECK { $IS_CLOSED = 1 }
 our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 
 sub new {

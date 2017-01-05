@@ -5,9 +5,9 @@ use warnings;
 
 use MOP::Module;
 
-use B                      (); # nasty stuff, all nasty stuff
-use Sub::Name              (); # handling some sub stuff
-use Symbol                 (); # creating the occasional symbol
+use B         (); # nasty stuff, all nasty stuff
+use Sub::Name (); # handling some sub stuff
+use Symbol    (); # creating the occasional symbol
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -105,15 +105,6 @@ sub IS_CLASS_ABSTRACT {
     no warnings 'once';
     return ${$_[0] . '::IS_ABSTRACT'}
 }
-
-sub IS_CLASS_CLOSED   {
-    die '[ARGS] You must specify a class name'
-        unless defined $_[0];
-    no strict 'refs';
-    no warnings 'once';
-    return ${$_[0] . '::IS_CLOSED'}
-}
-
 
 ## ------------------------------------------------------------------
 ## CV/Glob introspection

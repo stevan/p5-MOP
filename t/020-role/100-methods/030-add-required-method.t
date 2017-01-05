@@ -137,23 +137,4 @@ subtest '... testing exception when method name is bad' => sub {
     );
 };
 
-subtest '... testing exception when role is closed' => sub {
-    my $Foo = MOP::Role->new( name => 'Foo' );
-    isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
-
-    is(
-        exception { $Foo->set_is_closed(1) },
-        undef,
-        '... closed class successfully'
-    );
-
-    like(
-        exception { $Foo->add_required_method('foo') },
-        qr/^\[CLOSED\] Cannot add a method requirement \(foo\) to \(Foo\) because it has been closed/,
-        '... could not add a required method when the class is closed'
-    );
-};
-
-
 done_testing;

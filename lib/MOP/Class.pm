@@ -17,7 +17,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 our @ISA;  BEGIN { @ISA  = 'MOP::Object' };
 our @DOES; BEGIN { @DOES = 'MOP::Role' }; # to be composed later ...
 
-our $IS_CLOSED;
 UNITCHECK {
     # apply them roles  ...
     MOP::Internal::Util::APPLY_ROLES(
@@ -25,7 +24,6 @@ UNITCHECK {
         \@DOES,
         to => 'class'
     );
-    $IS_CLOSED = 1;
 }
 
 # superclasses
@@ -39,8 +37,6 @@ sub superclasses {
 
 sub set_superclasses {
     my ($self, @superclasses) = @_;
-    die '[CLOSED] Cannot add superclasses to a package which has been closed'
-        if $self->is_closed;
     die '[ARGS] You must specify at least one superclass'
         if scalar( @superclasses ) == 0;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
