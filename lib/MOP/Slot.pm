@@ -12,6 +12,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
 
+# if called upon to be a CODE ref
+# then return the initializer
+use overload '&{}' => 'initializer', fallback => 1;
+
 sub CREATE {
     my ($class, $args) = @_;
 
