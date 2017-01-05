@@ -32,7 +32,6 @@ isa_ok($role, 'MOP::Role');
 
 subtest '... testing setting a role that has required method' => sub {
     is($role->name, 'Foo', '... got the expected name');
-    ok($role->is_abstract, '... the role is abstract');
 
     ok(!$role->requires_method('bar'), '... this method is not required');
     ok($role->requires_method('baz'), '... this method is required');

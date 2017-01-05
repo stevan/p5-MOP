@@ -26,9 +26,6 @@ my @METHODS = qw[
     version
     authority
 
-    is_abstract
-        set_is_abstract
-
     roles
         set_roles
         does_role

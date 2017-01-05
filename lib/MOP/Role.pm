@@ -77,48 +77,6 @@ sub does_role {
     return 0;
 }
 
-# abstract-ness
-
-# NOTE:
-# ponder removing the required_methods logic from here
-# this is something that could be investigated at the
-# class FINALIZATION time and then the IS_ABSTRACT flag
-# is set. We need to do this for inheritance anyway, so
-# we might as well handle it them, then we can assume
-# that the package is in a consistent state.
-#
-# see also: "__NOTES__.txt/Do we want to check abstract-ness via required methods?"
-#
-# - SL
-
-sub is_abstract {
-    my ($self) = @_;
-    # if you have required methods, you are abstract
-    # that is a hard enforced rule here ...
-    my $default = scalar $self->required_methods ? 1 : 0;
-    # if there is no $IS_ABSTRACT variable, return the
-    # calculated default, but if there is an $IS_ABSTRACT
-    # variable, only allow a true value to override the
-    # calculated default
-    my $is_abstract = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', 'SCALAR' );
-    return $default unless $is_abstract;
-    return $$is_abstract ? 1 : $default;
-    # this approach should allow someone to create
-    # an abstract class even if they do not have any
-    # required methods, but also keep the strict
-    # checking of required methods as a indicator
-    # of abstract-ness
-
-}
-
-sub set_is_abstract {
-    my ($self, $value) = @_;
-    die '[ARGS] You must specify a value to set'
-        unless defined $value;
-    MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'IS_ABSTRACT', $value ? \1 : \0 );
-    return;
-}
-
 ## Methods
 
 # get them all; regular, aliased & required
@@ -788,16 +746,6 @@ that it also has all the methods from that package as well.
 =item C<set_roles( @roles )>
 
 =item C<does_role( $role )>
-
-=back
-
-=head2 Abstractness
-
-=over 4
-
-=item C<is_abstract>
-
-=item C<set_is_abstract( $value )>
 
 =back
 

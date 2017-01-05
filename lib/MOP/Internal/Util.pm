@@ -95,18 +95,6 @@ sub SET_GLOB_SLOT {
 }
 
 ## ------------------------------------------------------------------
-## Basic Package level introspection
-## ------------------------------------------------------------------
-
-sub IS_CLASS_ABSTRACT {
-    die '[ARGS] You must specify a class name'
-        unless defined $_[0];
-    no strict 'refs';
-    no warnings 'once';
-    return ${$_[0] . '::IS_ABSTRACT'}
-}
-
-## ------------------------------------------------------------------
 ## CV/Glob introspection
 ## ------------------------------------------------------------------
 
@@ -264,9 +252,7 @@ sub APPLY_ROLES {
         if $opts{to} eq 'class'           # if we are composing into a class ...
         && (scalar keys %$method_conflicts) # and we have any conflicts ...
         # and the conflicts are not satisfied by the composing class ...
-        && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts)
-        # and the class is not declared abstract ....
-        && !$meta->is_abstract;
+        && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts);
 
     # check the required method set and
     # see if what we are composing into
@@ -277,9 +263,8 @@ sub APPLY_ROLES {
     }
 
     die "[CONFLICT] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")"
-        if $opts{to} eq 'class'           # if we are composing into a class ...
-        && scalar keys %$required_methods # and we have required methods ...
-        && !$meta->is_abstract;           # and the class is not abstract ...
+        if $opts{to} eq 'class'            # if we are composing into a class ...
+        && scalar keys %$required_methods; # and we have required methods ...
 
     foreach my $name ( keys %$methods ) {
         # if we have a method already by that name ...

@@ -62,8 +62,6 @@ subtest '... testing basics' => sub {
     is($role->version,   '0.01',        '... got the expected version');
     is($role->authority, 'cpan:STEVAN', '... got the expected authority');
 
-    ok(!$role->is_abstract, '... the role is not abstract');
-
     is_deeply([ $role->roles ], [], '... this role does no roles');
 
     ok(!$role->does_role('Bar'), '... we do not do the role Bar');
@@ -79,8 +77,6 @@ subtest '... testing simple role relationships' => sub {
     is($role->name,      'Bar',         '... got the expected name');
     is($role->version,   '0.02',        '... got the expected version');
     is($role->authority, 'cpan:STEVAN', '... got the expected authority');
-
-    ok(!$role->is_abstract, '... the role is not abstract');
 
     is_deeply([ $role->roles ], ['Foo'], '... this role does no roles');
 
@@ -98,8 +94,6 @@ subtest '... testing setting roles' => sub {
     is($role->name,      'Baz',         '... got the expected name');
     is($role->version,   '0.03',        '... got the expected version');
     is($role->authority, 'cpan:STEVAN', '... got the expected authority');
-
-    ok(!$role->is_abstract, '... the role is not abstract');
 
     is_deeply([ $role->roles ], [], '... this role does no roles');
     ok(!$role->does_role('Bar'), '... we do not do the role Bar');
