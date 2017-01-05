@@ -29,9 +29,7 @@ requires 'Scalar::Util' => 0;
 # ... these can also be replaced by XS, but maybe a little tricker
 # to accomplish this goal
 
-requires 'B::CompilerPhase::Hook' => 0; # needed for the internals of FINALIZE
-requires 'Devel::GlobalPhase'     => 0; # needed to access global phase
-requires 'Sub::Name'              => 0; # needed to set names to anon subs
+requires 'Sub::Name'    => 0; # needed to set names to anon subs
 
 ## ------------------------------------------------------------------
 ## Test modules

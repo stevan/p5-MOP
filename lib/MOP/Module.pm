@@ -105,40 +105,6 @@ sub set_is_closed {
     return;
 }
 
-# finalizers
-
-sub finalizers {
-    my ($self) = @_;
-    my $finalizers = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
-    return unless $finalizers;
-    return @$finalizers;
-}
-
-sub has_finalizers {
-    my ($self) = @_;
-    my $finalizers = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'FINALIZERS', 'ARRAY' );
-    return 0 unless $finalizers;
-    return !! scalar @$finalizers;
-}
-
-sub add_finalizer {
-    my ($self, $finalizer) = @_;
-    die '[CLOSED] Cannot add a finalizer to a package which has been closed'
-        if $self->is_closed;
-
-    die '[ARGS] You must specify a finalizer CODE reference to add'
-        unless $finalizer && ref $finalizer eq 'CODE';
-
-    MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'FINALIZERS', [ $self->finalizers, $finalizer ] );
-    return;
-}
-
-sub run_all_finalizers {
-    my ($self) = @_;
-    $_->( $self ) foreach $self->finalizers;
-    return;
-}
-
 1;
 
 __END__
@@ -155,8 +121,6 @@ MOP::Module - a more structured `package`
 
     warn 'Module (' . $module->name . ') has been closed'
         if $module->is_closed;
-
-    $module->add_finalizer(sub { ... });
 
     UNITCHECK { $module->run_all_finalizers }
 
@@ -185,13 +149,6 @@ version, authority and exports) as well as adds two concepts.
 When a module is closed, it should no longer be altered, this
 being Perl we only guarantee this through our own API.
 
-=head2 Finalization hooks
-
-These are simply callbacks that are associated with a module and
-are expected to be called at UNITCHECK time. The callbacks are
-run in FIFO order, but no attempt is made by the MOP to govern
-the module loading order.
-
 =head1 METHODS
 
 =over 4
@@ -219,18 +176,6 @@ the module loading order.
 =item C<is_closed>
 
 =item C<set_is_closed( $value )>
-
-=back
-
-=head2 Finalization
-
-=over 4
-
-=item C<finalizers>
-
-=item C<add_finalizer( &$finalizer )>
-
-=item C<run_all_finalizers>
 
 =back
 

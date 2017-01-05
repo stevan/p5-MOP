@@ -35,11 +35,6 @@ UNITCHECK {
     *is_closed          = \&MOP::Module::is_closed;
     *set_is_closed      = \&MOP::Module::set_is_closed;
 
-    *finalizers         = \&MOP::Module::finalizers;
-    *add_finalizer      = \&MOP::Module::add_finalizer;
-    *has_finalizers     = \&MOP::Module::has_finalizers;
-    *run_all_finalizers = \&MOP::Module::run_all_finalizers;
-
     $IS_CLOSED = 1;
 }
 

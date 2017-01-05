@@ -54,11 +54,6 @@ my @METHODS = qw[
             get_attribute_alias
             delete_attribute_alias
 
-    finalizers
-        has_finalizers
-        add_finalizer
-        run_all_finalizers
-
     required_methods
         requires_method
         add_required_method
