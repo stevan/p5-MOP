@@ -5,11 +5,11 @@ use warnings;
 
 use mop::module;
 
-use B                  (); # nasty stuff, all nasty stuff
-use Sub::Name          (); # handling some sub stuff
-use Symbol             (); # creating the occasional symbol
-use Devel::Hook        (); # need this for accessing the UNITCHECK's AV
-use Devel::GlobalPhase (); # need this for checking what global phase we are in
+use B                      (); # nasty stuff, all nasty stuff
+use Sub::Name              (); # handling some sub stuff
+use Symbol                 (); # creating the occasional symbol
+use Devel::GlobalPhase     (); # need this for checking what global phase we are in
+use B::CompilerPhase::Hook (); # needed to implement FINALIZE
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -100,20 +100,20 @@ sub SET_GLOB_SLOT {
 ## Basic Package level introspection
 ## ------------------------------------------------------------------
 
-sub IS_CLASS_ABSTRACT { 
-    die '[ARGS] You must specify a class name' 
-        unless defined $_[0]; 
-    no strict 'refs'; 
-    no warnings 'once'; 
-    return ${$_[0] . '::IS_ABSTRACT'} 
+sub IS_CLASS_ABSTRACT {
+    die '[ARGS] You must specify a class name'
+        unless defined $_[0];
+    no strict 'refs';
+    no warnings 'once';
+    return ${$_[0] . '::IS_ABSTRACT'}
 }
 
-sub IS_CLASS_CLOSED   { 
-    die '[ARGS] You must specify a class name' 
-        unless defined $_[0]; 
-    no strict 'refs'; 
-    no warnings 'once'; 
-    return ${$_[0] . '::IS_CLOSED'}   
+sub IS_CLASS_CLOSED   {
+    die '[ARGS] You must specify a class name'
+        unless defined $_[0];
+    no strict 'refs';
+    no warnings 'once';
+    return ${$_[0] . '::IS_CLOSED'}
 }
 
 
@@ -318,9 +318,9 @@ sub INSTALL_FINALIZATION_RUNNER {
             # an eval STRING;
             || (caller(3))[3] eq '(eval)';
 
-    push @{ Devel::Hook::_get_unitcheck_array() } => (
-        sub { mop::module->new( name => $pkg )->run_all_finalizers }
-    );
+    B::CompilerPhase::Hook::enqueue_UNITCHECK {
+        mop::module->new( name => $pkg )->run_all_finalizers
+    };
     return;
 }
 
