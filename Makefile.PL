@@ -19,12 +19,8 @@ my %WriteMakefileArgs = (
         'Symbol'             => 0,
         'Scalar::Util'       => 0,
 
-        # dependencies ...
-        'B::CompilerPhase::Hook' => 0, # to implement the FINALIZER
-
-        # things to be replaced
+        # this can be replaced
         # by XS at some point
-        'Devel::GlobalPhase' => 0, # needed to access global phase
         'Sub::Name'          => 0, # needed to set names to anon subs
 
         # tests ..
