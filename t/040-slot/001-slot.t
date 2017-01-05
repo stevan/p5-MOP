@@ -20,7 +20,22 @@ TODO:
     use strict;
     use warnings;
 
+    our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
+
     our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}
+
+    package Bar;
+    use strict;
+    use warnings;
+
+    our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
+
+    our %HAS; BEGIN { %HAS = (
+        bar => MOP::Slot->new(
+            name        => 'bar',
+            initializer => sub { 'Bar::bar' }
+        )
+    )}
 }
 
 subtest '... simple MOP::Slot test' => sub {
@@ -32,6 +47,28 @@ subtest '... simple MOP::Slot test' => sub {
     is($a->initializer, $Foo::HAS{foo}, '... got the initializer we expected');
 
     ok($a->was_aliased_from('Foo'), '... the slot belongs to Foo');
+
+    my $foo = Foo->new;
+    isa_ok($foo, 'Foo');
+
+    is($foo->{foo}, 'Foo::foo', '... the slot initialized correctly');
+};
+
+subtest '... simple MOP::Slot in a slot test' => sub {
+    my $a = $Bar::HAS{bar};
+    isa_ok($a, 'MOP::Slot');
+
+    is($a->name, 'bar', '... got the name we expected');
+    is($a->origin_class, 'Bar', '... got the origin class we expected');
+    is($a->initializer, $Bar::HAS{bar}->initializer, '... got the initializer we expected');
+
+    ok($a->was_aliased_from('Bar'), '... the slot belongs to Bar');
+
+    my $bar = Bar->new;
+    isa_ok($bar, 'Bar');
+
+    is($bar->{bar}, 'Bar::bar', '... the slot initialized correctly');
+
 };
 
 done_testing;
