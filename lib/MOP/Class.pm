@@ -3,6 +3,8 @@ package MOP::Class;
 use strict;
 use warnings;
 
+use mro ();
+
 use UNIVERSAL::Object;
 
 use MOP::Role;
