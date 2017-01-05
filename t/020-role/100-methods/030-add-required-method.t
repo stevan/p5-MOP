@@ -33,7 +33,6 @@ TODO:
 
 my $role = MOP::Role->new( name => 'Foo' );
 isa_ok($role, 'MOP::Role');
-# does_ok($role, 'MOP::Module'); # TODO
 
 subtest '... testing creating a required method' => sub {
     ok(!$role->requires_method('bar'), '... this method is not required');

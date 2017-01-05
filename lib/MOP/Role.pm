@@ -5,7 +5,6 @@ use warnings;
 
 use UNIVERSAL::Object;
 
-use MOP::Module;
 use MOP::Method;
 use MOP::Slot;
 
@@ -14,23 +13,51 @@ use MOP::Internal::Util;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object' };
-our @DOES; BEGIN { @DOES = 'MOP::Module' }; # to be composed later ...
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
 
-UNITCHECK {
-    # FIXME:
-    # Poor mans role composition, this will suffice
-    # for now, until I have enough infrastructure to
-    # be able to actually do the composition.
-    # - SL
+sub CREATE {
+    my ($class, $args) = @_;
+    my $name = $args->{name}
+        || die '[ARGS] You must specify a package name';
+    my $stash;
+    {
+        # get a ref to to the stash itself ...
+        no strict 'refs';
+        $stash = \%{ $name . '::' };
+    }
+    # and then a ref to that, because we
+    # need to bless it and do not want to
+    # bless the actual stash if we can
+    # avoid it.
+    return bless \$stash => $class;
+}
 
-    *CREATE    = \&MOP::Module::CREATE;
+# stash
 
-    *stash     = \&MOP::Module::stash;
+sub stash {
+    my ($self) = @_;
+    return $$self; # returns the direct HASH ref of the stash
+}
 
-    *name      = \&MOP::Module::name;
-    *version   = \&MOP::Module::version;
-    *authority = \&MOP::Module::authority;
+# identity
+
+sub name {
+    my ($self) = @_;
+    return MOP::Internal::Util::GET_NAME( $self->stash );
+}
+
+sub version {
+    my ($self) = @_;
+    my $version = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'VERSION', 'SCALAR' );
+    return unless $version;
+    return $$version;
+}
+
+sub authority {
+    my ($self) = @_;
+    my $authority = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'AUTHORITY', 'SCALAR' );
+    return unless $authority;
+    return $$authority;
 }
 
 # other roles
@@ -734,8 +761,23 @@ MOP::Role - the metaclass for roles
 
 =head1 METHODS
 
-This module I<does> the L<MOP::Module> package, which means
-that it also has all the methods from that package as well.
+=over 4
+
+=item C<stash>
+
+=back
+
+=head2 Identity
+
+=over 4
+
+=item C<name>
+
+=item C<version>
+
+=item C<authority>
+
+=back
 
 =head2 Role Relationships
 

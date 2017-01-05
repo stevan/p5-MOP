@@ -54,7 +54,6 @@ TODO:
 subtest '... testing basics' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    # does_ok($role, 'MOP::Module'); # TODO
 
     ok(!blessed(\%Foo::), '... check that the stash did not get blessed');
 
@@ -70,7 +69,6 @@ subtest '... testing basics' => sub {
 subtest '... testing simple role relationships' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
-    # does_ok($role, 'MOP::Module'); # TODO
 
     ok(!blessed(\%Bar::), '... check that the stash did not get blessed');
 
@@ -87,7 +85,6 @@ subtest '... testing simple role relationships' => sub {
 subtest '... testing setting roles' => sub {
     my $role = MOP::Role->new( name => 'Baz' );
     isa_ok($role, 'MOP::Role');
-    # does_ok($role, 'MOP::Module'); # TODO
 
     ok(!blessed(\%Baz::), '... check that the stash did not get blessed');
 

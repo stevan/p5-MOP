@@ -15,7 +15,6 @@ my $Class = MOP::Class->new( name => 'MOP::Class' );
 isa_ok($Class, 'MOP::Class');
 
 ok($Class->does_role('MOP::Role'), '... MOP::Class does MOP::Role');
-ok($Class->does_role('MOP::Module'), '... MOP::Class does MOP::Module');
 
 my @METHODS = qw[
     CREATE

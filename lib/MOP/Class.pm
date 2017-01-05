@@ -5,7 +5,6 @@ use warnings;
 
 use UNIVERSAL::Object;
 
-use MOP::Module;
 use MOP::Role;
 use MOP::Method;
 use MOP::Slot;

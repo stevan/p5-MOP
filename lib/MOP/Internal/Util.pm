@@ -3,11 +3,10 @@ package MOP::Internal::Util;
 use strict;
 use warnings;
 
-use MOP::Module;
-
-use B         (); # nasty stuff, all nasty stuff
-use Sub::Name (); # handling some sub stuff
-use Symbol    (); # creating the occasional symbol
+use B            (); # nasty stuff, all nasty stuff
+use Sub::Name    (); # handling some sub stuff
+use Symbol       (); # creating the occasional symbol
+use Scalar::Util (); # I think I use blessed somewhere in here ...
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
