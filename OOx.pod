@@ -6,22 +6,22 @@ OOx - A proposal for extensions to the Perl 5 object system
 
 =head1 DISCLAIMER
 
-This proposal is I<not> about adding new syntax or introducing a full 
-meta-object protocol to the Perl 5 object system, instead it is about 
-adding some I<minimal> components that are needed in the core language 
-to support the possibilities of building those two things at a later 
-point. 
+This proposal is I<not> about adding new syntax or introducing a full
+meta-object protocol to the Perl 5 object system, instead it is about
+adding some I<minimal> components that are needed in the core language
+to support the possibilities of building those two things at a later
+point.
 
-In short, we have to do this first before we can do that, so please 
-be patient, the rest will come. 
+In short, we have to do this first before we can do that, so please
+be patient, the rest will come.
 
 =head1 DESCRIPTION
 
 The current mechanisms of OO Perl are very minimal by design, and this
-proposal aims to take the same approach with this extension. This 
-means punting a lot of details to the class writers to work out and 
-relying on the creativity of the CPAN community to build syntactic 
-sugar as needed. This is entirely on purpose and driven by the 
+proposal aims to take the same approach with this extension. This
+means punting a lot of details to the class writers to work out and
+relying on the creativity of the CPAN community to build syntactic
+sugar as needed. This is entirely on purpose and driven by the
 following axiom.
 
   Object Orientation in Perl is just a Design Pattern
@@ -32,53 +32,53 @@ These agreed upon patterns are as follows:
 
 =item classes are packages
 
-=item the C<@ISA> package variable is used to store that package's class 
+=item the C<@ISA> package variable is used to store that package's class
       inheritance relationship
 
 =item methods are subroutines in a given package (class)
 
-=item the C<bless> keyword is used associate a reference (instance) to 
+=item the C<bless> keyword is used associate a reference (instance) to
       a package (class) for the purposes of method dispatch
 
 =item method dispatch is done via the C<< -> >> operator
 
 =back
 
-This proposal aims to add three more features to this list (one of 
-which requires some internal additions to Perl, the remaining two 
-are just conventions built upon feature that already exist). 
+This proposal aims to add three more features to this list (one of
+which requires some internal additions to Perl, the remaining two
+are just conventions built upon feature that already exist).
 
-B<NOTE> Some of these features build upon one another, to minimize 
-confusion they will described in dependency order, but since this 
+B<NOTE> Some of these features build upon one another, to minimize
+confusion they will described in dependency order, but since this
 itself could be confusing, I wanted to state it here.
 
 =head2 ATTRIBUTE MANAGEMENT
 
-Perl currently does not keep track of what attribute slots are in a 
-given instance at the class level. While this adds great flexibility 
-it makes it virtually impossible to do simple things like have a 
-default C<new> method to contrust instances, generation of accessors 
-for the attribute, etc. 
+Perl currently does not keep track of what attribute slots are in a
+given instance at the class level. While this adds great flexibility
+it makes it virtually impossible to do simple things like have a
+default C<new> method to contrust instances, generation of accessors
+for the attribute, etc.
 
 I propose that we store class scoped attribute information in a manner
-similar to how we store inheritance information (C<@ISA>), using a package 
-scoped hash named C<%HAS>. For each entry in the hash, the key is the 
-name used to address the slot witin the instance, and the value is a CODE 
-references which, when called, will produce a new default value for 
-that slot. 
+similar to how we store inheritance information (C<@ISA>), using a package
+scoped hash named C<%HAS>. For each entry in the hash, the key is the
+name used to address the slot witin the instance, and the value is a CODE
+references which, when called, will produce a new default value for
+that slot.
 
 =head3 EXAMPLE
 
     package Point {
         use strict;
         use warnings;
-        
+
         our %HAS = (
             x => sub { 0 },
             y => sub { 0 },
         );
-        
-        sub new { 
+
+        sub new {
             my ($class, %args) = @_;
             foreach my $k ( keys %HAS ) {
                 $args{ $k } = $HAS{ $k }->()
@@ -88,18 +88,18 @@ that slot.
         }
     }
 
-Above you can see an example of a simple C<Point> object which has two 
-slots, C<x> and C<y>, both of who have a default value constructor that 
-produces the literal C<0> value. 
+Above you can see an example of a simple C<Point> object which has two
+slots, C<x> and C<y>, both of who have a default value constructor that
+produces the literal C<0> value.
 
-This also contains a simple example of a hand written constructor that 
-takes a set of key/value pairs, then using the attribute value 
-constructors to generate default values when they are not supplied. 
+This also contains a simple example of a hand written constructor that
+takes a set of key/value pairs, then using the attribute value
+constructors to generate default values when they are not supplied.
 
     package Point3D {
         use strict;
         use warnings;
-        
+
         our @ISA = ('Point');
         our %HAS = (
             %Point::HAS,
@@ -107,38 +107,38 @@ constructors to generate default values when they are not supplied.
         );
     }
 
-Here we take the example one step further to illustrate how attribute 
-information would be inherited. One simply has to use the existing list 
-flattening behavior to "merge" the inherited (parent) C<%HAS> with the 
-new (child) C<%HAS>. 
+Here we take the example one step further to illustrate how attribute
+information would be inherited. One simply has to use the existing list
+flattening behavior to "merge" the inherited (parent) C<%HAS> with the
+new (child) C<%HAS>.
 
-While it could be argued that this could be done automatically given that 
-we know from C<@ISA> the parent class, this author believes that to be 
-"unperlish". By punting this back to the class writer we are also restoring 
-all flexibility to them, allowing them to be more discriminating about 
+While it could be argued that this could be done automatically given that
+we know from C<@ISA> the parent class, this author believes that to be
+"unperlish". By punting this back to the class writer we are also restoring
+all flexibility to them, allowing them to be more discriminating about
 what – and how – attributes are inherited.
 
 =head3 INTROSPECTION
 
-Since all data is stored in the public package scoped C<%HAS> variable, 
-it is always availeble for instrospection, similiarly to C<@ISA>. And, 
-as with C<@ISA>, it is the responsibility of the class writer to make sure 
-that the C<%HAS> variable is representative of all expected slots in an 
-instance at all times. The level of strictness/enforcement is left as an 
-exercise to the reader. 
+Since all data is stored in the public package scoped C<%HAS> variable,
+it is always availeble for instrospection, similiarly to C<@ISA>. And,
+as with C<@ISA>, it is the responsibility of the class writer to make sure
+that the C<%HAS> variable is representative of all expected slots in an
+instance at all times. The level of strictness/enforcement is left as an
+exercise to the reader.
 
-In addition to looking at the full set of attributes for a class, the 
-individual hash entries in C<%HAS> contain introspectable information as 
+In addition to looking at the full set of attributes for a class, the
+individual hash entries in C<%HAS> contain introspectable information as
 well. By using CODE references for default value constructors is becomes
 possible to detect the package the underlying CV was constructed within
-by inspecting already existing internal fields (i.e. - getting the GLOB's 
-stash name).  
+by inspecting already existing internal fields (i.e. - getting the GLOB's
+stash name).
 
 =head2 ABSTRACT METHODS
 
-An abstract method is simply a method whose body is undefined. Since 
-methods are just subroutines, it is possible to define an abstract 
-method using the existing feature of subroutine predeclaration. 
+An abstract method is simply a method whose body is undefined. Since
+methods are just subroutines, it is possible to define an abstract
+method using the existing feature of subroutine predeclaration.
 
 I cannot stress how much this is B<NOT> a new feature, all the elements
 of this feature exist today, they were simply never used in this way.
@@ -148,48 +148,48 @@ of this feature exist today, they were simply never used in this way.
     package AbstractShape {
         use strict;
         use warnings;
-        
+
         sub draw;
     }
 
     package Rectangle {
         use strict;
         use warnings;
-        
+
         our @ISA = ('AbstractShape');
         our %HAS = (
             height => sub { 0 },
             width  => sub { 0 },
         );
-        
+
         sub new { ... } # assume sensible constructor here
         sub draw {
             my ($self, $canvas) = @_;
-            $canvas->new_rectangle( 
+            $canvas->new_rectangle(
                 h => $self->{height},
                 w => $self->{width},
             );
         }
     }
 
-Here we simply define an C<AbstractShape> class with a single abstract 
+Here we simply define an C<AbstractShape> class with a single abstract
 C<draw> method. We make no attempt to enforce class level abstractness
 since that would require us to be able to prevent instance construction
-which is currently not possible (and considered not to be within the 
-scope of this proposal). This abstract class is then inherited using 
-the normal (unchanged) Perl inheritance mechanism which results in 
+which is currently not possible (and considered not to be within the
+scope of this proposal). This abstract class is then inherited using
+the normal (unchanged) Perl inheritance mechanism which results in
 the inheritance of the abstract/predeclared C<draw> method, which behaves
-as one would expect for an abstract method to behave. 
+as one would expect for an abstract method to behave.
 
 =head2 ROLE COMPOSITION
 
-Over the past 10 years of Moose, the concept of B<Roles> has become an 
-important feature in Perl object oriented programming, I propose it is 
-time to add this feature to the core. 
+Over the past 10 years of Moose, the concept of B<Roles> has become an
+important feature in Perl object oriented programming, I propose it is
+time to add this feature to the core.
 
-It is left as an execise to the reader to generally understand what a 
-role is, how a role is used and what are the benefits and drawbacks of 
-those techniques. Where we feel it is useful, we will clarify, but it 
+It is left as an execise to the reader to generally understand what a
+role is, how a role is used and what are the benefits and drawbacks of
+those techniques. Where we feel it is useful, we will clarify, but it
 can be assume that we are describing a mechanism similar to Moose/Moo.
 
 =head3 EXAMPLE
@@ -197,39 +197,39 @@ can be assume that we are describing a mechanism similar to Moose/Moo.
     package Equality {
         use strict;
         use warnings;
-        
-        sub equal_to; 
-        
+
+        sub equal_to;
+
         sub not_equal_to {
             my ($self, $other) = @_;
             return not $self->equal_to( $other );
         }
     }
-    
+
 This is a very simple role which can be composed into a class to add
-methods for doing equality testing. It contains one abstract method 
+methods for doing equality testing. It contains one abstract method
 (C<equal_to>) and a second method (C<not_equal_to>) which is implemented
-in terms of the first. 
+in terms of the first.
 
 It is important to note that this role is nothing more than a package
 with some subroutines inside it. There is no special flag to designate
 what is and is not a role, just as with classes they are just packages
-and subs, only when looked at from a specific point of view can they 
-be seen as roles. 
-    
+and subs, only when looked at from a specific point of view can they
+be seen as roles.
+
     package Comparable {
         use strict;
         use warnings;
-        
+
         our @DOES = ('Equality');
-        
-        sub compare;        
-        
+
+        sub compare;
+
         sub equal_to {
             my ($self, $other) = @_;
             $self->compare( $other ) == 0
         }
-        
+
         sub greater_than {
             my ($self, $other) = @_;
             $self->compare($other) == 1;
@@ -240,38 +240,38 @@ be seen as roles.
             $self->compare($other) == -1;
         }
     }
-    
-Here is an example of another role, which composes the first C<Equality> 
-role via the C<@DOES> package variable. It then implements the abstract 
-method (C<equal_to>), a requirement from C<Equality>, but it does it in 
+
+Here is an example of another role, which composes the first C<Equality>
+role via the C<@DOES> package variable. It then implements the abstract
+method (C<equal_to>), a requirement from C<Equality>, but it does it in
 terms of it's own abstract method (C<compare>). Similiarly to C<Equality>
-all the methods in C<Comparable> are implemented in terms of a single 
-abstract method, which can be viewed as a requirement for making the 
-role useful. 
+all the methods in C<Comparable> are implemented in terms of a single
+abstract method, which can be viewed as a requirement for making the
+role useful.
 
 =head3 COMPOSITION
 
-Roles must actually be composed into a class, which, unlike C<@ISA> and 
-inheritance, actually requires action to be taken by Perl. We propose that 
+Roles must actually be composed into a class, which, unlike C<@ISA> and
+inheritance, actually requires action to be taken by perl. We propose that
 the appropriate time for this is during the C<UNITCHECK> compilation phase
-and provide a reference example here to try and describe what would be 
+and provide a reference example here to try and describe what would be
 done.
 
     package Comparable {
         # ...
-        UNITCHECK { 
-            core::oo::compose( 
-                roles => \@DOES, 
+        UNITCHECK {
+            core::oo::compose(
+                roles => \@DOES,
                 into  => __PACKAGE__,
                 as    => 'role',
-            ); 
+            );
         }
     }
 
-However, it should be noted that this should be internal magic associated 
-with the writing of the C<@DOES> variable that schedules this to happen 
-within the C<UNITCHECK> phase, but those details are up for discussion. 
-    
+However, it should be noted that this should be internal magic associated
+with the writing of the C<@DOES> variable that schedules this to happen
+within the C<UNITCHECK> phase, but those details are up for discussion.
+
     package Currency {
         use strict;
         use warnings;
@@ -287,25 +287,25 @@ within the C<UNITCHECK> phase, but those details are up for discussion.
     }
 
 Finally we arrive at the class part of this example. Note that the abstract
-C<compare> method is implemented here and we have our own C<new> constructor. 
+C<compare> method is implemented here and we have our own C<new> constructor.
 
-It is assumed that if we did not fulfill the C<compare> method requirement, 
-that this class would not compile and would throw an error. In this case we 
+It is assumed that if we did not fulfill the C<compare> method requirement,
+that this class would not compile and would throw an error. In this case we
 can use the same mechanism as when we compose a role into a role, with the
-only difference being that we want to fail to compile the class if there are 
-unresolved abstract methods. Again, here is the reference example to show 
+only difference being that we want to fail to compile the class if there are
+unresolved abstract methods. Again, here is the reference example to show
 how that might be done, take note of the C<< as => 'class' >> which is needed
 since any given package can both a role or class, depending only on how you
 choose to look at it.
 
     package Currency {
         # ...
-        UNITCHECK { 
-            core::oo::compose( 
-                roles => \@DOES, 
+        UNITCHECK {
+            core::oo::compose(
+                roles => \@DOES,
                 into  => __PACKAGE__,
                 as    => 'class',
-            ); 
+            );
         }
     }
 
