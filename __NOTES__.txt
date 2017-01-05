@@ -51,16 +51,6 @@ Design Goals
     - focus on lower level integration with the language
         - sugar can always be added later on
 
-------------------------------------------------------------------
-
-MOP::Object
------------
-
-The construction protocol for MOP::Object expects that by runtime
-you have already "compiled" all the neccessary meta information into
-the package. This is because it must be able to read all meta
-information using just package stash/glob operations only. (see the
-"Design Goals" above)
 
 ------------------------------------------------------------------
 

@@ -40,7 +40,6 @@ TODO:
 subtest '... simple deleting an slot alias test' => sub {
     my $role = MOP::Role->new( name => 'Baz' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -64,7 +63,6 @@ subtest '... simple deleting an slot alias test' => sub {
 subtest '... testing deleting an slot alias when there is no %HAS' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     is(
         exception { $role->delete_slot_alias( 'foo' ) },
@@ -76,7 +74,6 @@ subtest '... testing deleting an slot alias when there is no %HAS' => sub {
 subtest '... testing deleting an slot alias when there is a %HAS, but no entry for that item' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     is(
         exception { $role->delete_slot_alias( 'gorch' ) },
@@ -88,7 +85,6 @@ subtest '... testing deleting an slot alias when there is a %HAS, but no entry f
 subtest '... testing trying to delete slot alias when it is a regular one' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     like(
         exception { $role->delete_slot_alias( 'foo' ) },

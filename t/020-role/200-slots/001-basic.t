@@ -40,7 +40,6 @@ subtest '... simple MOP::Slot test' => sub {
 
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -65,7 +64,6 @@ subtest '... simple MOP::Slot test' => sub {
     isnt($slot, $all_slots[0], '... not the same instance though');
 
     foreach my $a ( $all_slots[0], $regular_slots[0], $slot ) {
-        isa_ok($a, 'MOP::Object');
         isa_ok($a, 'MOP::Slot');
 
         is($a->name, 'foo', '... got the name we expected');
@@ -79,7 +77,6 @@ subtest '... simple MOP::Slot test' => sub {
 subtest '... simple test when no %HAS is present' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots = $role->all_slots;
     is(scalar @all_slots, 0, '... no slots');
@@ -94,7 +91,6 @@ subtest '... simple test when no %HAS is present' => sub {
 subtest '... simple MOP::Slot test with aliases' => sub {
     my $role = MOP::Role->new( name => 'Baz' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -118,7 +114,6 @@ subtest '... simple MOP::Slot test with aliases' => sub {
 subtest '... testing getting an slot alias that does not exist' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     ok(!$role->get_slot_alias('some_random_NAME'), '... got nothing back if the aliased slot does not exist');
     ok(!$role->has_slot_alias('some_random_NAME'), '... got nothing back if the aliased slot does not exist');

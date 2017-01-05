@@ -31,7 +31,6 @@ TODO:
 
 subtest '... simple aliased MOP::Slot test' => sub {
     my $a = MOP::Slot->new( name => 'bar', initializer => $Foo::HAS{bar} );
-    isa_ok($a, 'MOP::Object');
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');

@@ -40,7 +40,6 @@ TODO:
 subtest '... simple deleting an slot test' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -56,7 +55,6 @@ subtest '... simple deleting an slot test' => sub {
         my $slot = $role->get_slot('foo');
         ok($slot, '... we can get the foo slot');
         isa_ok($slot, 'MOP::Slot');
-        isa_ok($slot, 'MOP::Object');
     }
 
     is(
@@ -75,7 +73,6 @@ subtest '... simple deleting an slot test' => sub {
 subtest '... testing deleting an slot when there is no %HAS' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     is(
         exception { $role->delete_slot( 'foo' ) },
@@ -87,7 +84,6 @@ subtest '... testing deleting an slot when there is no %HAS' => sub {
 subtest '... testing deleting an slot when there is a %HAS, but no entry for that item' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     is(
         exception { $role->delete_slot( 'gorch' ) },
@@ -99,7 +95,6 @@ subtest '... testing deleting an slot when there is a %HAS, but no entry for tha
 subtest '... testing trying to delete slot when it is an alias' => sub {
     my $role = MOP::Role->new( name => 'Baz' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     like(
         exception { $role->delete_slot( 'foo' ) },

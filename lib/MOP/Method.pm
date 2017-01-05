@@ -5,14 +5,14 @@ use warnings;
 
 use attributes ();
 
-use MOP::Object;
+use UNIVERSAL::Object;
 
 use MOP::Internal::Util;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = 'MOP::Object' };
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
 
 sub CREATE {
     my ($class, $args) = @_;

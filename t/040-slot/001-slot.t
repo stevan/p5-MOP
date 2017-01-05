@@ -25,7 +25,6 @@ TODO:
 
 subtest '... simple MOP::Slot test' => sub {
     my $a = MOP::Slot->new( name => 'foo', initializer => $Foo::HAS{foo} );
-    isa_ok($a, 'MOP::Object');
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'foo', '... got the name we expected');

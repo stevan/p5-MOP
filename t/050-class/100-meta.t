@@ -13,7 +13,6 @@ BEGIN {
 
 my $Class = MOP::Class->new( name => 'MOP::Class' );
 isa_ok($Class, 'MOP::Class');
-isa_ok($Class, 'MOP::Object');
 
 ok($Class->does_role('MOP::Role'), '... MOP::Class does MOP::Role');
 ok($Class->does_role('MOP::Module'), '... MOP::Class does MOP::Module');
@@ -77,8 +76,8 @@ is($Class->name,      'MOP::Class', '... got the expected value from ->name');
 is($Class->version,   '0.01', '... got the expected value from ->version');
 is($Class->authority, 'cpan:STEVAN', '... got the expected value ->authority');
 
-is_deeply([ $Class->superclasses ], [ 'MOP::Object' ], '... got the expected value from ->superclasses');
-is_deeply($Class->mro, [ 'MOP::Class', 'MOP::Object', 'UNIVERSAL::Object' ], '... got the expected value from ->mro');
+is_deeply([ $Class->superclasses ], [ 'UNIVERSAL::Object' ], '... got the expected value from ->superclasses');
+is_deeply($Class->mro, [ 'MOP::Class', 'UNIVERSAL::Object' ], '... got the expected value from ->mro');
 
 is_deeply([ $Class->roles ], [ 'MOP::Role' ], '... got the expected value from ->roles');
 
@@ -87,6 +86,6 @@ is_deeply([ sort map { $_->name } $Class->all_methods ], [ sort @METHODS ], '...
 is($Class->get_method('superclasses')->body, \&MOP::Class::superclasses, '... got the expected value from ->get_method');
 
 can_ok($Class, 'superclasses');
-is_deeply([ $Class->superclasses ], [ 'MOP::Object' ], '... got the expected value from ->superclasses (still)');
+is_deeply([ $Class->superclasses ], [ 'UNIVERSAL::Object' ], '... got the expected value from ->superclasses (still)');
 
 done_testing;

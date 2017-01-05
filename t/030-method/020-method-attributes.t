@@ -36,7 +36,6 @@ TODO:
 
 subtest '... simple MOP::Method test' => sub {
     my $m = MOP::Method->new( body => \&Foo::foo );
-    isa_ok($m, 'MOP::Object');
     isa_ok($m, 'MOP::Method');
 
     is($m->name, 'foo', '... got the name we expected');
@@ -55,7 +54,6 @@ subtest '... simple MOP::Method test' => sub {
 
 subtest '... simple MOP::Method test' => sub {
     my $m = MOP::Method->new( body => \&Foo::bar );
-    isa_ok($m, 'MOP::Object');
     isa_ok($m, 'MOP::Method');
 
     is($m->name, 'bar', '... got the name we expected');

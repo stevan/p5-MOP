@@ -3,7 +3,8 @@ package MOP::Role;
 use strict;
 use warnings;
 
-use MOP::Object;
+use UNIVERSAL::Object;
+
 use MOP::Module;
 use MOP::Method;
 use MOP::Slot;
@@ -13,7 +14,7 @@ use MOP::Internal::Util;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA;  BEGIN { @ISA  = 'MOP::Object' };
+our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object' };
 our @DOES; BEGIN { @DOES = 'MOP::Module' }; # to be composed later ...
 
 UNITCHECK {

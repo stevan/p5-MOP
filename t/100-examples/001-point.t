@@ -23,7 +23,7 @@ TODO:
     package Point;
     use strict;
     use warnings;
-    our @ISA; BEGIN { @ISA = ('MOP::Object') }
+    our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
     our %HAS; BEGIN {
         %HAS = (
             x => sub { 0 },
@@ -93,7 +93,7 @@ subtest '... test an instance of Point' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point'),
-        [ 'Point', 'MOP::Object', 'UNIVERSAL::Object' ],
+        [ 'Point', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 
@@ -117,7 +117,7 @@ subtest '... test an instance of Point3D' => sub {
 
     is_deeply(
         mro::get_linear_isa('Point3D'),
-        [ 'Point3D', 'Point', 'MOP::Object', 'UNIVERSAL::Object' ],
+        [ 'Point3D', 'Point', 'UNIVERSAL::Object' ],
         '... got the expected linear isa'
     );
 
@@ -157,10 +157,9 @@ subtest '... meta test' => sub {
 
         my $Point = MOP::Class->new( name => 'Point' );
         isa_ok($Point, 'MOP::Class');
-        isa_ok($Point, 'MOP::Object');
 
-        is_deeply($Point->mro, [ 'Point', 'MOP::Object', 'UNIVERSAL::Object' ], '... got the expected mro');
-        is_deeply([ $Point->superclasses ], [ 'MOP::Object' ], '... got the expected superclasses');
+        is_deeply($Point->mro, [ 'Point', 'UNIVERSAL::Object' ], '... got the expected mro');
+        is_deeply([ $Point->superclasses ], [ 'UNIVERSAL::Object' ], '... got the expected superclasses');
 
         foreach ( @Point_methods ) {
             ok($Point->has_method( $_ ), '... Point has method ' . $_);

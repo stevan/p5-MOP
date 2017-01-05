@@ -34,7 +34,6 @@ TODO:
 my $role = MOP::Role->new( name => 'Foo' );
 isa_ok($role, 'MOP::Role');
 # does_ok($role, 'MOP::Module'); # TODO
-isa_ok($role, 'MOP::Object');
 
 subtest '... testing creating a required method' => sub {
     ok(!$role->requires_method('bar'), '... this method is not required');
@@ -128,7 +127,6 @@ subtest '... testing creating a required method when glob is already there (w/ou
 subtest '... testing exception when method name is bad' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     like(
         exception { $Foo->add_required_method('this-canno\tnbeaname') },

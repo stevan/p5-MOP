@@ -39,7 +39,6 @@ our $Foo_foo = sub { 'Foo::foo' };
 subtest '... testing deleting method alias' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method('foo'), '... [foo] method to get');
     ok(!$Foo->get_method('foo'), '... [foo] method to get');
@@ -68,7 +67,6 @@ subtest '... testing deleting method alias' => sub {
 subtest '... testing deleting a method alias that does not exist (but has glob already)' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     is($Foo::bling, 100, '... we have our package variable named same as our method');
 
@@ -84,7 +82,6 @@ subtest '... testing deleting a method alias that does not exist (but has glob a
 subtest '... testing deleting a method alias that does not exist' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->delete_method_alias('some_random_NAME'), '... got nothing back if the required method does not exist');
 };
@@ -92,7 +89,6 @@ subtest '... testing deleting a method alias that does not exist' => sub {
 subtest '... testing deleting a method alias that is actually a reqular method' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method_alias('bar'), '... this method is not an alias (it is a regular method)');
     ok($Foo->has_method('bar'), '... this method is not an alias (it is a regular method)');
@@ -113,7 +109,6 @@ subtest '... testing deleting a method alias that is actually a reqular method' 
 subtest '... testing deleting a method alias that is actually a required method' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method_alias('baz'), '... this method is not an alias (a required method)');
     ok($Foo->requires_method('baz'), '... this method is not an alias (a required method)');

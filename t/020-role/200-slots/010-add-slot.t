@@ -36,7 +36,6 @@ TODO:
 subtest '... simple adding a slot test' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -57,7 +56,6 @@ subtest '... simple adding a slot test' => sub {
     );
 
     my $a = $role->get_slot('foo');
-    isa_ok($a, 'MOP::Object');
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'foo', '... got the name we expected');
@@ -70,7 +68,6 @@ subtest '... simple adding a slot test' => sub {
 subtest '... simple adding a slot test (when %HAS is present)' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     my @all_slots     = $role->all_slots;
     my @regular_slots = $role->slots;
@@ -91,7 +88,6 @@ subtest '... simple adding a slot test (when %HAS is present)' => sub {
     );
 
     my $a = $role->get_slot('bar');
-    isa_ok($a, 'MOP::Object');
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');
@@ -104,7 +100,6 @@ subtest '... simple adding a slot test (when %HAS is present)' => sub {
 subtest '... testing error adding a slot whose initializer is not correct' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
-    isa_ok($role, 'MOP::Object');
 
     like(
         exception { $role->add_slot( foo => sub { 0 } ) },

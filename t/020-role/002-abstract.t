@@ -13,9 +13,6 @@ BEGIN {
 =pod
 
 TODO:
-- test the MOP::Internal::Util::IS_CLASS_ABSTRACT function here as well
-    - the two APIs (MOP::Object::util & MOP-OO) should have
-      the same end result
 - test setting abstract-ness from the Role API as well
 
 =cut
@@ -56,7 +53,6 @@ subtest '... testing is_abstract' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Foo', '... got the expected name');
     ok($role->is_abstract, '... the role is abstract');
@@ -67,7 +63,6 @@ subtest '... testing setting a role to be abstract' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Bar', '... got the expected name');
     ok(!$role->is_abstract, '... the role is not abstract');
@@ -85,7 +80,6 @@ subtest '... testing setting a role that has required method' => sub {
     my $role = MOP::Role->new( name => 'Baz' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Baz', '... got the expected name');
     ok($role->is_abstract, '... the role is abstract (even though we mark as not being so)');
@@ -104,7 +98,6 @@ subtest '... testing setting a role to NOT be abstract' => sub {
     my $role = MOP::Role->new( name => 'Gorch' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Gorch', '... got the expected name');
     ok(!$role->is_abstract, '... the role is not abstract (because we marked it as not being so)');
@@ -115,7 +108,6 @@ subtest '... testing setting a role to NOT be abstract (w/ required method)' => 
     my $role = MOP::Role->new( name => 'Bling' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Bling', '... got the expected name');
     ok($role->is_abstract, '... the role is abstract (even though we marked it as not being so)');
@@ -128,7 +120,6 @@ subtest '... testing some edge cases ' => sub {
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
     # does_ok($role, 'MOP::Module'); # TODO
-    isa_ok($role, 'MOP::Object');
 
     is($role->name, 'Foo', '... got the expected name');
     ok($role->is_abstract, '... the role is abstract');

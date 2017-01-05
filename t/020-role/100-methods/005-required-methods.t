@@ -29,7 +29,6 @@ TODO:
 my $role = MOP::Role->new( name => 'Foo' );
 isa_ok($role, 'MOP::Role');
 # does_ok($role, 'MOP::Module'); # TODO
-isa_ok($role, 'MOP::Object');
 
 subtest '... testing setting a role that has required method' => sub {
     is($role->name, 'Foo', '... got the expected name');

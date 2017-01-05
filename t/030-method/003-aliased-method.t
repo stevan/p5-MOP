@@ -31,7 +31,6 @@ TODO:
 
 subtest '... simple aliased MOP::Method test' => sub {
     my $m = MOP::Method->new( body => \&Foo::foo );
-    isa_ok($m, 'MOP::Object');
     isa_ok($m, 'MOP::Method');
 
     is($m->name, 'foo', '... got the name we expected');

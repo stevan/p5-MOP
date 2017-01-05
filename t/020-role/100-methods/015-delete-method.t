@@ -44,7 +44,6 @@ TODO:
 subtest '... testing deleting method' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok($Foo->has_method('foo'), '... [foo] method to get');
     ok($Foo->get_method('foo'), '... [foo] method to get');
@@ -73,7 +72,6 @@ subtest '... testing deleting method' => sub {
 subtest '... testing deleting a method that does not exist (but has glob already)' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     is($Foo::bling, 100, '... we have our package variable named same as our method');
 
@@ -89,7 +87,6 @@ subtest '... testing deleting a method that does not exist (but has glob already
 subtest '... testing deleting a method that does not exist' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->delete_method('some_random_NAME'), '... got nothing back if the method does not exist');
 };
@@ -97,7 +94,6 @@ subtest '... testing deleting a method that does not exist' => sub {
 subtest '... testing deleting a method that is actually a required method' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method('bar'), '... this method is required (not a regular method)');
     ok($Foo->requires_method('bar'), '... this method is required (not a regular method)');
@@ -115,7 +111,6 @@ subtest '... testing deleting a method that is actually a required method' => su
 subtest '... testing deleting a method that is actually an aliased method' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method('baz'), '... this method is not a regular method');
     ok($Foo->has_method_alias('baz'), '... this method is an alias (not a regular method)');

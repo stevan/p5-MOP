@@ -34,7 +34,6 @@ TODO:
 subtest '... testing basics' => sub {
     my $Foo = MOP::Role->new( name => 'Foo' );
     isa_ok($Foo, 'MOP::Role');
-    isa_ok($Foo, 'MOP::Object');
 
     ok(!$Foo->has_method('foo'), '... no [foo] method to get');
     ok(!$Foo->get_method('foo'), '... no [foo] method to get');

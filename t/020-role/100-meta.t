@@ -12,7 +12,7 @@ BEGIN {
 }
 
 my $Role = MOP::Role->new( name => 'MOP::Role' );
-isa_ok($Role, 'MOP::Object');
+isa_ok($Role, 'MOP::Role');
 
 ok($Role->does_role('MOP::Module'), '... MOP::Role does MOP::Module');
 

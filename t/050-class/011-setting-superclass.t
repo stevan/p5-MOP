@@ -36,13 +36,13 @@ subtest '... testing adding superclass successfully' => sub {
     ok(!Foo->can('new'), '... no `new` method in Foo');
 
     is(
-        exception { $c->set_superclasses('MOP::Object') },
+        exception { $c->set_superclasses('UNIVERSAL::Object') },
         undef,
         '... was able to set the superclass effectively'
     );
 
-    is_deeply([ $c->superclasses ], [ 'MOP::Object' ], '... got a superclass now');
-    is_deeply($c->mro, [ 'Foo',  'MOP::Object', 'UNIVERSAL::Object' ], '... got more in the mro now');
+    is_deeply([ $c->superclasses ], [ 'UNIVERSAL::Object' ], '... got a superclass now');
+    is_deeply($c->mro, [ 'Foo', 'UNIVERSAL::Object' ], '... got more in the mro now');
 
     ok(Foo->can('new'), '... we now have a `new` method in Foo');
 

@@ -75,7 +75,7 @@ BEGIN {
     use strict;
     use warnings;
 
-    our @ISA;  BEGIN { @ISA  = ('MOP::Object')             }
+    our @ISA;  BEGIN { @ISA  = ('UNIVERSAL::Object')       }
     our @DOES; BEGIN { @DOES = ('Comparable', 'Printable') }
     our %HAS;  BEGIN { %HAS  = (amount => sub { 0 })       }
 

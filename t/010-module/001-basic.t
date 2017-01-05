@@ -40,7 +40,6 @@ TODO:
 subtest '... testing identity methods' => sub {
     my $module = MOP::Module->new( name => 'Foo' );
     isa_ok($module, 'MOP::Module');
-    isa_ok($module, 'MOP::Object');
 
     ok(!blessed(\%Foo::), '... check that the stash did not get blessed');
 
@@ -52,7 +51,6 @@ subtest '... testing identity methods' => sub {
 subtest '... testing identity methods w/ AUTHORITY missing' => sub {
     my $module = MOP::Module->new( name => 'Bar' );
     isa_ok($module, 'MOP::Module');
-    isa_ok($module, 'MOP::Object');
 
     ok(!blessed(\%Bar::), '... check that the stash did not get blessed');
 
@@ -64,7 +62,6 @@ subtest '... testing identity methods w/ AUTHORITY missing' => sub {
 subtest '... testing identity methods w/ VERSION & AUTHORITY missing' => sub {
     my $module = MOP::Module->new( name => 'Baz' );
     isa_ok($module, 'MOP::Module');
-    isa_ok($module, 'MOP::Object');
 
     ok(!blessed(\%Baz::), '... check that the stash did not get blessed');
 

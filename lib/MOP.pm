@@ -6,8 +6,6 @@ use warnings;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use MOP::Object;
-
 use MOP::Module;
 
 use MOP::Role;
