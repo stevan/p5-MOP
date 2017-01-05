@@ -22,13 +22,11 @@ TODO:
     use strict;
     use warnings;
 
-    BEGIN {
-        MOP::Internal::Util::INSTALL_CODE_ATTRIBUTE_HANDLER(
-            __PACKAGE__, qw[
-                Bar
-                Baz
-            ]
-        );
+    sub MODIFY_CODE_ATTRIBUTES { () }
+    sub FETCH_CODE_ATTRIBUTES {
+        my $code = $_[1];
+        return 'Bar' if $_[1] eq \&foo;
+        return 'Baz' if $_[1] eq \&bar;
     }
 
     sub foo : Bar { 'Foo::foo' }

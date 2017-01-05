@@ -218,54 +218,6 @@ sub REMOVE_CV_FROM_GLOB {
 }
 
 ## ------------------------------------------------------------------
-## Code Attributes
-## ------------------------------------------------------------------
-
-# NOTE:
-# Not hugely happy with the approach of this, but it
-# is a start, we can improve on it as we use it.
-# - SL
-
-sub INSTALL_CODE_ATTRIBUTE_HANDLER {
-    my $pkg       = shift;
-    my %supported = map { $_ => undef } @_;
-
-    die '[ARGS] You must specify a package'
-        unless $pkg;
-    die '[ARGS] You must specify at least one supported attribute'
-        if scalar( keys %supported ) == 0;
-
-    {
-        no strict 'refs';
-
-        # NOTE:
-        # this will effectively be shared package
-        # level storage for this particular module
-        # - SL
-        my %cv_to_attr_map;
-
-        *{$pkg . '::FETCH_CODE_ATTRIBUTES'} = sub {
-            my (undef, $code) = @_;
-            return @{ $cv_to_attr_map{ 0+$code } };
-        };
-
-        *{$pkg . '::MODIFY_CODE_ATTRIBUTES'} = sub {
-            my (undef, $code, @attrs) = @_;
-
-            my @bad_attrs = grep { not exists $supported{ $_ } } @attrs;
-            return @bad_attrs if @bad_attrs;
-
-            $cv_to_attr_map{ 0+$code } = \@attrs;
-
-            return ();
-        };
-    }
-
-    return;
-}
-
-
-## ------------------------------------------------------------------
 ## Role application and composition
 ## ------------------------------------------------------------------
 
