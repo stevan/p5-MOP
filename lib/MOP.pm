@@ -1,4 +1,5 @@
 package MOP;
+# ABSTRACT: A Meta Object Protocol for Perl 5
 
 use strict;
 use warnings;
@@ -15,3 +16,7 @@ use MOP::Method;
 1;
 
 __END__
+
+=pod
+
+=cut

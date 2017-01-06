@@ -1,4 +1,5 @@
 package MOP::Slot;
+# ABSTRACT: A representation of a class slot
 
 use strict;
 use warnings;
@@ -72,14 +73,18 @@ __END__
 
 =pod
 
-=head1 NAME
-
-MOP::Slot
-
-=head1 SYNPOSIS
-
-=head1 DESCRIPTION
-
 =head1 METHODS
+
+=over 4
+
+=item C<name>
+
+=item C<initializer>
+
+=item C<origin_stash>
+
+=item C<was_aliased_from>
+
+=back
 
 =cut

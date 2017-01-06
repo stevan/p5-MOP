@@ -1,4 +1,5 @@
 package MOP::Class;
+# ABSTRACT: A representation of a class
 
 use strict;
 use warnings;
@@ -55,14 +56,6 @@ sub mro {
 __END__
 
 =pod
-
-=head1 NAME
-
-MOP::Class - the metaclass for class
-
-=head1 SYNPOSIS
-
-=head1 DESCRIPTION
 
 =head1 METHODS
 

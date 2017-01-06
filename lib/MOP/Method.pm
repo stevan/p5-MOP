@@ -1,4 +1,5 @@
 package MOP::Method;
+# ABSTRACT: A representation of a method
 
 use strict;
 use warnings;
@@ -88,14 +89,22 @@ __END__
 
 =pod
 
-=head1 NAME
-
-MOP::Method
-
-=head1 SYNPOSIS
-
-=head1 DESCRIPTION
-
 =head1 METHODS
+
+=over 4
+
+=item C<name>
+
+=item C<body>
+
+=item C<is_required>
+
+=item C<origin_stash>
+
+=item C<was_aliased_from>
+
+=item C<get_code_attributes>
+
+=back
 
 =cut

@@ -1,4 +1,5 @@
 package MOP::Role;
+# Abstract: A representation of a role
 
 use strict;
 use warnings;
@@ -760,14 +761,6 @@ sub delete_slot_alias {
 __END__
 
 =pod
-
-=head1 NAME
-
-MOP::Role - the metaclass for roles
-
-=head1 SYNPOSIS
-
-=head1 DESCRIPTION
 
 =head1 METHODS
 

@@ -1,4 +1,5 @@
 package MOP::Internal::Util;
+# ABSTRACT: For MOP Internal Use Only
 
 use strict;
 use warnings;
@@ -369,11 +370,13 @@ sub COMPOSE_ALL_ROLE_METHODS {
     return \%methods, \%conflicts, \%required;
 }
 
-
 1;
 
 __END__
 
+=pod
+
+=cut
 
 
 
