@@ -13,18 +13,25 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
+our %HAS; BEGIN {
+    %HAS = (
+        body => sub { die '[ARGS] You must specify a method body' },
+    )
+}
 
 sub CREATE {
     my ($class, $args) = @_;
 
-    die '[ARGS] You must specify a method body'
-        unless $args->{body};
+    my $body = $args->{body} || $HAS{body}->();
+
     die '[ARGS] The body specified must be a CODE reference'
-        unless ref $args->{body} eq 'CODE';
+        unless ref $body eq 'CODE';
 
-    my $body = $args->{body};
-
-    return bless \$body => $class;
+    # this will get blessed, so we
+    # do not actually want the CV
+    # to get touched, so we get a
+    # ref of a ref here ...
+    return \$body;
 }
 
 sub name {

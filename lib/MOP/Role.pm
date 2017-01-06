@@ -14,11 +14,19 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
+our %HAS; BEGIN {
+    %HAS = (
+        name => sub { die '[ARGS] You must specify a stash name' },
+    )
+}
 
 sub CREATE {
     my ($class, $args) = @_;
-    my $name = $args->{name}
-        || die '[ARGS] You must specify a package name';
+
+    # intiialize the name ...
+    my $name = $args->{name} || $HAS{name}->();
+
+    # then find the stash ...
     my $stash;
     {
         # get a ref to to the stash itself ...
@@ -26,10 +34,12 @@ sub CREATE {
         $stash = \%{ $name . '::' };
     }
     # and then a ref to that, because we
-    # need to bless it and do not want to
-    # bless the actual stash if we can
-    # avoid it.
-    return bless \$stash => $class;
+    # eventually will need to bless it and
+    # we do not want to bless the actual
+    # stash because that persists beyond
+    # the lifetime of this object, so we
+    # bless a ref of a ref then ...
+    return \$stash;
 }
 
 # stash

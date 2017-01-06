@@ -10,7 +10,13 @@ use MOP::Internal::Util;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' }
+our %HAS; BEGIN {
+    %HAS = (
+        name        => sub { die '[ARGS] You must specify a slot name'        },
+        initializer => sub { die '[ARGS] You must specify a slot initializer' },
+    )
+}
 
 # if called upon to be a CODE ref
 # then return the initializer
@@ -18,18 +24,12 @@ use overload '&{}' => 'initializer', fallback => 1;
 
 sub CREATE {
     my ($class, $args) = @_;
+    my $proto = $class->SUPER::CREATE( $args );
 
-    die '[ARGS] You must specify a slot name'
-        unless $args->{name};
-    die '[ARGS] You must specify a slot initializer'
-        unless $args->{initializer};
     die '[ARGS] The initializer specified must be a CODE reference'
-        unless ref $args->{initializer} eq 'CODE';
+        unless ref $proto->{initializer} eq 'CODE';
 
-    return bless {
-        name        => $args->{name},
-        initializer => $args->{initializer},
-    } => $class;
+    return $proto;
 }
 
 sub name {
