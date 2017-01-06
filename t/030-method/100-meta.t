@@ -22,7 +22,7 @@ sub foo { 'FOO' }
         body
 
         name
-        origin_class
+        origin_stash
         was_aliased_from
     ];
 
@@ -32,7 +32,7 @@ sub foo { 'FOO' }
     is($Method->body->(), 'FOO', '... got the expected result from calling body');
 
     is($Method->name, 'foo', '... got the expected result from ->name');
-    is($Method->origin_class, 'main', '... got the expected result from ->origin_class');
+    is($Method->origin_stash, 'main', '... got the expected result from ->origin_stash');
 
     ok($Method->was_aliased_from('main'), '... the method was aliased from main::');
     ok(!$Method->was_aliased_from('Foo'), '... the method was not aliased from Foo::');
@@ -49,7 +49,7 @@ sub foo { 'FOO' }
         body
 
         name
-        origin_class
+        origin_stash
         was_aliased_from
     ];
 
@@ -59,7 +59,7 @@ sub foo { 'FOO' }
     is($Method->body->(), 'ANON', '... got the expected result from calling body');
 
     is($Method->name, '__ANON__', '... got the expected result from ->name');
-    is($Method->origin_class, 'main', '... got the expected result from ->origin_class');
+    is($Method->origin_stash, 'main', '... got the expected result from ->origin_stash');
 
     ok($Method->was_aliased_from('main'), '... the method was aliased from main::');
     ok(!$Method->was_aliased_from('Foo'), '... the method was not aliased from Foo::');

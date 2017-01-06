@@ -64,7 +64,7 @@ subtest '... testing basics' => sub {
         isa_ok($m, 'MOP::Method');
 
         is($m->name, '__ANON__', '... got the name we expected');
-        is($m->origin_class, 'main', '... got the origin-class we expected');
+        is($m->origin_stash, 'main', '... got the origin-class we expected');
         ok(!$m->is_required, '... the method is not required');
 
         is($m->body, Foo->can('foo'), '... the method body is what we expected');

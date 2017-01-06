@@ -34,7 +34,7 @@ subtest '... simple aliased MOP::Slot test' => sub {
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');
-    is($a->origin_class, 'Bar', '... got the origin class we expected');
+    is($a->origin_stash, 'Bar', '... got the origin class we expected');
     is($a->initializer, $Foo::HAS{bar}, '... equivalant to the initializer we expected');
     is($a->initializer, $Bar::HAS{bar}, '... equivalant to the initializer we expected');
 

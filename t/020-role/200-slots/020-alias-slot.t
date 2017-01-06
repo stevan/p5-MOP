@@ -59,7 +59,7 @@ subtest '... simple adding a slot alias test' => sub {
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');
-    is($a->origin_class, 'Bar', '... got the origin class we expected');
+    is($a->origin_stash, 'Bar', '... got the origin class we expected');
     is($a->initializer, $Bar::bar_initializer, '... got the initializer we expected');
 
     ok($a->was_aliased_from('Bar'), '... the slot belongs to Bar');
@@ -91,7 +91,7 @@ subtest '... simple adding a slot test (when %HAS is present)' => sub {
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'foo', '... got the name we expected');
-    is($a->origin_class, 'Foo', '... got the origin class we expected');
+    is($a->origin_stash, 'Foo', '... got the origin class we expected');
     is($a->initializer, $Foo::foo_initializer, '... got the initializer we expected');
 
     ok($a->was_aliased_from('Foo'), '... the slot belongs to Foo');

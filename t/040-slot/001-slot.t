@@ -43,7 +43,7 @@ subtest '... simple MOP::Slot test' => sub {
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'foo', '... got the name we expected');
-    is($a->origin_class, 'Foo', '... got the origin class we expected');
+    is($a->origin_stash, 'Foo', '... got the origin class we expected');
     is($a->initializer, $Foo::HAS{foo}, '... got the initializer we expected');
 
     ok($a->was_aliased_from('Foo'), '... the slot belongs to Foo');
@@ -59,7 +59,7 @@ subtest '... simple MOP::Slot in a slot test' => sub {
     isa_ok($a, 'MOP::Slot');
 
     is($a->name, 'bar', '... got the name we expected');
-    is($a->origin_class, 'Bar', '... got the origin class we expected');
+    is($a->origin_stash, 'Bar', '... got the origin class we expected');
     is($a->initializer, $Bar::HAS{bar}->initializer, '... got the initializer we expected');
 
     ok($a->was_aliased_from('Bar'), '... the slot belongs to Bar');

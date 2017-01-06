@@ -42,7 +42,7 @@ sub is_required {
     MOP::Internal::Util::IS_CV_NULL( $self->body );
 }
 
-sub origin_class {
+sub origin_stash {
     my ($self) = @_;
     # NOTE:
     # Here we actually want the stash that is
@@ -63,7 +63,7 @@ sub was_aliased_from {
     die '[ARGS] You must specify at least one classname'
         if scalar( @classnames ) == 0;
 
-    my $class = $self->origin_class;
+    my $class = $self->origin_stash;
     foreach my $candidate ( @classnames ) {
         return 1 if $candidate eq $class;
     }

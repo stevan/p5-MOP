@@ -83,7 +83,7 @@ subtest '... testing basics' => sub {
     isa_ok($foo, 'MOP::Method');
 
     is($foo->name, 'foo', '... got the expected name');
-    is($foo->origin_class, 'Foo', '... got the expected origin class');
+    is($foo->origin_stash, 'Foo', '... got the expected origin class');
     is($foo->body, \&Foo::foo, '... got the expected body');
     ok(!$foo->is_required, '... not a required method');
 
@@ -94,7 +94,7 @@ subtest '... testing basics' => sub {
     isa_ok($bar, 'MOP::Method');
 
     is($bar->name, 'bar', '... got the expected name');
-    is($bar->origin_class, 'Bar', '... got the expected origin class');
+    is($bar->origin_stash, 'Bar', '... got the expected origin class');
     is($bar->body, \&Bar::bar, '... got the expected body');
     ok(!$bar->is_required, '... not a required method');
 

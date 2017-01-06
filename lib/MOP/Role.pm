@@ -131,7 +131,7 @@ sub methods {
 
         # if the method is not originally from the
         # class, then we probably don't want it ...
-        if ( $method->origin_class ne $class ) {
+        if ( $method->origin_stash ne $class ) {
             # if our class has roles, then non-local
             # methods *might* be valid, so ...
 
@@ -170,7 +170,7 @@ sub methods {
 sub aliased_methods {
     my $self  = shift;
     my $class = $self->name;
-    return grep { (!$_->is_required) && $_->origin_class ne $class } $self->all_methods
+    return grep { (!$_->is_required) && $_->origin_stash ne $class } $self->all_methods
 }
 
 # just the required methods (locality be damned)
@@ -232,7 +232,7 @@ sub get_required_method {
     );
     # and make sure it is local, and
     # then return the method ...
-    return $method if $method->origin_class eq $class;
+    return $method if $method->origin_stash eq $class;
     # or return nothing ...
     return;
 }
@@ -312,7 +312,7 @@ sub has_method {
         my @roles  = $self->roles;
         # and make sure it is local, and
         # then return accordingly
-        return $method->origin_class eq $class
+        return $method->origin_stash eq $class
             || (@roles && $method->was_aliased_from( @roles ));
     }
 
@@ -340,7 +340,7 @@ sub get_method {
         # and make sure it is local, and
         # then return accordingly
         return $method
-            if $method->origin_class eq $class
+            if $method->origin_stash eq $class
             || (@roles && $method->was_aliased_from( @roles ));
     }
 
@@ -388,7 +388,7 @@ sub delete_method {
             # if the method has not come from
             # the local class, we need to see
             # if it was added from a role
-            if ($method->origin_class ne $self->name) {
+            if ($method->origin_stash ne $self->name) {
 
                 # if it came from a role, then it is
                 # okay to be deleted, but if it didn't
@@ -429,7 +429,7 @@ sub get_method_alias {
         # and make sure it is not local, and
         # then return accordingly
         return $method
-            if $method->origin_class ne $class;
+            if $method->origin_stash ne $class;
     }
 
     # if there was no CV, return false.
@@ -480,7 +480,7 @@ sub delete_method_alias {
             my $method = MOP::Method->new( body => *{ $glob }{CODE} );
 
             die "[CONFLICT] Cannot delete an aliased method ($name) when there is a regular method already there"
-                if $method->origin_class eq $self->name;
+                if $method->origin_stash eq $self->name;
 
             # but if we have a regular method, then we
             # can just delete the CV from the glob
@@ -506,7 +506,7 @@ sub has_method_alias {
     # now we grab the CV and make sure it is
     # local, and return accordingly
     if ( my $code = MOP::Internal::Util::GET_GLOB_SLOT( $stash, $name, 'CODE' ) ) {
-        return MOP::Method->new( body => $code )->origin_class ne $class;
+        return MOP::Method->new( body => $code )->origin_stash ne $class;
     }
 
     # if there was no CV, return false.
@@ -517,7 +517,7 @@ sub has_method_alias {
 
 ## FIXME:
 ## The same problem we had methods needs to be fixed with
-## slots, just checking the origin_class v. class is
+## slots, just checking the origin_stash v. class is
 ## not enough, we need to check aliasing as well.
 ## - SL
 
@@ -540,7 +540,7 @@ sub slots {
     my $class = $self->name;
     my @roles = $self->roles;
     return grep {
-        $_->origin_class eq $class
+        $_->origin_stash eq $class
             ||
         (@roles && $_->was_aliased_from( @roles ))
     } $self->all_slots
@@ -550,7 +550,7 @@ sub slots {
 sub aliased_slots {
     my $self  = shift;
     my $class = $self->name;
-    return grep { $_->origin_class ne $class } $self->all_slots
+    return grep { $_->origin_stash ne $class } $self->all_slots
 }
 
 ## regular ...
@@ -573,7 +573,7 @@ sub has_slot {
         initializer => $has->{ $name }
     );
 
-    return $slot->origin_class eq $class
+    return $slot->origin_stash eq $class
         || (@roles && $slot->was_aliased_from( @roles ));
 }
 
@@ -596,7 +596,7 @@ sub get_slot {
     );
 
     return $slot
-        if $slot->origin_class eq $class
+        if $slot->origin_stash eq $class
         || (@roles && $slot->was_aliased_from( @roles ));
 
     return;
@@ -617,8 +617,8 @@ sub add_slot {
     my $class = $self->name;
     my $slot  = MOP::Slot->new( name => $name, initializer => $initializer );
 
-    die '[ERROR] Slot is not from local (' . $class . '), it is from (' . $slot->origin_class . ')'
-        if $slot->origin_class ne $class;
+    die '[ERROR] Slot is not from local (' . $class . '), it is from (' . $slot->origin_stash . ')'
+        if $slot->origin_stash ne $class;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
     MOP::Internal::Util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
@@ -646,7 +646,7 @@ sub delete_slot {
         if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
-        )->origin_class ne $class;
+        )->origin_stash ne $class;
 
     delete $has->{ $name };
 
@@ -668,7 +668,7 @@ sub has_slot_alias {
     return MOP::Slot->new(
         name        => $name,
         initializer => $has->{ $name }
-    )->origin_class ne $class;
+    )->origin_stash ne $class;
 }
 
 sub get_slot_alias {
@@ -689,7 +689,7 @@ sub get_slot_alias {
     );
 
     return $slot
-        if $slot->origin_class ne $class;
+        if $slot->origin_stash ne $class;
 
     return;
 }
@@ -710,7 +710,7 @@ sub alias_slot {
     my $slot  = MOP::Slot->new( name => $name, initializer => $initializer );
 
     die '[CONFLICT] Slot is from the local class (' . $class . '), it should be from a different class'
-        if $slot->origin_class eq $class;
+        if $slot->origin_stash eq $class;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
     MOP::Internal::Util::SET_GLOB_SLOT( $stash, 'HAS', $has = {} )
@@ -738,7 +738,7 @@ sub delete_slot_alias {
         if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
-        )->origin_class eq $class;
+        )->origin_stash eq $class;
 
     delete $has->{ $name };
 

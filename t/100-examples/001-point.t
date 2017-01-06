@@ -168,7 +168,7 @@ subtest '... meta test' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, $_, '... got the right method name (' . $_ . ')');
             ok(!$m->is_required, '... the ' . $_ . ' method is not a required method');
-            is($m->origin_class, 'Point', '... the ' . $_ . ' method was defined in Point class')
+            is($m->origin_stash, 'Point', '... the ' . $_ . ' method was defined in Point class')
         }
 
         ok(Point->can( $_ ), '... Point can call method ' . $_)

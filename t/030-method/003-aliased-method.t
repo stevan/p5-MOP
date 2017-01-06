@@ -34,7 +34,7 @@ subtest '... simple aliased MOP::Method test' => sub {
     isa_ok($m, 'MOP::Method');
 
     is($m->name, 'foo', '... got the name we expected');
-    is($m->origin_class, 'Bar', '... got the origin class we expected');
+    is($m->origin_stash, 'Bar', '... got the origin class we expected');
     is($m->body, \&Bar::foo, '... got the body we expected');
     ok(!$m->is_required, '... the method is required');
 

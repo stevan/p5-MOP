@@ -73,7 +73,7 @@ subtest '... testing all-methods' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, 'baz', '... got the expected name');
             ok($m->is_required, '... the method is required');
-            is($m->origin_class, 'Foo', '... the method is not aliased');
+            is($m->origin_stash, 'Foo', '... the method is not aliased');
             like(
                 exception { $m->body->() },
                 qr/^Undefined subroutine \&Foo\:\:baz called/,
@@ -98,7 +98,7 @@ subtest '... testing all-methods' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, 'foo', '... got the expected name');
             ok(!$m->is_required, '... the method is required');
-            is($m->origin_class, 'Foo', '... the method is not aliased');
+            is($m->origin_stash, 'Foo', '... the method is not aliased');
             my $result;
             is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
             is($result, 'Foo::foo', '... got the expected result');
@@ -144,7 +144,7 @@ subtest '... testing all-methods (with aliased one)' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, 'bar', '... got the expected name');
             ok(!$m->is_required, '... the method is required');
-            is($m->origin_class, 'Bar', '... the method is not aliased');
+            is($m->origin_stash, 'Bar', '... the method is not aliased');
             my $result;
             is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
             is($result, 'Bar::bar', '... got the expected result');
@@ -165,8 +165,8 @@ subtest '... testing all-methods (with aliased one)' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, 'baz', '... got the expected name');
             ok($m->is_required, '... the method is required');
-            isnt($m->origin_class, 'Bar', '... the method is aliased');
-            is($m->origin_class, 'Foo', '... the method is aliased');
+            isnt($m->origin_stash, 'Bar', '... the method is aliased');
+            is($m->origin_stash, 'Foo', '... the method is aliased');
             like(
                 exception { $m->body->() },
                 qr/^Undefined subroutine \&Foo\:\:baz called/,
@@ -190,8 +190,8 @@ subtest '... testing all-methods (with aliased one)' => sub {
             isa_ok($m, 'MOP::Method');
             is($m->name, 'foo', '... got the expected name');
             ok(!$m->is_required, '... the method is not required');
-            isnt($m->origin_class, 'Bar', '... the method is aliased');
-            is($m->origin_class, 'Foo', '... the method is aliased');
+            isnt($m->origin_stash, 'Bar', '... the method is aliased');
+            is($m->origin_stash, 'Foo', '... the method is aliased');
             my $result;
             is(exception { $result = $m->body->() }, undef, '... got the lack of an exception from calling the regular sub');
             is($result, 'Foo::foo', '... got the expected result');

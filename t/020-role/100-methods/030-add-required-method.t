@@ -61,7 +61,7 @@ subtest '... testing creating a required method' => sub {
         ok(defined $m, '... this method is required');
         isa_ok($m, 'MOP::Method');
         is($m->name, 'gorch', '... got the expected name');
-        is($m->origin_class, 'Foo', '... got the expected origin class');
+        is($m->origin_stash, 'Foo', '... got the expected origin class');
         ok($m->is_required, '... this method is required');
         is($m->body, Foo->can('gorch'), '... got the expected body');
     };
@@ -117,7 +117,7 @@ subtest '... testing creating a required method when glob is already there (w/ou
         ok(defined $m, '... this method is required');
         isa_ok($m, 'MOP::Method');
         is($m->name, 'bling', '... got the expected name');
-        is($m->origin_class, 'Foo', '... got the expected origin class');
+        is($m->origin_stash, 'Foo', '... got the expected origin class');
         ok($m->is_required, '... this method is required');
         is($m->body, Foo->can('bling'), '... got the expected body');
     };

@@ -42,7 +42,7 @@ sub initializer {
     return $self->{initializer};
 }
 
-sub origin_class {
+sub origin_stash {
     my ($self) = @_;
     # NOTE:
     # for the time being we are going to stick with
@@ -59,7 +59,7 @@ sub was_aliased_from {
     die '[ARGS] You must specify at least one classname'
         if scalar( @classnames ) == 0;
 
-    my $class = $self->origin_class;
+    my $class = $self->origin_stash;
     foreach my $candidate ( @classnames ) {
         return 1 if $candidate eq $class;
     }

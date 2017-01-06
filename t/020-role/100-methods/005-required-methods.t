@@ -42,7 +42,7 @@ subtest '... testing setting a role that has required method' => sub {
         ok(defined $m, '... this method is required');
         isa_ok($m, 'MOP::Method');
         is($m->name, 'baz', '... got the expected name');
-        is($m->origin_class, 'Foo', '... got the expected origin class');
+        is($m->origin_stash, 'Foo', '... got the expected origin class');
         ok($m->is_required, '... this method is required');
         is($m->body, Foo->can('baz'), '... got the expected body');
     };
