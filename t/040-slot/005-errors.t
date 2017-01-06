@@ -19,7 +19,7 @@ TODO:
 subtest '... simple MOP::Slot error test' => sub {
 
     like(
-        exception { MOP::Slot->new },
+        exception { MOP::Slot->new( initializer => sub {} ) },
         qr/^\[ARGS\] You must specify a slot name/,
         '... got the expection we expected'
     );
