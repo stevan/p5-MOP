@@ -8,7 +8,7 @@ use UNIVERSAL::Object;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' }
