@@ -78,6 +78,11 @@ sub was_aliased_from {
     return 0;
 }
 
+sub has_code_attributes {
+    my ($self, $to_match) = @_;
+    return grep /$to_match/, attributes::get( $self->body );
+}
+
 sub get_code_attributes {
     my ($self) = @_;
     return attributes::get( $self->body );
@@ -102,6 +107,8 @@ __END__
 =item C<origin_stash>
 
 =item C<was_aliased_from>
+
+=item C<has_code_attributes>
 
 =item C<get_code_attributes>
 
