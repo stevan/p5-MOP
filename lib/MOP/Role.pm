@@ -1,5 +1,5 @@
 package MOP::Role;
-# Abstract: A representation of a role
+# ABSTRACT: A representation of a role
 
 use strict;
 use warnings;
