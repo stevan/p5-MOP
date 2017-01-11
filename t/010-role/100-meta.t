@@ -15,6 +15,7 @@ my $Role = MOP::Role->new( name => 'MOP::Role' );
 isa_ok($Role, 'MOP::Role');
 
 my @METHODS = qw[
+    BUILDARGS
     CREATE
 
     stash

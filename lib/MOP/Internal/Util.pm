@@ -16,6 +16,21 @@ our $AUTHORITY = 'cpan:STEVAN';
 ## Basic Glob access
 ## ------------------------------------------------------------------
 
+sub IS_VALID_MODULE_NAME {
+    my ($name) = @_;
+    $name =~ /[A-Z_a-z][0-9A-Z_a-z]*(?:::[0-9A-Z_a-z]+)*/
+}
+
+sub IS_STASH_REF {
+    my ($stash) = @_;
+    die '[ARGS] You must specify a stash'
+        unless defined $stash;
+    if ( my $name = B::svref_2object( $stash )->NAME ) {
+        return IS_VALID_MODULE_NAME( $name );
+    }
+    return;
+}
+
 sub GET_NAME {
     my ($stash) = @_;
     die '[ARGS] You must specify a stash'

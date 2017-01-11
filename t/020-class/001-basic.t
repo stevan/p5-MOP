@@ -15,7 +15,7 @@ BEGIN {
 TODO:
 - test method aliases
 - test slots
-- test required methods
+- test required methods 
 
 =cut
 
@@ -30,19 +30,27 @@ TODO:
     sub bar { 'Foo::Bar' }
 }
 
-subtest '... testing class' => sub {
+my %cases = (
+    '... basic constructor'        => sub { MOP::Class->new( name => 'Foo' )     },
+    '... HASH ref constructor'     => sub { MOP::Class->new( { name => 'Foo' } ) },
+    '... package name constructor' => sub { MOP::Class->new( 'Foo' )             },
+    '... stash ref constructor'    => sub { MOP::Class->new( \%Foo:: )           },
+);
 
-    my $c = MOP::Class->new( name => 'Foo' );
-    isa_ok($c, 'MOP::Class');
+foreach my $case ( keys %cases ) {
+    subtest $case => sub {
+        my $c = $cases{ $case }->();
+        isa_ok($c, 'MOP::Class');
 
-    is_deeply([ $c->superclasses ], [], '... got no superclasses');
-    is_deeply($c->mro, [ 'Foo' ], '... got only myself in the mro');
+        is_deeply([ $c->superclasses ], [], '... got no superclasses');
+        is_deeply($c->mro, [ 'Foo' ], '... got only myself in the mro');
 
-    ok($c->has_method('bar'), '... we have the bar method');
-    ok(!$c->has_method('baz'), '... we do not have the baz method');
+        ok($c->has_method('bar'), '... we have the bar method');
+        ok(!$c->has_method('baz'), '... we do not have the baz method');
 
-    ok(!$c->has_method_alias('bar'), '... the bar method is not an alias');
-};
+        ok(!$c->has_method_alias('bar'), '... the bar method is not an alias');
+    };
+}
 
 done_testing;
 

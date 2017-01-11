@@ -19,4 +19,10 @@ __END__
 
 =pod
 
+=head1 SYNOPSIS
+
+use MOP;
+
+my $m = MOP::Class->new( package => 'Foo' );
+
 =cut

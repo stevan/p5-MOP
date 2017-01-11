@@ -17,6 +17,7 @@ isa_ok($Class, 'MOP::Class');
 ok($Class->does_role('MOP::Role'), '... MOP::Class does MOP::Role');
 
 my @METHODS = qw[
+    BUILDARGS 
     CREATE
 
     stash

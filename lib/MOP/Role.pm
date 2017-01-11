@@ -15,24 +15,57 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
-our %HAS; BEGIN {
-    %HAS = (
-        name => sub { die '[ARGS] You must specify a stash name' },
-    )
+
+sub BUILDARGS {
+    my $class = shift;
+    my %args;
+
+    if ( scalar( @_ ) == 1 ) {
+        if ( ref $_[0] ) {
+            if ( ref $_[0] eq 'HASH' ) {
+                if ( MOP::Internal::Util::IS_STASH_REF( $_[0] ) ) {
+                    # if it is a stash, grab the name 
+                    %args = ( 
+                        name  => MOP::Internal::Util::GET_NAME( $_[0] ),
+                        stash => $_[0]
+                    );
+                }
+                else {
+                    # just plain old HASH ref ...
+                    %args = %{ $_[0] };
+                }
+            }
+        }
+        else {
+            # assume it is a single package name ...
+            %args = ( name => $_[0] );
+        }
+    }
+    else {
+        # assume we got key/value pairs ...
+        %args = @_;
+    }
+
+    die '[ARGS] You must specify a package name'
+        unless $args{name};
+
+    die '[ARGS] You must specify a valid package name, not `'.$_[0].'`'
+        unless MOP::Internal::Util::IS_VALID_MODULE_NAME( $args{name} );
+
+    return \%args;
 }
 
 sub CREATE {
     my ($class, $args) = @_;
 
-    # intiialize the name ...
-    my $name = $args->{name} || $HAS{name}->();
+    # intiialize the stash ...
+    my $stash = $args->{stash};
 
-    # then find the stash ...
-    my $stash;
-    {
+    # if we have it, otherwise get it ...
+    unless ( $stash ) {
         # get a ref to to the stash itself ...
         no strict 'refs';
-        $stash = \%{ $name . '::' };
+        $stash = \%{ $args->{name} . '::' };
     }
     # and then a ref to that, because we
     # eventually will need to bless it and
