@@ -391,6 +391,10 @@ __END__
 
 =pod
 
+=head1 DESCRIPTION
+
+No user serviceable parts inside. 
+
 =cut
 
 
