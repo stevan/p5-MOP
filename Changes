@@ -1,5 +1,7 @@
 Revision history for Perl extension MOP
 
+0.03
+
 0.02 2017-01-12
 	[ENHANCEMENT]
 	- fixing constructors to allow both named

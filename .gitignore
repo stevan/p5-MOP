@@ -6,7 +6,3 @@ nytprof*
 Makefile
 Makefile.old
 cover_db
-callparser1.h
-*.bs
-*.o
-Moxie.c
