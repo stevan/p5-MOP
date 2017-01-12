@@ -112,6 +112,21 @@ __END__
 
 =pod
 
+=head1 DESCRIPTION
+
+A method is simply a wrapper around a reference to a CODE slot inside 
+a given package. 
+
+=head1 CONSTRUCTORS
+
+=over 4
+
+=item L<new( body => \&method )>
+
+=item L<new( \&method )>
+
+=back
+
 =head1 METHODS
 
 =over 4

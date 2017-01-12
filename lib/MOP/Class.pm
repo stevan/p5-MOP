@@ -57,6 +57,23 @@ __END__
 
 =pod
 
+=head1 DESCRIPTION
+
+A class I<does> all the things a role does, with the addition of 
+inheritance and instance construction. 
+
+=head1 CONSTRUCTORS
+
+=over 4
+
+=item L<new( name => $package_name )>
+
+=item L<new( $package_name )>
+
+=item L<new( \%package_stash )>
+
+=back
+
 =head1 METHODS
 
 This module I<does> the L<MOP::Role> package, which means

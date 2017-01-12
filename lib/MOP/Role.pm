@@ -795,6 +795,23 @@ __END__
 
 =pod
 
+=head1 DESCRIPTION
+
+A role is simply a package which I<may> have methods, I<may> have slot 
+defintions, and I<may> consume other roles. 
+
+=head1 CONSTRUCTORS
+
+=over 4
+
+=item L<new( name => $package_name )>
+
+=item L<new( $package_name )>
+
+=item L<new( \%package_stash )>
+
+=back
+
 =head1 METHODS
 
 =over 4
