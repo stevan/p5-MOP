@@ -14,20 +14,38 @@ our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
-our %HAS; BEGIN {
-    %HAS = (
-        body => sub { die '[ARGS] You must specify a method body' },
-    )
+
+sub BUILDARGS {
+    my $class = shift;
+    my %args;
+
+    if ( scalar( @_ ) == 1 ) {
+        if ( ref $_[0] ) {
+            if ( ref $_[0] eq 'CODE' ) {
+                %args = ( body => $_[0] );      
+            }
+            elsif (ref $_[0] eq 'HASH') {
+                %args = %{ $_[0] };
+            }
+        }
+    }
+    else {
+        %args = @_;
+    }
+
+    die '[ARGS] You must specify a method body'
+        unless $args{body};
+
+    die '[ARGS] The body specified must be a CODE reference'
+        unless ref $args{body} eq 'CODE';
+
+    return \%args;    
 }
 
 sub CREATE {
     my ($class, $args) = @_;
 
-    my $body = $args->{body} || $HAS{body}->();
-
-    die '[ARGS] The body specified must be a CODE reference'
-        unless ref $body eq 'CODE';
-
+    my $body = $args->{body};
     # this will get blessed, so we
     # do not actually want the CV
     # to get touched, so we get a

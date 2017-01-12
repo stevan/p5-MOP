@@ -23,16 +23,24 @@ TODO:
     sub foo { 'Foo::foo' }
 }
 
-subtest '... simple MOP::Method test' => sub {
-    my $m = MOP::Method->new( body => \&Foo::foo );
-    isa_ok($m, 'MOP::Method');
+my %cases = (
+    '... key/value constructor' => sub { MOP::Method->new( body => \&Foo::foo )     },
+    '... HASH ref constructor'  => sub { MOP::Method->new( { body => \&Foo::foo } ) },
+    '... CODE ref constructor'  => sub { MOP::Method->new( \&Foo::foo )             },
+);
 
-    is($m->name, 'foo', '... got the name we expected');
-    is($m->origin_stash, 'Foo', '... got the origin class we expected');
-    is($m->body, \&Foo::foo, '... got the body we expected');
-    ok(!$m->is_required, '... the method is not required');
+foreach my $case ( keys %cases ) {
+    subtest $case => sub {
+        my $m = $cases{ $case }->();
+        isa_ok($m, 'MOP::Method');
 
-    ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
-};
+        is($m->name, 'foo', '... got the name we expected');
+        is($m->origin_stash, 'Foo', '... got the origin class we expected');
+        is($m->body, \&Foo::foo, '... got the body we expected');
+        ok(!$m->is_required, '... the method is not required');
+
+        ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
+    };
+}
 
 done_testing;
