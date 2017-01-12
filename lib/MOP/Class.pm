@@ -66,11 +66,11 @@ inheritance and instance construction.
 
 =over 4
 
-=item L<new( name => $package_name )>
+=item C<new( name => $package_name )>
 
-=item L<new( $package_name )>
+=item C<new( $package_name )>
 
-=item L<new( \%package_stash )>
+=item C<new( \%package_stash )>
 
 =back
 

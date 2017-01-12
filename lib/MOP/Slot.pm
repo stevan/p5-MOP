@@ -101,9 +101,9 @@ conceptual model laid out by L<UNIVERSAL::Object>.
 
 =over 4
 
-=item L<new( name => $name, initializer => $initializer )>
+=item C<new( name => $name, initializer => $initializer )>
 
-=item L<new( $name, $initializer )>
+=item C<new( $name, $initializer )>
 
 =back
 

@@ -121,9 +121,9 @@ a given package.
 
 =over 4
 
-=item L<new( body => \&method )>
+=item C<new( body => \&method )>
 
-=item L<new( \&method )>
+=item C<new( \&method )>
 
 =back
 
