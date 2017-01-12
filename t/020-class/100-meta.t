@@ -70,7 +70,7 @@ my @METHODS = qw[
 can_ok($Class, $_) for @METHODS;
 
 is($Class->name,      'MOP::Class', '... got the expected value from ->name');
-is($Class->version,   '0.01', '... got the expected value from ->version');
+is($Class->version,   $MOP::Class::VERSION, '... got the expected value from ->version');
 is($Class->authority, 'cpan:STEVAN', '... got the expected value ->authority');
 
 is_deeply([ $Class->superclasses ], [ 'UNIVERSAL::Object' ], '... got the expected value from ->superclasses');

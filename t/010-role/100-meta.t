@@ -64,7 +64,7 @@ my @METHODS = qw[
 can_ok($Role, $_) for @METHODS;
 
 is($Role->name,      'MOP::Role', '... got the expected value from ->name');
-is($Role->version,   '0.01', '... got the expected value from ->version');
+is($Role->version,   $MOP::Role::VERSION, '... got the expected value from ->version');
 is($Role->authority, 'cpan:STEVAN', '... got the expected value ->authority');
 
 is_deeply([ sort map { $_->name } $Role->methods ], [ sort @METHODS ], '... got the expected value from ->methods');
