@@ -12,12 +12,6 @@ our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' }
-our %HAS; BEGIN {
-    %HAS = (
-        name        => sub { die '[ARGS] You must specify a slot name'        },
-        initializer => sub { die '[ARGS] You must specify a slot initializer' },
-    )
-}
 
 # if called upon to be a CODE ref
 # then return the initializer
@@ -44,14 +38,27 @@ sub BUILDARGS {
     return $args;
 }
 
+sub CREATE {
+    my ($class, $args) = @_;
+    # NOTE:
+    # Ideally this instance would actually just be 
+    # a reference to an HE (C-level hash entry struct)
+    # but that is not something that is exposed at 
+    # the language level. Instead we use an ARRAY 
+    # ref to both 1) save space and 2) retain an 
+    # illusion of opacity regarding these instances.
+    # - SL
+    return +[ $args->{name}, $args->{initializer} ]
+}
+
 sub name {
     my ($self) = @_;
-    return $self->{name};
+    return $self->[0];
 }
 
 sub initializer {
     my ($self) = @_;
-    return $self->{initializer};
+    return $self->[1];
 }
 
 sub origin_stash {
