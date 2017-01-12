@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.02
+0.02 2017-01-12
 	[ENHANCEMENT]
 	- fixing constructors to allow both named
 	  and positional argument forms
