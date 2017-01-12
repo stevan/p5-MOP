@@ -19,13 +19,13 @@ TODO:
 subtest '... simple MOP::Slot error test' => sub {
 
     like(
-        exception { MOP::Slot->new( initializer => sub {} ) },
+        exception { MOP::Slot->new( initializer => sub {}, foo => [] ) },
         qr/^\[ARGS\] You must specify a slot name/,
         '... got the expection we expected'
     );
 
     like(
-        exception { MOP::Slot->new( name => 'foo' ) },
+        exception { MOP::Slot->new( name => 'foo', foo => [] ) },
         qr/^\[ARGS\] You must specify a slot initializer/,
         '... got the expection we expected'
     );

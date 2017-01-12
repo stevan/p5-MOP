@@ -23,14 +23,25 @@ our %HAS; BEGIN {
 # then return the initializer
 use overload '&{}' => 'initializer', fallback => 1;
 
-sub CREATE {
-    my ($class, $args) = @_;
-    my $proto = $class->SUPER::CREATE( $args );
+sub BUILDARGS {
+    my $class = shift;
+    my $args;
 
+    if ( scalar( @_ ) eq 2 && !(ref $_[0]) && ref $_[1] eq 'CODE' ) {
+        $args = +{ name => $_[0], initializer => $_[1] };
+    }
+    else {
+        $args = $class->SUPER::BUILDARGS( @_ );
+    }
+
+    die '[ARGS] You must specify a slot name'
+        unless $args->{name};
+    die '[ARGS] You must specify a slot initializer'
+        unless $args->{initializer};
     die '[ARGS] The initializer specified must be a CODE reference'
-        unless ref $proto->{initializer} eq 'CODE';
+        unless ref $args->{initializer} eq 'CODE';        
 
-    return $proto;
+    return $args;
 }
 
 sub name {
@@ -72,6 +83,22 @@ sub was_aliased_from {
 __END__
 
 =pod
+
+=head1 DESCRIPTION
+
+A slot is best thought of as representing a single entry in the 
+package scoped C<%HAS> variable. This is basically just building upon the 
+conceptual model laid out by L<UNIVERSAL::Object>.
+
+=head1 CONSTRUCTORS
+
+=over 4
+
+=item L<new( name => $name, initializer => $initializer )>
+
+=item L<new( $name, $initializer )>
+
+=back
 
 =head1 METHODS
 
