@@ -1,11 +1,15 @@
 Revision history for Perl extension MOP
 
 0.02
-	- fixing the MOP::Method constructor
-		- removed the `body` slot
-		- allowed single CODE ref constructor arg
+	[ENHANCEMENT]
+	- fixing constructors to allow both named 
+	  and positional argument forms
+	  	- added tests and docs for this
+
+	[MISC]
 	- adding in a few more tests
 	- fixing some POD issues
+	- fleshing out some documentation
 
 0.01 2017-01-11
     - Initial release to an unsuspecting world
