@@ -59,8 +59,8 @@ __END__
 
 =head1 DESCRIPTION
 
-A class I<does> all the things a role does, with the addition of 
-inheritance and instance construction. 
+A class I<does> all the things a role does, with the addition of
+inheritance and instance construction.
 
 =head1 CONSTRUCTORS
 

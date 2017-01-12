@@ -33,7 +33,7 @@ sub BUILDARGS {
     die '[ARGS] You must specify a slot initializer'
         unless $args->{initializer};
     die '[ARGS] The initializer specified must be a CODE reference'
-        unless ref $args->{initializer} eq 'CODE';        
+        unless ref $args->{initializer} eq 'CODE';
 
     return $args;
 }
@@ -41,11 +41,11 @@ sub BUILDARGS {
 sub CREATE {
     my ($class, $args) = @_;
     # NOTE:
-    # Ideally this instance would actually just be 
+    # Ideally this instance would actually just be
     # a reference to an HE (C-level hash entry struct)
-    # but that is not something that is exposed at 
-    # the language level. Instead we use an ARRAY 
-    # ref to both 1) save space and 2) retain an 
+    # but that is not something that is exposed at
+    # the language level. Instead we use an ARRAY
+    # ref to both 1) save space and 2) retain an
     # illusion of opacity regarding these instances.
     # - SL
     return +[ $args->{name}, $args->{initializer} ]
@@ -93,8 +93,8 @@ __END__
 
 =head1 DESCRIPTION
 
-A slot is best thought of as representing a single entry in the 
-package scoped C<%HAS> variable. This is basically just building upon the 
+A slot is best thought of as representing a single entry in the
+package scoped C<%HAS> variable. This is basically just building upon the
 conceptual model laid out by L<UNIVERSAL::Object>.
 
 =head1 CONSTRUCTORS

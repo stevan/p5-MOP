@@ -393,7 +393,7 @@ __END__
 
 =head1 DESCRIPTION
 
-No user serviceable parts inside. 
+No user serviceable parts inside.
 
 =cut
 

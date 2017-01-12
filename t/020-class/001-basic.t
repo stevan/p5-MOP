@@ -15,7 +15,7 @@ BEGIN {
 TODO:
 - test method aliases
 - test slots
-- test required methods 
+- test required methods
 
 =cut
 

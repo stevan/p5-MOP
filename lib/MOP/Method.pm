@@ -22,7 +22,7 @@ sub BUILDARGS {
     if ( scalar( @_ ) == 1 ) {
         if ( ref $_[0] ) {
             if ( ref $_[0] eq 'CODE' ) {
-                %args = ( body => $_[0] );      
+                %args = ( body => $_[0] );
             }
             elsif (ref $_[0] eq 'HASH') {
                 %args = %{ $_[0] };
@@ -39,7 +39,7 @@ sub BUILDARGS {
     die '[ARGS] The body specified must be a CODE reference'
         unless ref $args{body} eq 'CODE';
 
-    return \%args;    
+    return \%args;
 }
 
 sub CREATE {
@@ -114,8 +114,8 @@ __END__
 
 =head1 DESCRIPTION
 
-A method is simply a wrapper around a reference to a CODE slot inside 
-a given package. 
+A method is simply a wrapper around a reference to a CODE slot inside
+a given package.
 
 =head1 CONSTRUCTORS
 

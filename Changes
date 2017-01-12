@@ -2,7 +2,7 @@ Revision history for Perl extension MOP
 
 0.02
 	[ENHANCEMENT]
-	- fixing constructors to allow both named 
+	- fixing constructors to allow both named
 	  and positional argument forms
 	  	- added tests and docs for this
 

@@ -24,8 +24,8 @@ sub BUILDARGS {
         if ( ref $_[0] ) {
             if ( ref $_[0] eq 'HASH' ) {
                 if ( MOP::Internal::Util::IS_STASH_REF( $_[0] ) ) {
-                    # if it is a stash, grab the name 
-                    %args = ( 
+                    # if it is a stash, grab the name
+                    %args = (
                         name  => MOP::Internal::Util::GET_NAME( $_[0] ),
                         stash => $_[0]
                     );
@@ -797,8 +797,8 @@ __END__
 
 =head1 DESCRIPTION
 
-A role is simply a package which I<may> have methods, I<may> have slot 
-defintions, and I<may> consume other roles. 
+A role is simply a package which I<may> have methods, I<may> have slot
+defintions, and I<may> consume other roles.
 
 =head1 CONSTRUCTORS
 
