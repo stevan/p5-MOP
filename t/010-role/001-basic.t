@@ -51,20 +51,29 @@ TODO:
     our $AUTHORITY = 'cpan:STEVAN';
 }
 
-subtest '... testing basics' => sub {
-    my $role = MOP::Role->new( name => 'Foo' );
-    isa_ok($role, 'MOP::Role');
+my %cases = (
+    '... basic constructor'        => sub { MOP::Role->new( name => 'Foo' )     },
+    '... HASH ref constructor'     => sub { MOP::Role->new( { name => 'Foo' } ) },
+    '... package name constructor' => sub { MOP::Role->new( 'Foo' )             },
+    '... stash ref constructor'    => sub { MOP::Role->new( \%Foo:: )           },
+);
 
-    ok(!blessed(\%Foo::), '... check that the stash did not get blessed');
+foreach my $case ( keys %cases ) {
+    subtest $case => sub {
+        my $role = $cases{ $case }->();
+        isa_ok($role, 'MOP::Role');
 
-    is($role->name,      'Foo',         '... got the expected name');
-    is($role->version,   '0.01',        '... got the expected version');
-    is($role->authority, 'cpan:STEVAN', '... got the expected authority');
+        ok(!blessed(\%Foo::), '... check that the stash did not get blessed');
 
-    is_deeply([ $role->roles ], [], '... this role does no roles');
+        is($role->name,      'Foo',         '... got the expected name');
+        is($role->version,   '0.01',        '... got the expected version');
+        is($role->authority, 'cpan:STEVAN', '... got the expected authority');
 
-    ok(!$role->does_role('Bar'), '... we do not do the role Bar');
-};
+        is_deeply([ $role->roles ], [], '... this role does no roles');
+
+        ok(!$role->does_role('Bar'), '... we do not do the role Bar');
+    };
+}
 
 subtest '... testing simple role relationships' => sub {
     my $role = MOP::Role->new( name => 'Bar' );
