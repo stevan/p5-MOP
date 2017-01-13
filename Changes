@@ -3,6 +3,9 @@ Revision history for Perl extension MOP
 0.03
     [MISC]
     - fixing some POD issues
+    - adjusting some dependencies
+        - removed Test::Fatal
+        - bumped UNIVERSAL::Object to latest
 
 0.02 2017-01-12
 	[ENHANCEMENT]
