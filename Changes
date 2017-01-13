@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.03
+0.03 2017-01-13
     [MISC]
     - fixing some POD issues
     - adjusting some dependencies
