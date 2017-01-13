@@ -9,7 +9,7 @@ use Sub::Name    (); # handling some sub stuff
 use Symbol       (); # creating the occasional symbol
 use Scalar::Util (); # I think I use blessed somewhere in here ...
 
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## ------------------------------------------------------------------
