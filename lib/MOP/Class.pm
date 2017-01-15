@@ -14,7 +14,7 @@ use MOP::Slot;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.04';
+our $VERSION   = '0.05';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object' };
