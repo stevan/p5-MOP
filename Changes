@@ -1,6 +1,9 @@
 Revision history for Perl extension MOP
 
-0.04
+0.04 2017-01-15
+    [MISC]
+    - restored Test::Fatal, sorry that was
+      just stupid of me
 
 0.03 2017-01-13
     [MISC]
