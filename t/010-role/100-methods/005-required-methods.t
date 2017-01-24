@@ -34,6 +34,7 @@ subtest '... testing setting a role that has required method' => sub {
 
     ok(!$role->requires_method('bar'), '... this method is not required');
     ok($role->requires_method('baz'), '... this method is required');
+    ok($role->has_required_method('baz'), '... this method is required (has)');
 
     ok(!$role->get_required_method('bar'), '... this method is not required');
 

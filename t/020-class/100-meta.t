@@ -49,6 +49,7 @@ my @METHODS = qw[
 
     required_methods
         requires_method
+        has_required_method
         add_required_method
         get_required_method
         delete_required_method

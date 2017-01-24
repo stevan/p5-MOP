@@ -247,7 +247,7 @@ sub required_methods {
 #
 # - SL
 
-sub requires_method {
+sub has_required_method {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
@@ -257,6 +257,9 @@ sub requires_method {
     return 0 unless exists $stash->{ $name };
     return MOP::Internal::Util::DOES_GLOB_HAVE_NULL_CV( $stash->{ $name } );
 }
+
+# consistency is a good thing ...
+sub requires_method { goto &has_required_method }
 
 sub get_required_method {
     my $class = $_[0]->name;
@@ -879,6 +882,8 @@ defintions, and I<may> consume other roles.
 =item C<required_methods>
 
 =item C<requires_method( $name )>
+
+=item C<has_required_method( $name )>
 
 =item C<get_required_method( $name )>
 
