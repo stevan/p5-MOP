@@ -1,6 +1,9 @@
 Revision history for Perl extension MOP
 
 0.05
+    [API]
+    - added `has_required_method` to MOP::Role
+        - added tests for this
 
 0.04 2017-01-15
     [MISC]
