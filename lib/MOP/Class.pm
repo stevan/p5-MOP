@@ -4,7 +4,8 @@ package MOP::Class;
 use strict;
 use warnings;
 
-use mro ();
+use mro  ();
+use Carp ();
 
 use UNIVERSAL::Object;
 
@@ -40,7 +41,7 @@ sub superclasses {
 
 sub set_superclasses {
     my ($self, @superclasses) = @_;
-    die '[ARGS] You must specify at least one superclass'
+    Carp::croak('[ARGS] You must specify at least one superclass')
         if scalar( @superclasses ) == 0;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
     return;

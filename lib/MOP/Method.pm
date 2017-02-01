@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use attributes ();
+use Carp       ();
 
 use UNIVERSAL::Object;
 
@@ -33,10 +34,10 @@ sub BUILDARGS {
         %args = @_;
     }
 
-    die '[ARGS] You must specify a method body'
+    Carp::croak('[ARGS] You must specify a method body')
         unless $args{body};
 
-    die '[ARGS] The body specified must be a CODE reference'
+    Carp::croak('[ARGS] The body specified must be a CODE reference')
         unless ref $args{body} eq 'CODE';
 
     return \%args;
@@ -86,7 +87,7 @@ sub origin_stash {
 sub was_aliased_from {
     my ($self, @classnames) = @_;
 
-    die '[ARGS] You must specify at least one classname'
+    Carp::croak('[ARGS] You must specify at least one classname')
         if scalar( @classnames ) == 0;
 
     my $class = $self->origin_stash;

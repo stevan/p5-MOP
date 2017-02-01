@@ -28,7 +28,7 @@ __END__
   printf 'Intospecting %s package with version %s', $m->name, $m->version;
 
   foreach my $s ( $m->all_slots ) {
-  	  printf 'Found slot %s', $s->name;
+      printf 'Found slot %s', $s->name;
   }
 
   foreach my $m ( $m->all_methods ) {
