@@ -73,7 +73,7 @@ a given package.
 =head2 L<UNIVERSAL::Object>
 
 This module uses the L<UNIVERSAL::Object> module as the chosen instance
-construction protocol, but also in it's introspection assumes that a
+construction protocol, but also in its introspection assumes that a
 class uses the conventions of L<UNIVERSAL::Object> specifically with
 regards to slot storage.
 
