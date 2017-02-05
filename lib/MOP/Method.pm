@@ -59,6 +59,11 @@ sub name {
     return MOP::Internal::Util::GET_GLOB_NAME( $self->body )
 }
 
+sub fully_qualified_name {
+    my ($self) = @_;
+    join '::' => $self->origin_stash, $self->name;
+}
+
 sub body {
     my ($self) = @_;
     return $$self;

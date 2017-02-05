@@ -32,6 +32,8 @@ subtest '... simple required MOP::Method test' => sub {
     is($m->body, \&Foo::foo, '... got the body we expected');
     ok($m->is_required, '... the method is required');
 
+    is($m->fully_qualified_name, 'Foo::foo', '... got the expected fully qualified name');
+
     ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
 };
 
