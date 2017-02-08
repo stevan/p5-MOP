@@ -25,7 +25,7 @@ __END__
 
   my $m = MOP::Class->new( 'Foo' );
 
-  printf 'Intospecting %s package with version %s', $m->name, $m->version;
+  printf 'Introspecting %s package with version %s', $m->name, $m->version;
 
   foreach my $s ( $m->all_slots ) {
       printf 'Found slot %s', $s->name;
