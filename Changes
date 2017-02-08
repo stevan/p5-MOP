@@ -1,5 +1,9 @@
 Revision history for Perl extension MOP
 
+0.06
+    [MISC]
+    - bumped UNIVERSAL::Object to latest
+
 0.05 2017-02-07
     [API]
     - added `has_required_method` to MOP::Role

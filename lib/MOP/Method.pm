@@ -11,7 +11,7 @@ use UNIVERSAL::Object;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
