@@ -6,7 +6,7 @@ use warnings;
 
 use Carp ();
 
-use UNIVERSAL::Object;
+use UNIVERSAL::Object::Immutable;
 
 use MOP::Method;
 use MOP::Slot;
@@ -16,7 +16,7 @@ use MOP::Internal::Util;
 our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object::Immutable' };
 
 sub BUILDARGS {
     my $class = shift;

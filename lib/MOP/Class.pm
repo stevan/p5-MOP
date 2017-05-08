@@ -7,7 +7,7 @@ use warnings;
 use mro  ();
 use Carp ();
 
-use UNIVERSAL::Object;
+use UNIVERSAL::Object::Immutable;
 
 use MOP::Role;
 use MOP::Method;
@@ -18,7 +18,7 @@ use MOP::Internal::Util;
 our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object' };
+our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object::Immutable' };
 our @DOES; BEGIN { @DOES = 'MOP::Role' }; # to be composed later ...
 
 UNITCHECK {

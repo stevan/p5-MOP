@@ -6,14 +6,14 @@ use warnings;
 
 use Carp ();
 
-use UNIVERSAL::Object;
+use UNIVERSAL::Object::Immutable;
 
 use MOP::Internal::Util;
 
 our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' }
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object::Immutable' }
 
 # if called upon to be a CODE ref
 # then return the initializer
