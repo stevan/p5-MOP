@@ -1,10 +1,9 @@
 Revision history for Perl extension MOP
 
-0.07
+0.06 2017-05-08
     [INTERNALS]
     - make all instance use UNIVERSAL::Object::Immutable
 
-0.06
     [MISC]
     - bumped UNIVERSAL::Object to latest
 
