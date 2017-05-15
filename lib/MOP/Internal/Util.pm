@@ -78,9 +78,11 @@ sub GET_GLOB_SLOT {
     # method, its annoying, but the XS side
     # should not have to care about this so
     # it can be removed eventually.
-    if ( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) {
+    if (( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) || ref $stash->{ $name } ne 'GLOB') {
         B::svref_2object( $stash )->NAME->can( $name );
     }
+
+
     # return the reference stored in the glob
     # which might be undef, but that can be
     # handled by the caller
