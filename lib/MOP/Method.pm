@@ -7,14 +7,14 @@ use warnings;
 use attributes ();
 use Carp       ();
 
-use UNIVERSAL::Object;
+use UNIVERSAL::Object::Immutable;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object' };
+our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object::Immutable' };
 
 sub BUILDARGS {
     my $class = shift;
@@ -57,6 +57,11 @@ sub CREATE {
 sub name {
     my ($self) = @_;
     return MOP::Internal::Util::GET_GLOB_NAME( $self->body )
+}
+
+sub fully_qualified_name {
+    my ($self) = @_;
+    join '::' => $self->origin_stash, $self->name;
 }
 
 sub body {

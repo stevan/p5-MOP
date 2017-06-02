@@ -1,8 +1,21 @@
 Revision history for Perl extension MOP
 
-0.05
+0.07
+    [MISC]
+    - fix edge case where we need to vivify a GLOB slot
+
+0.06 2017-05-08
+    [INTERNALS]
+    - make all instance use UNIVERSAL::Object::Immutable
+
+    [MISC]
+    - bumped UNIVERSAL::Object to latest
+
+0.05 2017-02-07
     [API]
     - added `has_required_method` to MOP::Role
+        - added tests for this
+    - added `fully_qualified_name` to MOP::Method
         - added tests for this
 
     [MISC]

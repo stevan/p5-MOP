@@ -10,7 +10,7 @@ use Sub::Name    (); # handling some sub stuff
 use Symbol       (); # creating the occasional symbol
 use Scalar::Util (); # I think I use blessed somewhere in here ...
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## ------------------------------------------------------------------
@@ -78,9 +78,11 @@ sub GET_GLOB_SLOT {
     # method, its annoying, but the XS side
     # should not have to care about this so
     # it can be removed eventually.
-    if ( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) {
+    if (( $slot eq 'CODE' && $stash->{ $name } eq "-1" ) || ref $stash->{ $name } ne 'GLOB') {
         B::svref_2object( $stash )->NAME->can( $name );
     }
+
+
     # return the reference stored in the glob
     # which might be undef, but that can be
     # handled by the caller

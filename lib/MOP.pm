@@ -4,7 +4,7 @@ package MOP;
 use strict;
 use warnings;
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use MOP::Role;
@@ -25,7 +25,7 @@ __END__
 
   my $m = MOP::Class->new( 'Foo' );
 
-  printf 'Intospecting %s package with version %s', $m->name, $m->version;
+  printf 'Introspecting %s package with version %s', $m->name, $m->version;
 
   foreach my $s ( $m->all_slots ) {
       printf 'Found slot %s', $s->name;
@@ -73,7 +73,7 @@ a given package.
 =head2 L<UNIVERSAL::Object>
 
 This module uses the L<UNIVERSAL::Object> module as the chosen instance
-construction protocol, but also in it's introspection assumes that a
+construction protocol, but also in its introspection assumes that a
 class uses the conventions of L<UNIVERSAL::Object> specifically with
 regards to slot storage.
 
