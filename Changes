@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.07
+0.07 2017-06-19
     [MISC]
     - fix edge case where we need to vivify a GLOB slot
 
