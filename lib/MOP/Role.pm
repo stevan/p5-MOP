@@ -660,7 +660,7 @@ sub add_slot {
         unless $name;
 
     Carp::croak('[ARGS] You must specify an initializer CODE reference to associate with the slot')
-        unless $initializer && ref $initializer eq 'CODE';
+        unless $initializer && (ref $initializer eq 'CODE' || MOP::Internal::Util::CAN_COERCE_TO_CODE_REF( $initializer ));
 
     my $stash = $self->stash;
     my $class = $self->name;
@@ -752,7 +752,7 @@ sub alias_slot {
         unless $name;
 
     Carp::croak('[ARGS] You must specify an initializer CODE reference to associate with the slot alias')
-        unless $initializer && ref $initializer eq 'CODE';
+        unless $initializer && (ref $initializer eq 'CODE' || MOP::Internal::Util::CAN_COERCE_TO_CODE_REF( $initializer ));
 
     my $stash = $self->stash;
     my $class = $self->name;
