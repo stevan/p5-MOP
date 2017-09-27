@@ -1,5 +1,10 @@
 Revision history for Perl extension MOP
 
+0.09
+    [ENHANCEMENT]
+    - moved the Slot::Intitializer class from Moxie back
+      to this level, I believe it is more appropritate
+
 0.08 2017-08-08
     [ENHANCEMENT]
     - added support for CODE overloaded (&{})
