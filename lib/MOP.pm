@@ -13,6 +13,8 @@ use MOP::Class;
 use MOP::Slot;
 use MOP::Method;
 
+use MOP::Slot::Initializer;
+
 1;
 
 __END__
