@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.09
+0.09 2017-09-27
     [ENHANCEMENT]
     - moved the Slot::Intitializer class from Moxie back
       to this level, I believe it is more appropritate
