@@ -101,11 +101,16 @@ subtest '... testing error adding a slot whose initializer is not correct' => su
     my $role = MOP::Role->new( name => 'Foo' );
     isa_ok($role, 'MOP::Role');
 
-    like(
+    is(
         exception { $role->add_slot( foo => sub { 0 } ) },
-        qr/^\[ERROR\] Slot is not from local \(Foo\)\, it is from \(main\)/,
-        '... cannot add an initializer that is not from the class'
+        undef,
+        '... we can add an initializer that is not from the class, and it will be converted'
     );
+
+    my $slot = $role->get_slot('foo');
+    isa_ok($slot, 'MOP::Slot');
+
+    is($slot->origin_stash, 'Foo', '... the origin stash has been set correctly');
 };
 
 done_testing;

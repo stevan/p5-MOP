@@ -164,6 +164,11 @@ sub CREATE_NULL_CV {
     return;
 }
 
+sub SET_COMP_STASH_FOR_CV {
+    my ($cv, $in_pkg) = @_;
+    Sub::Metadata::mutate_sub_package( $cv, $in_pkg );
+}
+
 sub INSTALL_CV {
     my ($in_pkg, $name, $code, %opts) = @_;
 

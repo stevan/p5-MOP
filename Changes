@@ -1,5 +1,13 @@
 Revision history for Perl extension MOP
 
+0.10
+    [BREAKING CHANGE]
+    - The `add_slot` method now will set the COMP STASH
+      of the initializer, therefore taking ownership of
+      that CV, this mirrors what `add_method` does
+        - this is actually unlikely to break much, but
+          is significant, so maybe
+
 0.09 2017-09-27
     [ENHANCEMENT]
     - moved the Slot::Intitializer class from Moxie back
