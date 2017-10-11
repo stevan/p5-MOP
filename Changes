@@ -13,6 +13,11 @@ Revision history for Perl extension MOP
     - MOP::Slot::Initializer has completely changed, the
       last version should be ignored completely
 
+    [DEPENDENCIES]
+    - added Sub::Metadata, used to detect null CVs and
+      mutate the COMP_STASH of CVs.
+
+
 0.09 2017-09-27
     [ENHANCEMENT]
     - moved the Slot::Intitializer class from Moxie back
