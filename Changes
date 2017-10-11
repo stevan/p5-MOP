@@ -15,6 +15,8 @@ Revision history for Perl extension MOP
         - the `builder` feature has been completely removed
         - all methods other than `new` have been removed
         - it is a blessed CODE reference
+    - the API for `get_code_attributes` in MOP::Method has
+      changed, it now returns MOP::Method::Attribute objects
 
     [DEPENDENCIES]
     - added Sub::Metadata, used to detect null CVs and

@@ -25,13 +25,13 @@ TODO:
     sub MODIFY_CODE_ATTRIBUTES { () }
     sub FETCH_CODE_ATTRIBUTES {
         my $code = $_[1];
-        return 'Bar' if $_[1] eq \&foo;
-        return 'Baz' if $_[1] eq \&bar;
+        return 'Bar'            if $_[1] eq \&foo;
+        return 'Baz(test => 1)' if $_[1] eq \&bar;
     }
 
     sub foo : Bar { 'Foo::foo' }
 
-    sub bar : Baz;
+    sub bar : Baz(test => 1);
 }
 
 subtest '... simple MOP::Method test' => sub {
@@ -46,7 +46,7 @@ subtest '... simple MOP::Method test' => sub {
     ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
 
     is_deeply(
-        [ $m->get_code_attributes ],
+        [ map $_->name, $m->get_code_attributes('Bar') ],
         [ 'Bar' ],
         '... got the attributes we expected'
     );
@@ -63,11 +63,11 @@ subtest '... simple MOP::Method test' => sub {
 
     ok($m->was_aliased_from('Foo'), '... the method belongs to Foo');
 
-    is_deeply(
-        [ $m->get_code_attributes ],
-        [ 'Baz' ],
-        '... got the attributes we expected'
-    );
+    my ($Baz) = $m->get_code_attributes('Baz');
+
+    is($Baz->name, 'Baz', '... got the attribute name we expected');
+    is_deeply($Baz->args, [ 'test', 1 ], '... got the attribute args we expected');
+    is($Baz->original, 'Baz(test => 1)', '... got the attribute original we expected');
 };
 
 done_testing;

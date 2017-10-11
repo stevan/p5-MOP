@@ -9,6 +9,8 @@ use Carp       ();
 
 use UNIVERSAL::Object::Immutable;
 
+use MOP::Method::Attribute;
+
 use MOP::Internal::Util;
 
 our $VERSION   = '0.09';
@@ -104,12 +106,14 @@ sub was_aliased_from {
 
 sub has_code_attributes {
     my ($self, $to_match) = @_;
-    return grep /$to_match/, attributes::get( $self->body );
+    $to_match //= '.';
+    return scalar grep /^$to_match/, attributes::get( $self->body );
 }
 
 sub get_code_attributes {
-    my ($self) = @_;
-    return attributes::get( $self->body );
+    my ($self, $to_match) = @_;
+    $to_match //= '.';
+    return map MOP::Method::Attribute->new( $_ ), grep /^$to_match/, attributes::get( $self->body );
 }
 
 1;
