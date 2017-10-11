@@ -13,12 +13,10 @@ use MOP::Internal::Util;
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use overload '&{}' => 'to_code', fallback => 1;
-
 our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 our %HAS; BEGIN {
     %HAS = (
-        default  => sub { eval 'sub { undef }' },
+        default  => sub {},
         required => sub {},
         # ... private
         _initializer => sub {},
@@ -35,40 +33,25 @@ sub BUILDARGS {
     return $args;
 }
 
-sub BUILD {
-    my ($self, $params) = @_;
-
-    $self->{_initializer} = $self->_generate_initializer( $params->{in_package} );
-}
-
-# meta info ...
-
-sub has_default { !! $_[0]->{default}  }
-sub is_required { !! $_[0]->{reguired} }
-
-sub default  { $_[0]->{default}  }
-sub required { $_[0]->{reguired} }
-
-# coerce to CODE ref ...
-
-sub to_code { $_[0]->{_initializer} }
-
-## ...
-
-sub _generate_initializer {
-    my ($self, $is_pkg) = @_;
+sub CREATE {
+    my ($class, $args) = @_;
 
     my $code;
-    if ( my $message = $self->{required} ) {
+    if ( my $message = $args->{required} ) {
         $code = eval 'sub { die \''.$message.'\' }';
     }
     else {
-        $code = $self->{default};
+        $code = $args->{default} || eval 'sub { undef }';
     }
 
-    MOP::Internal::Util::SET_COMP_STASH_FOR_CV( $code, $is_pkg )if $is_pkg;
-
     return $code;
+}
+
+sub BUILD {
+    my ($self, $params) = @_;
+
+    MOP::Internal::Util::SET_COMP_STASH_FOR_CV( $self, $params->{within_package} )
+        if $params->{within_package};
 }
 
 1;
