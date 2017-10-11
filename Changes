@@ -12,6 +12,9 @@ Revision history for Perl extension MOP
       domain of the MOP::Slot::Initializer
     - MOP::Slot::Initializer has completely changed, the
       last version should be ignored completely
+        - the `builder` feature has been completely removed
+        - all methods other than `new` have been removed
+        - it is a blessed CODE reference
 
     [DEPENDENCIES]
     - added Sub::Metadata, used to detect null CVs and
