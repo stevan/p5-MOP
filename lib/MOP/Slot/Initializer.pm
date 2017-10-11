@@ -18,18 +18,26 @@ use overload '&{}' => 'to_code', fallback => 1;
 our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 our %HAS; BEGIN {
     %HAS = (
-        default      => sub {},
-        required     => sub {},
-        builder      => sub {},
+        default  => sub { eval 'sub { undef }' },
+        required => sub {},
         # ... private
         _initializer => sub {},
     )
 }
 
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = $class->SUPER::BUILDARGS( @_ );
+
+    Carp::confess('Cannot have both a default and be required in the same initializer')
+        if $args->{default} && $args->{required};
+
+    return $args;
+}
+
 sub BUILD {
     my ($self, $params) = @_;
-    ## TODO:
-    ## - add consistency checking (no default + required, etc)
+
     $self->{_initializer} = $self->_generate_initializer( $params->{in_package} );
 }
 
@@ -37,11 +45,9 @@ sub BUILD {
 
 sub has_default { !! $_[0]->{default}  }
 sub is_required { !! $_[0]->{reguired} }
-sub is_builder  { !! $_[0]->{builder}  }
 
 sub default  { $_[0]->{default}  }
 sub required { $_[0]->{reguired} }
-sub builder  { $_[0]->{builder}  }
 
 # coerce to CODE ref ...
 
@@ -53,17 +59,11 @@ sub _generate_initializer {
     my ($self, $is_pkg) = @_;
 
     my $code;
-    if ( my $method = $self->{builder} ) {
-        $code = eval 'sub { (shift)->'.$method.'( @_ ) }';
-    }
-    elsif ( my $message = $self->{required} ) {
+    if ( my $message = $self->{required} ) {
         $code = eval 'sub { die \''.$message.'\' }';
     }
-    elsif ( $self->{default} ) {
-        $code = $self->{default};
-    }
     else {
-        $code = eval 'sub { undef }';
+        $code = $self->{default};
     }
 
     MOP::Internal::Util::SET_COMP_STASH_FOR_CV( $code, $is_pkg )if $is_pkg;
