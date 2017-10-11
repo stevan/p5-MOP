@@ -7,6 +7,11 @@ Revision history for Perl extension MOP
       that CV, this mirrors what `add_method` does
         - this is actually unlikely to break much, but
           is significant, so maybe
+    - MOP::Slot objects no longer act as overloaded CODE
+      refs (the &{} operator), this function is not the
+      domain of the MOP::Slot::Initializer
+    - MOP::Slot::Initializer has completely changed, the
+      last version should be ignored completely
 
 0.09 2017-09-27
     [ENHANCEMENT]

@@ -8,6 +8,8 @@ use Carp ();
 
 use UNIVERSAL::Object;
 
+use MOP::Internal::Util;
+
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -16,13 +18,10 @@ use overload '&{}' => 'to_code', fallback => 1;
 our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 our %HAS; BEGIN {
     %HAS = (
-        meta     => sub { die 'A class/role `meta` instance is required' },
-        name     => sub { die 'A slot `name` is required' },
-        # ...
-        default  => sub {},
-        required => sub {},
-        builder  => sub {},
-        # private ...
+        default      => sub {},
+        required     => sub {},
+        builder      => sub {},
+        # ... private
         _initializer => sub {},
     )
 }
@@ -31,37 +30,45 @@ sub BUILD {
     my ($self, $params) = @_;
     ## TODO:
     ## - add consistency checking (no default + required, etc)
-    ## - add type checking/coercion as needed
+    $self->{_initializer} = $self->_generate_initializer( $params->{in_package} );
 }
 
-sub to_code {
-    my ($self) = @_;
+# meta info ...
 
-    # short curcuit the optimal case ...
-    return $self->{_initializer} if $self->{_initializer};
+sub has_default { !! $_[0]->{default}  }
+sub is_required { !! $_[0]->{reguired} }
+sub is_builder  { !! $_[0]->{builder}  }
 
-    my $meta = $self->{meta};
-    my $name = $self->{name};
+sub default  { $_[0]->{default}  }
+sub required { $_[0]->{reguired} }
+sub builder  { $_[0]->{builder}  }
 
-    ## FIXME:
-    ## The eval-into-package thing below is not great
-    ## and can likely be done in a much better way.
-    ## - SL
+# coerce to CODE ref ...
 
-    #warn sprintf "Generating initializer for slot(%s) in class(%s)", $name, $meta->name;
+sub to_code { $_[0]->{_initializer} }
 
+## ...
+
+sub _generate_initializer {
+    my ($self, $is_pkg) = @_;
+
+    my $code;
     if ( my $method = $self->{builder} ) {
-        return $self->{_initializer} ||= eval 'package '.$meta->name.'; sub { (shift)->'.$method.'( @_ ) }';
+        $code = eval 'sub { (shift)->'.$method.'( @_ ) }';
     }
-    elsif ( $self->{required} ) {
-        return $self->{_initializer} ||= eval 'package '.$meta->name.'; sub { die "A `'.$name.'` value is required" }';
+    elsif ( my $message = $self->{required} ) {
+        $code = eval 'sub { die \''.$message.'\' }';
     }
     elsif ( $self->{default} ) {
-        return $self->{_initializer} ||= $self->{default};
+        $code = $self->{default};
     }
     else {
-        return $self->{_initializer} ||= eval 'package '.$meta->name.'; sub { undef }';
+        $code = eval 'sub { undef }';
     }
+
+    MOP::Internal::Util::SET_COMP_STASH_FOR_CV( $code, $is_pkg )if $is_pkg;
+
+    return $code;
 }
 
 1;
@@ -72,16 +79,13 @@ __END__
 
 =head1 DESCRIPTION
 
-Slots in the MOP World (sung to the tune of "Spirits in the
-Material World" by the Police), more details later ...
+Initializer objects for the MOP
 
 =head1 CONSTRUCTORS
 
 =over 4
 
-=item C<new( name => $name, initializer => $initializer )>
-
-=item C<new( $name, $initializer )>
+=item C<new( %args )>
 
 =back
 
@@ -89,13 +93,7 @@ Material World" by the Police), more details later ...
 
 =over 4
 
-=item C<name>
-
-=item C<initializer>
-
-=item C<origin_stash>
-
-=item C<was_aliased_from>
+=item C<to_code>
 
 =back
 

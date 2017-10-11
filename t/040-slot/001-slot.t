@@ -4,9 +4,12 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Fatal;
 
 BEGIN {
+    use_ok('MOP::Role');
     use_ok('MOP::Slot');
+    use_ok('MOP::Slot::Initializer');
 }
 
 =pod
@@ -22,7 +25,7 @@ TODO:
 
     our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 
-    our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } )}
+    our %HAS; BEGIN { %HAS = ( foo => sub { 'Foo::foo' } ) }
 
     package Bar;
     use strict;
@@ -31,9 +34,8 @@ TODO:
     our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
 
     our %HAS; BEGIN { %HAS = (
-        bar => MOP::Slot->new(
-            name        => 'bar',
-            initializer => sub { 'Bar::bar' }
+        bar => MOP::Slot::Initializer->new(
+            default => sub { 'Bar::bar' }
         )
     )}
 }
@@ -62,20 +64,48 @@ foreach my $case ( keys %cases ) {
     };
 }
 
-subtest '... simple MOP::Slot in a slot test' => sub {
-    my $a = $Bar::HAS{bar};
-    isa_ok($a, 'MOP::Slot');
+subtest '... simple MOP::Slot::Initializer in a slot test' => sub {
+    my $slot_init = $Bar::HAS{bar};
+    isa_ok($slot_init, 'MOP::Slot::Initializer');
 
-    is($a->name, 'bar', '... got the name we expected');
-    is($a->origin_stash, 'Bar', '... got the origin class we expected');
-    is($a->initializer, $Bar::HAS{bar}->initializer, '... got the initializer we expected');
+    my $slot = MOP::Role->new('Bar')->get_slot('bar');
+    isa_ok($slot, 'MOP::Slot');
 
-    ok($a->was_aliased_from('Bar'), '... the slot belongs to Bar');
+    is($slot->name, 'bar', '... got the name we expected');
+    is($slot->origin_stash, 'Bar', '... got the origin class we expected');
+    is($slot->initializer, $slot_init->to_code, '... got the initializer we expected');
+
+    ok($slot->was_aliased_from('Bar'), '... the slot belongs to Bar');
 
     my $bar = Bar->new;
     isa_ok($bar, 'Bar');
 
     is($bar->{bar}, 'Bar::bar', '... the slot initialized correctly');
+};
+
+subtest '... trickier MOP::Slot::Initializer in a slot test' => sub {
+
+    my $slot_init = MOP::Slot::Initializer->new(
+        in_package => 'Bar',
+        required   => 'A `baz` is required'
+    );
+
+    $Bar::HAS{baz} = $slot_init;
+
+    my $slot = MOP::Role->new('Bar')->get_slot('baz');
+    isa_ok($slot, 'MOP::Slot');
+
+    is($slot->name, 'baz', '... got the name we expected');
+    is($slot->origin_stash, 'Bar', '... got the origin class we expected');
+    is($slot->initializer, $slot_init->to_code, '... got the initializer we expected');
+
+    ok($slot->was_aliased_from('Bar'), '... the slot belongs to Bar');
+
+    like(
+        exception { Bar->new },
+        qr/^A \`baz\` is required/,
+        '... got the expected required exception'
+    );
 
 };
 
