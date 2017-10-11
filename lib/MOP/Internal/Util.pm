@@ -7,6 +7,7 @@ use warnings;
 use B                   (); # nasty stuff, all nasty stuff
 use Carp                (); # errors and stuff
 use Sub::Name           (); # handling some sub stuff
+use Sub::Metadata       (); # handling other sub stuff
 use Symbol              (); # creating the occasional symbol
 use Scalar::Util        (); # I think I use blessed somewhere in here ...
 use Devel::OverloadInfo (); # Sometimes I need to know about overloading
@@ -128,8 +129,7 @@ sub IS_CV_NULL {
     my ($cv) = @_;
     Carp::croak('[ARGS] You must specify a CODE reference')
         unless $cv;
-    my $op = B::svref_2object( $cv );
-    return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
+    return Sub::Metadata::sub_body_type( $cv ) eq 'UNDEF';
 }
 
 sub DOES_GLOB_HAVE_NULL_CV {
@@ -146,9 +146,7 @@ sub DOES_GLOB_HAVE_NULL_CV {
     return 1 if $glob eq '-1';
     # next lets see if we have a CODE slot ...
     if ( my $code = *{ $glob }{CODE} ) {
-        # if it is a CV and the ROOT is a NULL op ...
-        my $op = B::svref_2object( $code );
-        return !! $op->isa('B::CV') && $op->ROOT->isa('B::NULL');
+        return Sub::Metadata::sub_body_type( $code ) eq 'UNDEF';
     }
     # if we had no CODE slot, it can't be a NULL CV ...
     return 0;
