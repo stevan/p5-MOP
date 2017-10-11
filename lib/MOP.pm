@@ -11,9 +11,10 @@ use MOP::Role;
 use MOP::Class;
 
 use MOP::Slot;
+use MOP::Slot::Initializer;
+
 use MOP::Method;
 
-use MOP::Slot::Initializer;
 
 1;
 

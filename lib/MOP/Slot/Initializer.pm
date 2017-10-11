@@ -62,21 +62,13 @@ __END__
 
 =head1 DESCRIPTION
 
-Initializer objects for the MOP
+Initializer objects for the MOP made out of CODE refs.
 
 =head1 CONSTRUCTORS
 
 =over 4
 
 =item C<new( %args )>
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item C<to_code>
 
 =back
 
