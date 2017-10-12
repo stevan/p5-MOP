@@ -31,7 +31,17 @@ __END__
 
 =head1 DESCRIPTION
 
-No user serviceable parts inside.
+This is the public API for MOP related utility functions.
+
+=head1 METHODS
+
+=over 4
+
+=item C<APPLY_ROLES( $meta, $roles, %opts )>
+
+=item C<INHERIT_SLOTS( $meta )>
+
+=back
 
 =cut
 
