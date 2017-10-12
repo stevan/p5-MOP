@@ -8,7 +8,6 @@ use Data::Dumper;
 
 BEGIN {
     use_ok('MOP::Method');
-    use_ok('MOP::Internal::Util');
 }
 
 =pod

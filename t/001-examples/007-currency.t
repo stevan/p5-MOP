@@ -7,6 +7,7 @@ use Test::More;
 use Data::Dumper;
 
 BEGIN {
+    use_ok('MOP');
     use_ok('MOP::Role');
     use_ok('MOP::Class');
 }
@@ -58,7 +59,7 @@ BEGIN {
     }
 
     BEGIN {
-        MOP::Internal::Util::APPLY_ROLES(
+        MOP::Util::APPLY_ROLES(
             MOP::Role->new( name => __PACKAGE__ ),
             \@DOES,
             to => 'role'
@@ -90,7 +91,7 @@ BEGIN {
     }
 
     BEGIN {
-        MOP::Internal::Util::APPLY_ROLES(
+        MOP::Util::APPLY_ROLES(
             MOP::Role->new( name => __PACKAGE__ ),
             \@DOES,
             to => 'role'

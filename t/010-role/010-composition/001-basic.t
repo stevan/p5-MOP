@@ -7,6 +7,7 @@ use Test::More;
 use Test::Fatal;
 
 BEGIN {
+    use_ok('MOP');
     use_ok('MOP::Role');
 }
 
@@ -36,7 +37,7 @@ TODO:
     our @DOES; BEGIN { @DOES = ('Foo', 'Bar') }
 
     BEGIN {
-        MOP::Internal::Util::APPLY_ROLES(
+        MOP::Util::APPLY_ROLES(
             MOP::Role->new( name => __PACKAGE__ ),
             \@DOES,
             to => 'role'

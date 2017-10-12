@@ -16,6 +16,7 @@ use MOP::Slot::Initializer;
 use MOP::Method;
 use MOP::Method::Attribute;
 
+use MOP::Util;
 
 1;
 
