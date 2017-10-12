@@ -62,7 +62,7 @@ sub args {
     # then strips away any quotes
     # and treats everything as a
     # simple string.
-    $arg_splitter  ||= sub { split /\s*(?:\,|\=\>)\s*/ => $_[0] }
+    $arg_splitter  ||= sub { split /\s*(?:\,|\=\>)\s*/ => $_[0] };
     $arg_processor ||= sub {
         # NOTE:
         # None of the args are eval-ed and they are
