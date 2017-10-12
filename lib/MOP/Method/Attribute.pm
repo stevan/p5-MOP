@@ -15,72 +15,69 @@ our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object::Immutable') }
 our %HAS; BEGIN {
     %HAS = (
         original => sub { die '`original` is required' },
-        name     => sub { die '`name` is required' },
-        args     => sub { +[] },
     )
 }
 
+# NOTE:
+# we are not terribly sophisticated, but
+# we accept `foo` calls (no-parens) and
+# we accept `foo(1, 2, 3)` calls (parens
+# with comma seperated args).
+
 sub BUILDARGS {
     my $class = shift;
+    Carp::confess('You must pass only a simple string')
+        unless scalar(@_) == 1 && not ref $_[0];
+    return +{ original => $_[0] };
+}
 
-    if ( scalar(@_) == 1 && not ref $_[0] ) {
-        my $original = shift;
+sub REPR { \(my $x) }
 
-        # we are not terribly sophisticated, but
-        # we accept `foo` calls (no-parens) and
-        # we accept `foo(1, 2, 3)` calls (parens
-        # with comma seperated args).
+sub CREATE {
+    my ($class, $proto) = @_;
+    my $self = $class->REPR;
+    $$self = $proto->{original};
+    $self;
+}
 
+sub original { ${ $_[0] } }
+
+sub name {
+    my ($self) = @_;
+    my ($name) = ($$self =~ m/^([a-zA-Z_]*)/);
+    return $name;
+}
+
+sub args {
+    my ($self, $arg_splitter, $arg_processor) = @_;
+    my ($args) = ($$self =~ m/^[a-zA-Z_]*\(\s*(.*)\)/ms);
+    return unless $args;
+
+    # NOTE:
+    # These parses arguments badly,
+    # but they are just the defaults.
+    # it makes no attempt to enforce
+    # anything, just splits on the
+    # comma, both skinny and fat,
+    # then strips away any quotes
+    # and treats everything as a
+    # simple string.
+    $arg_splitter  ||= sub { split /\s*(?:\,|\=\>)\s*/ => $_[0] }
+    $arg_processor ||= sub {
         # NOTE:
         # None of the args are eval-ed and they are
         # basically just a list of strings, with the
         # one exception of the string "undef", which
         # will be turned into undef
+        my $arg = $_[0];
+        $arg =~ s/\s*$//;
+        $arg =~ s/^['"]//;
+        $arg =~ s/['"]$//;
+        $arg eq 'undef' ? undef : $arg;
+    };
 
-        if ( $original =~ m/([a-zA-Z_]*)\(\s*(.*)\)/ms ) {
-            #warn "parsed paren/args form for ($_)";
-            return +{
-                original => $original,
-                name     => $1,
-                args     => [
-                    # NOTE:
-                    # This parses arguments badly,
-                    # it makes no attempt to enforce
-                    # anything, just splits on the
-                    # comma, both skinny and fat,
-                    # then strips away any quotes
-                    # and treats everything as a
-                    # simple string.
-                    map {
-                        my $arg = $_;
-                        $arg =~ s/\s*$//;
-                        $arg =~ s/^['"]//;
-                        $arg =~ s/['"]$//;
-                        $arg eq 'undef' ? undef : $arg;
-                    } split /\s*(?:\,|\=\>)\s*/ => $2
-                ]
-            };
-        }
-        elsif ( $original =~ m/^([a-zA-Z_]*)$/ ) {
-            #warn "parsed no-parens form for ($_)";
-            return +{
-                original => $original,
-                name     => $1,
-            };
-        }
-        else {
-            Carp::croak('Unable to parse trait (' . $original . ')');
-        }
-
-    } else {
-        $class->SUPER::BUILDARGS( @_ );
-    }
+    return [ map $arg_processor->( $_ ), $arg_splitter->( $args ) ];
 }
-
-sub original { $_[0]->{original} }
-
-sub name { $_[0]->{name} }
-sub args { $_[0]->{args} }
 
 1;
 
@@ -102,7 +99,5 @@ attribute invocation information.
 =head2 C<name>
 
 =head2 C<args>
-
-=head2 C<handler>
 
 =cut
