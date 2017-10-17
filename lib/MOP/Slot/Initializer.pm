@@ -6,20 +6,18 @@ use warnings;
 
 use Carp ();
 
-use UNIVERSAL::Object;
+use UNIVERSAL::Object::Immutable;
 
 use MOP::Internal::Util;
 
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object') }
+our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object::Immutable') }
 our %HAS; BEGIN {
     %HAS = (
         default  => sub {},
         required => sub {},
-        # ... private
-        _initializer => sub {},
     )
 }
 
