@@ -132,6 +132,9 @@ sub IS_CV_NULL {
     my ($cv) = @_;
     Carp::croak('[ARGS] You must specify a CODE reference')
         unless $cv;
+    Carp::croak('[ARGS] You must specify a CODE reference')
+        unless $cv && ref $cv eq 'CODE'
+            || CAN_COERCE_TO_CODE_REF( $cv );
     return Sub::Metadata::sub_body_type( $cv ) eq 'UNDEF';
 }
 
@@ -169,18 +172,26 @@ sub CREATE_NULL_CV {
 
 sub SET_COMP_STASH_FOR_CV {
     my ($cv, $in_pkg) = @_;
+    Carp::croak('[ARGS] You must specify a CODE reference')
+        unless $cv;
+    Carp::croak('[ARGS] You must specify a package name')
+        unless defined $in_pkg;
+    Carp::croak('[ARGS] You must specify a CODE reference')
+        unless $cv && ref $cv eq 'CODE'
+            || CAN_COERCE_TO_CODE_REF( $cv );
     Sub::Metadata::mutate_sub_package( $cv, $in_pkg );
 }
 
 sub INSTALL_CV {
-    my ($in_pkg, $name, $code, %opts) = @_;
+    my ($in_pkg, $name, $cv, %opts) = @_;
 
     Carp::croak('[ARGS] You must specify a package name')
         unless defined $in_pkg;
     Carp::croak('[ARGS] You must specify a name')
         unless defined $name;
     Carp::croak('[ARGS] You must specify a CODE reference')
-        unless $code && ref $code eq 'CODE';
+        unless $cv && ref $cv eq 'CODE'
+            || CAN_COERCE_TO_CODE_REF( $cv );
     Carp::croak("[ARGS] You must specify a boolean value for `set_subname` option")
         if not exists $opts{set_subname};
 
@@ -189,7 +200,7 @@ sub INSTALL_CV {
         no warnings 'once', 'redefine';
 
         my $fullname =  $in_pkg.'::'.$name;
-        *{$fullname} = $opts{set_subname} ? Sub::Name::subname($fullname, $code) : $code;
+        *{$fullname} = $opts{set_subname} ? Sub::Name::subname($fullname, $cv) : $cv;
     }
     return;
 }
