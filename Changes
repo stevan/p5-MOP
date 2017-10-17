@@ -1,8 +1,17 @@
 Revision history for Perl extension MOP
 
 0.10
+    [ENHANCEMENT]
+    - There is now a public API of utility functions in
+      the MOP::Util module.
+    - added the MOP::Method::Attribute class to represent
+      any attributes attached to a method.
+        - see below for how this changes the `get_code_attributes`
+          method within MOP::Method
+
     [BREAKING CHANGE]
-    - The `add_slot` method now will set the COMP STASH
+    [ MOP::Slot ]
+    - The `add_slot` method now will set the COMP_STASH
       of the initializer, therefore taking ownership of
       that CV, this mirrors what `add_method` does
         - this is actually unlikely to break much, but
@@ -15,12 +24,17 @@ Revision history for Perl extension MOP
         - the `builder` feature has been completely removed
         - all methods other than `new` have been removed
         - it is a blessed CODE reference
+
+    [ MOP::Method ]
     - the API for `get_code_attributes` in MOP::Method has
       changed, it now returns MOP::Method::Attribute objects
 
     [DEPENDENCIES]
     - added Sub::Metadata, used to detect null CVs and
       mutate the COMP_STASH of CVs.
+    - bumped the UNIVERSAL::Object dependency version to
+      make sure we have support for immutable CODE ref
+      instances (needed for MOP::Slot::Initializer)
 
 
 0.09 2017-09-27
