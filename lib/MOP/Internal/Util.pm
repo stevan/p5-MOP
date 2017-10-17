@@ -11,6 +11,7 @@ use Sub::Metadata       (); # handling other sub stuff
 use Symbol              (); # creating the occasional symbol
 use Scalar::Util        (); # I think I use blessed somewhere in here ...
 use Devel::OverloadInfo (); # Sometimes I need to know about overloading
+use Devel::Hook         (); # for scheduling UNITCHECK blocks ...
 
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -112,6 +113,19 @@ sub SET_GLOB_SLOT {
         *{ $pkg . '::' . $name } = $value_ref;
     }
     return;
+}
+
+## ------------------------------------------------------------------
+## UNITCHECK hook
+## ------------------------------------------------------------------
+
+sub ADD_UNITCHECK_HOOK {
+    my ($cv) = @_;
+    Carp::croak('[ARGS] You must specify a CODE reference')
+        unless $cv;
+    Carp::croak('[ARGS] You must specify a CODE reference')
+        unless $cv && ref $cv eq 'CODE';
+    Devel::Hook->push_UNITCHECK_hook( $cv );
 }
 
 ## ------------------------------------------------------------------
