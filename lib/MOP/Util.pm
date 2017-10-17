@@ -10,7 +10,14 @@ use MOP::Internal::Util ();
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub APPLY_ROLES { MOP::Internal::Util::APPLY_ROLES( @_ ) }
+sub APPLY_ROLES {
+    my ($meta) = @_;
+    MOP::Internal::Util::APPLY_ROLES(
+        $meta,
+        [ $meta->roles ],
+        to => $meta->isa('MOP::Class') ? 'class' : 'role'
+    );
+}
 
 sub INHERIT_SLOTS {
     my ($meta) = @_;
@@ -37,7 +44,7 @@ This is the public API for MOP related utility functions.
 
 =over 4
 
-=item C<APPLY_ROLES( $meta, $roles, %opts )>
+=item C<APPLY_ROLES( $meta )>
 
 =item C<INHERIT_SLOTS( $meta )>
 

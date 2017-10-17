@@ -32,13 +32,7 @@ TODO:
 
     sub bar { 'Bar::bar' }
 
-    BEGIN {
-        MOP::Util::APPLY_ROLES(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \@DOES,
-            to => 'role'
-        )
-    }
+    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
 
     package FooBar;
     use strict;
@@ -46,13 +40,7 @@ TODO:
 
     our @DOES; BEGIN { @DOES = ('Bar') }
 
-    BEGIN {
-        MOP::Util::APPLY_ROLES(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \@DOES,
-            to => 'role'
-        )
-    }
+    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
 }
 
 subtest '... testing sub-roles' => sub {

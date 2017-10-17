@@ -36,13 +36,7 @@ TODO:
 
     our @DOES; BEGIN { @DOES = ('Foo', 'Bar') }
 
-    BEGIN {
-        MOP::Util::APPLY_ROLES(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \@DOES,
-            to => 'role'
-        )
-    }
+    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
 }
 
 subtest '... testing sub-roles' => sub {

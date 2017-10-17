@@ -58,13 +58,7 @@ BEGIN {
         $self->less_than($other) || $self->equal_to($other);
     }
 
-    BEGIN {
-        MOP::Util::APPLY_ROLES(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \@DOES,
-            to => 'role'
-        )
-    }
+    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
 
     package Printable;
     use strict;
@@ -90,13 +84,7 @@ BEGIN {
         sprintf '$%0.2f USD' => $self->{amount};
     }
 
-    BEGIN {
-        MOP::Util::APPLY_ROLES(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \@DOES,
-            to => 'role'
-        )
-    }
+    BEGIN { MOP::Util::APPLY_ROLES( MOP::Class->new( name => __PACKAGE__ ) ) }
 }
 
 my $Eq         = MOP::Role->new( name => 'Eq' );
