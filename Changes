@@ -4,6 +4,7 @@ Revision history for Perl extension MOP
     [ENHANCEMENT]
     - There is now a public API of utility functions in
       the MOP::Util module.
+        - see the docs for more info
     - added the MOP::Method::Attribute class to represent
       any attributes attached to a method.
         - see below for how this changes the `get_code_attributes`
@@ -32,6 +33,8 @@ Revision history for Perl extension MOP
     [DEPENDENCIES]
     - added Sub::Metadata, used to detect null CVs and
       mutate the COMP_STASH of CVs.
+    - added Devel::Hook, which is used in the new MOP::Util
+      function `defer_until_UNITCHECK`
     - bumped the UNIVERSAL::Object dependency version to
       make sure we have support for immutable CODE ref
       instances (needed for MOP::Slot::Initializer)

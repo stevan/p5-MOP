@@ -32,7 +32,12 @@ TODO:
 
     sub bar { 'Bar::bar' }
 
-    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
+    BEGIN {
+        MOP::Util::defer_until_UNITCHECK(
+            MOP::Role->new( name => __PACKAGE__ ),
+            \&MOP::Util::compose_roles
+        )
+    }
 
     package FooBar;
     use strict;
@@ -40,7 +45,12 @@ TODO:
 
     our @DOES; BEGIN { @DOES = ('Bar') }
 
-    BEGIN { MOP::Util::APPLY_ROLES( MOP::Role->new( name => __PACKAGE__ ) ) }
+    BEGIN {
+        MOP::Util::defer_until_UNITCHECK(
+            MOP::Role->new( name => __PACKAGE__ ),
+            \&MOP::Util::compose_roles
+        )
+    }
 }
 
 subtest '... testing sub-roles' => sub {

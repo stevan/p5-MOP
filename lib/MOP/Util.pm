@@ -5,12 +5,13 @@ use strict;
 use warnings;
 
 use MOP::Role;
+use MOP::Class;
 use MOP::Internal::Util ();
 
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub GET_META_FOR {
+sub get_meta {
     my ($package) = @_;
 
     my $meta = MOP::Role->new( $package );
@@ -26,7 +27,7 @@ sub GET_META_FOR {
     return MOP::Class->new( $package );
 }
 
-sub APPLY_ROLES {
+sub compose_roles {
     my ($meta) = @_;
 
     MOP::Internal::Util::APPLY_ROLES(
@@ -39,7 +40,7 @@ sub APPLY_ROLES {
     return;
 }
 
-sub INHERIT_SLOTS {
+sub inherit_slots {
     my ($meta) = @_;
 
     # roles don't inherit, so do nothing ...
@@ -65,6 +66,12 @@ sub INHERIT_SLOTS {
     return;
 }
 
+sub defer_until_UNITCHECK {
+    my ($meta, $cb) = @_;
+
+    MOP::Internal::Util::ADD_UNITCHECK_HOOK(sub { $cb->( $meta ) })
+}
+
 1;
 
 __END__
@@ -79,11 +86,13 @@ This is the public API for MOP related utility functions.
 
 =over 4
 
-=item C<GET_META_FOR( $package )>
+=item C<get_meta( $package )>
 
-=item C<APPLY_ROLES( $meta )>
+=item C<compose_roles( $meta )>
 
-=item C<INHERIT_SLOTS( $meta )>
+=item C<inherit_slots( $meta )>
+
+=item C<defer_until_UNITCHECK( $meta, $cb )>
 
 =back
 
