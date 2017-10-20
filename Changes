@@ -11,6 +11,17 @@ Revision history for Perl extension MOP
           method within MOP::Method
 
     [BREAKING CHANGE]
+    [ Roles ]
+    - role to class composition behavior has changed
+        - there is now no difference in the way compositon
+          beheaves when applied to a class or to a role
+            - previously only classes complained if there was a
+              conflict in the compositon process, now both
+              roles and classes complain
+            - previously only classes complained if there was a
+              method requirement after composition was complete,
+              now both roles and classes complain
+
     [ MOP::Slot ]
     - The `add_slot` method now will set the COMP_STASH
       of the initializer, therefore taking ownership of
