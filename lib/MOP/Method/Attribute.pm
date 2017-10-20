@@ -8,7 +8,7 @@ use Carp ();
 
 use UNIVERSAL::Object::Immutable;
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object::Immutable') }

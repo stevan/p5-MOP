@@ -13,7 +13,7 @@ use Scalar::Util        (); # I think I use blessed somewhere in here ...
 use Devel::OverloadInfo (); # Sometimes I need to know about overloading
 use Devel::Hook         (); # for scheduling UNITCHECK blocks ...
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## ------------------------------------------------------------------
