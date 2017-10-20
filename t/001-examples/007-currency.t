@@ -59,10 +59,9 @@ BEGIN {
     }
 
     BEGIN {
-        MOP::Util::defer_until_UNITCHECK(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \&MOP::Util::compose_roles
-        )
+        MOP::Util::defer_until_UNITCHECK(sub {
+            MOP::Util::compose_roles( MOP::Util::get_meta( __PACKAGE__ ) )
+        })
     }
 
     package Printable;
@@ -90,10 +89,9 @@ BEGIN {
     }
 
     BEGIN {
-        MOP::Util::defer_until_UNITCHECK(
-            MOP::Role->new( name => __PACKAGE__ ),
-            \&MOP::Util::compose_roles
-        )
+        MOP::Util::defer_until_UNITCHECK(sub {
+            MOP::Util::compose_roles( MOP::Util::get_meta( __PACKAGE__ ) )
+        })
     }
 }
 

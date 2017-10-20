@@ -22,7 +22,6 @@ sub get_meta {
         if not defined $isa
         || (ref $isa eq 'ARRAY' && scalar @$isa == 0);
 
-
     # with inheritance, we know it is a class ....
     return MOP::Class->new( $package );
 }
@@ -67,9 +66,10 @@ sub inherit_slots {
 }
 
 sub defer_until_UNITCHECK {
-    my ($meta, $cb) = @_;
+    my ($cb) = @_;
 
-    MOP::Internal::Util::ADD_UNITCHECK_HOOK(sub { $cb->( $meta ) })
+    MOP::Internal::Util::ADD_UNITCHECK_HOOK( $cb );
+    return;
 }
 
 1;
@@ -92,7 +92,7 @@ This is the public API for MOP related utility functions.
 
 =item C<inherit_slots( $meta )>
 
-=item C<defer_until_UNITCHECK( $meta, $cb )>
+=item C<defer_until_UNITCHECK( $cb )>
 
 =back
 
