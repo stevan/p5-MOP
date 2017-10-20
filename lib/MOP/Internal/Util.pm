@@ -303,7 +303,7 @@ sub APPLY_ROLES {
         $required_methods
     ) = COMPOSE_ALL_ROLE_METHODS( @meta_roles );
 
-    Carp::croak("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into the (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
+    Carp::croak("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
         if (scalar keys %$method_conflicts) # do we have any conflicts ...
         # and the conflicts are not satisfied by the composing item ...
         && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts);
