@@ -39,7 +39,6 @@ Revision history for Perl extension MOP
       make sure we have support for immutable CODE ref
       instances (needed for MOP::Slot::Initializer)
 
-
 0.09 2017-09-27
     [ENHANCEMENT]
     - moved the Slot::Intitializer class from Moxie back
