@@ -267,14 +267,12 @@ sub REMOVE_CV_FROM_GLOB {
 ## ------------------------------------------------------------------
 
 sub APPLY_ROLES {
-    my ($meta, $roles, %opts) = @_;
+    my ($meta, $roles) = @_;
 
     Carp::croak('[ARGS] You must specify a metaclass to apply roles to')
         unless Scalar::Util::blessed( $meta );
     Carp::croak('[ARGS] You must specify a least one roles to apply as an ARRAY ref')
         unless $roles && ref $roles eq 'ARRAY' && scalar( @$roles ) != 0;
-    Carp::croak("[ARGS] You must specify what type of object you want roles applied `to`")
-        unless exists $opts{to};
 
     foreach my $r ( $meta->roles ) {
         Carp::croak("[ERROR] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")")
@@ -305,10 +303,9 @@ sub APPLY_ROLES {
         $required_methods
     ) = COMPOSE_ALL_ROLE_METHODS( @meta_roles );
 
-    Carp::croak("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into the class (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
-        if $opts{to} eq 'class'           # if we are composing into a class ...
-        && (scalar keys %$method_conflicts) # and we have any conflicts ...
-        # and the conflicts are not satisfied by the composing class ...
+    Carp::croak("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into the (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
+        if (scalar keys %$method_conflicts) # do we have any conflicts ...
+        # and the conflicts are not satisfied by the composing item ...
         && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts);
 
     # check the required method set and
@@ -320,8 +317,7 @@ sub APPLY_ROLES {
     }
 
     Carp::croak("[CONFLICT] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")")
-        if $opts{to} eq 'class'            # if we are composing into a class ...
-        && scalar keys %$required_methods; # and we have required methods ...
+        if scalar keys %$required_methods; # do we have required methods ...
 
     foreach my $name ( keys %$methods ) {
         # if we have a method already by that name ...
