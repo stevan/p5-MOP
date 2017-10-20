@@ -75,7 +75,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This is the public API for MOP related utility functions.
+This is a public API of MOP related utility functions.
 
 =head1 METHODS
 
@@ -83,11 +83,41 @@ This is the public API for MOP related utility functions.
 
 =item C<get_meta( $package )>
 
+This will guess the most sensible type of meta object to represent
+the C<$package> supplied. The test is simple, if there is anything
+in the C<@ISA> array within C<$package>, then it is clearly a class
+and therefore returns a L<MOP::Class> instance. However, if there
+is nothing in C<@ISA> we conservatively estimate that this is a role
+and return a L<MOP::Role> instance.
+
+In pretty much all cases that matter, a role and a class are entirely
+interchangable.
+
 =item C<compose_roles( $meta )>
+
+This will look to see if the C<$meta> object has any roles stored
+in it's C<@DOES> array, if so it will compose the roles together
+and apply that result to C<$meta>.
+
+Note, if this is called more than once, the results are undefined.
 
 =item C<inherit_slots( $meta )>
 
+This will look to see if the C<$meta> object is a L<MOP::Class>
+instance and if so, will then loop through the direct superclasses
+(thouse in the C<@ISA> array of C<$meta>) and alias all the slots
+into the C<$meta> namespace.
+
+Note, if this is called more than once, the results are undefined.
+
 =item C<defer_until_UNITCHECK( $cb )>
+
+Given a B<CODE> reference, this will defer the execution
+of that C<$cb> until the next available B<UNITCHECK> phase.
+
+Note, it is not receommended to heavily abuse closures here, it
+might get messy, might not, better to keep it clean and just not
+go there.
 
 =back
 
