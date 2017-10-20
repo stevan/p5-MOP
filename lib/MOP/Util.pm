@@ -29,13 +29,8 @@ sub get_meta {
 sub compose_roles {
     my ($meta) = @_;
 
-    MOP::Internal::Util::APPLY_ROLES(
-        $meta,
-        [ $meta->roles ],
-        to => $meta->isa('MOP::Class') ? 'class' : 'role'
-    );
-
-    # nothing to return ...
+    my @roles = $meta->roles;
+    MOP::Internal::Util::APPLY_ROLES( $meta, \@roles ) if @roles;
     return;
 }
 
