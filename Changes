@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.10
+0.10 2017-10-20
     [ENHANCEMENT]
     - There is now a public API of utility functions in
       the MOP::Util module.
@@ -10,7 +10,8 @@ Revision history for Perl extension MOP
         - see below for how this changes the `get_code_attributes`
           method within MOP::Method
 
-    [BREAKING CHANGE]
+    [!!!!BREAKING CHANGES!!!!]
+
     [ Roles ]
     - role to class composition behavior has changed
         - there is now no difference in the way compositon
@@ -29,7 +30,7 @@ Revision history for Perl extension MOP
         - this is actually unlikely to break much, but
           is significant, so maybe
     - MOP::Slot objects no longer act as overloaded CODE
-      refs (the &{} operator), this function is not the
+      refs (the &{} operator), this function is now the
       domain of the MOP::Slot::Initializer
     - MOP::Slot::Initializer has completely changed, the
       last version should be ignored completely
