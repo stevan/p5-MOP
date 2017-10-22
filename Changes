@@ -1,5 +1,8 @@
 Revision history for Perl extension MOP
 
+0.11
+    - fixing the missing Devel::Hook dependency
+
 0.10 2017-10-20
     [ENHANCEMENT]
     - There is now a public API of utility functions in
