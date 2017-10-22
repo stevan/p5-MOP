@@ -1,6 +1,6 @@
 Revision history for Perl extension MOP
 
-0.11
+0.11 2017-10-22
     - fixing the missing Devel::Hook dependency
 
 0.10 2017-10-20
