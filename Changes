@@ -9,6 +9,11 @@ Revision history for Perl extension MOP
         - this is only in MOP::Util::get_meta, you should
           be able to override this/ignore this if needed
 
+    [BACKWARDS INCOMPATIBLE CHANGES]-ish
+    - switched back to Carp::confess from Carp::cluck, the
+      stack trace is vital until this module matures and
+      the error messages improve
+
 0.11 2017-10-22
     - fixing the missing Devel::Hook dependency
 
