@@ -26,11 +26,11 @@ sub BUILDARGS {
         $args = $class->SUPER::BUILDARGS( @_ );
     }
 
-    Carp::croak('[ARGS] You must specify a slot name')
+    Carp::confess('[ARGS] You must specify a slot name')
         unless $args->{name};
-    Carp::croak('[ARGS] You must specify a slot initializer')
+    Carp::confess('[ARGS] You must specify a slot initializer')
         unless $args->{initializer};
-    Carp::croak('[ARGS] The initializer specified must be a CODE reference')
+    Carp::confess('[ARGS] The initializer specified must be a CODE reference')
         unless ref $args->{initializer} eq 'CODE'
             || MOP::Internal::Util::CAN_COERCE_TO_CODE_REF( $args->{initializer} );
 
@@ -76,7 +76,7 @@ sub origin_stash {
 sub was_aliased_from {
     my ($self, @classnames) = @_;
 
-    Carp::croak('[ARGS] You must specify at least one classname')
+    Carp::confess('[ARGS] You must specify at least one classname')
         if scalar( @classnames ) == 0;
 
     my $class = $self->origin_stash;

@@ -41,7 +41,7 @@ sub superclasses {
 
 sub set_superclasses {
     my ($self, @superclasses) = @_;
-    Carp::croak('[ARGS] You must specify at least one superclass')
+    Carp::confess('[ARGS] You must specify at least one superclass')
         if scalar( @superclasses ) == 0;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'ISA', \@superclasses );
     return;

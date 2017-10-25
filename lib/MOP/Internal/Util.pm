@@ -27,7 +27,7 @@ sub IS_VALID_MODULE_NAME {
 
 sub IS_STASH_REF {
     my ($stash) = @_;
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
     if ( my $name = B::svref_2object( $stash )->NAME ) {
         return IS_VALID_MODULE_NAME( $name );
@@ -37,28 +37,28 @@ sub IS_STASH_REF {
 
 sub GET_NAME {
     my ($stash) = @_;
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
     B::svref_2object( $stash )->NAME
 }
 
 sub GET_STASH_NAME {
     my ($stash) = @_;
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
     B::svref_2object( $stash )->STASH->NAME
 }
 
 sub GET_GLOB_NAME {
     my ($stash) = @_;
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
     B::svref_2object( $stash )->GV->NAME
 }
 
 sub GET_GLOB_STASH_NAME {
     my ($stash) = @_;
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
     B::svref_2object( $stash )->GV->STASH->NAME
 }
@@ -66,11 +66,11 @@ sub GET_GLOB_STASH_NAME {
 sub GET_GLOB_SLOT {
     my ($stash, $name, $slot) = @_;
 
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
-    Carp::croak('[ARGS] You must specify a name')
+    Carp::confess('[ARGS] You must specify a name')
         unless defined $name;
-    Carp::croak('[ARGS] You must specify a slot')
+    Carp::confess('[ARGS] You must specify a slot')
         unless defined $slot;
 
     # do my best to not autovivify, and
@@ -95,11 +95,11 @@ sub GET_GLOB_SLOT {
 sub SET_GLOB_SLOT {
     my ($stash, $name, $value_ref) = @_;
 
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless defined $stash;
-    Carp::croak('[ARGS] You must specify a name')
+    Carp::confess('[ARGS] You must specify a name')
         unless defined $name;
-    Carp::croak('[ARGS] You must specify a value REF')
+    Carp::confess('[ARGS] You must specify a value REF')
         unless defined $value_ref;
 
     {
@@ -121,9 +121,9 @@ sub SET_GLOB_SLOT {
 
 sub ADD_UNITCHECK_HOOK {
     my ($cv) = @_;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv && ref $cv eq 'CODE';
     Devel::Hook->push_UNITCHECK_hook( $cv );
 }
@@ -144,9 +144,9 @@ sub CAN_COERCE_TO_CODE_REF {
 
 sub IS_CV_NULL {
     my ($cv) = @_;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv && ref $cv eq 'CODE'
             || CAN_COERCE_TO_CODE_REF( $cv );
     return Sub::Metadata::sub_body_type( $cv ) eq 'UNDEF';
@@ -154,7 +154,7 @@ sub IS_CV_NULL {
 
 sub DOES_GLOB_HAVE_NULL_CV {
     my ($glob) = @_;
-    Carp::croak('[ARGS] You must specify a GLOB')
+    Carp::confess('[ARGS] You must specify a GLOB')
         unless $glob;
     # NOTE:
     # If the glob eq -1 that means it may well be a null sub
@@ -174,23 +174,23 @@ sub DOES_GLOB_HAVE_NULL_CV {
 
 sub CREATE_NULL_CV {
     my ($in_pkg, $name) = @_;
-    Carp::croak('[ARGS] You must specify a package name')
+    Carp::confess('[ARGS] You must specify a package name')
         unless defined $in_pkg;
-    Carp::croak('[ARGS] You must specify a name')
+    Carp::confess('[ARGS] You must specify a name')
         unless defined $name;
     # this just tries to eval the NULL CV into
     # place, it is ugly, but works for now
-    eval "sub ${in_pkg}::${name}; 1;" or do { Carp::croak($@) };
+    eval "sub ${in_pkg}::${name}; 1;" or do { Carp::confess($@) };
     return;
 }
 
 sub SET_COMP_STASH_FOR_CV {
     my ($cv, $in_pkg) = @_;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv;
-    Carp::croak('[ARGS] You must specify a package name')
+    Carp::confess('[ARGS] You must specify a package name')
         unless defined $in_pkg;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv && ref $cv eq 'CODE'
             || CAN_COERCE_TO_CODE_REF( $cv );
     Sub::Metadata::mutate_sub_package( $cv, $in_pkg );
@@ -199,14 +199,14 @@ sub SET_COMP_STASH_FOR_CV {
 sub INSTALL_CV {
     my ($in_pkg, $name, $cv, %opts) = @_;
 
-    Carp::croak('[ARGS] You must specify a package name')
+    Carp::confess('[ARGS] You must specify a package name')
         unless defined $in_pkg;
-    Carp::croak('[ARGS] You must specify a name')
+    Carp::confess('[ARGS] You must specify a name')
         unless defined $name;
-    Carp::croak('[ARGS] You must specify a CODE reference')
+    Carp::confess('[ARGS] You must specify a CODE reference')
         unless $cv && ref $cv eq 'CODE'
             || CAN_COERCE_TO_CODE_REF( $cv );
-    Carp::croak("[ARGS] You must specify a boolean value for `set_subname` option")
+    Carp::confess("[ARGS] You must specify a boolean value for `set_subname` option")
         if not exists $opts{set_subname};
 
     {
@@ -222,9 +222,9 @@ sub INSTALL_CV {
 sub REMOVE_CV_FROM_GLOB {
     my ($stash, $name) = @_;
 
-    Carp::croak('[ARGS] You must specify a stash')
+    Carp::confess('[ARGS] You must specify a stash')
         unless $stash && ref $stash eq 'HASH';
-    Carp::croak('[ARGS] You must specify a name')
+    Carp::confess('[ARGS] You must specify a name')
         unless defined $name;
 
     # find the glob we are looking for
@@ -269,13 +269,13 @@ sub REMOVE_CV_FROM_GLOB {
 sub APPLY_ROLES {
     my ($meta, $roles) = @_;
 
-    Carp::croak('[ARGS] You must specify a metaclass to apply roles to')
+    Carp::confess('[ARGS] You must specify a metaclass to apply roles to')
         unless Scalar::Util::blessed( $meta );
-    Carp::croak('[ARGS] You must specify a least one roles to apply as an ARRAY ref')
+    Carp::confess('[ARGS] You must specify a least one roles to apply as an ARRAY ref')
         unless $roles && ref $roles eq 'ARRAY' && scalar( @$roles ) != 0;
 
     foreach my $r ( $meta->roles ) {
-        Carp::croak("[ERROR] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")")
+        Carp::confess("[ERROR] Could not find role ($_) in the set of roles in $meta (" . $meta->name . ")")
             unless scalar grep { $r eq $_ } @$roles;
     }
 
@@ -286,12 +286,12 @@ sub APPLY_ROLES {
         $slot_conflicts
     ) = COMPOSE_ALL_ROLE_SLOTS( @meta_roles );
 
-    Carp::croak("[CONFLICT] There should be no conflicting slots when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")")
+    Carp::confess("[CONFLICT] There should be no conflicting slots when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ")")
         if scalar keys %$slot_conflicts;
 
     foreach my $name ( keys %$slots ) {
         # if we have a slot already by that name ...
-        Carp::croak("[CONFLICT] Role Conflict, cannot compose slot ($name) into (" . $meta->name . ") because ($name) already exists")
+        Carp::confess("[CONFLICT] Role Conflict, cannot compose slot ($name) into (" . $meta->name . ") because ($name) already exists")
             if $meta->has_slot( $name );
         # otherwise alias it ...
         $meta->alias_slot( $name, $slots->{ $name } );
@@ -303,7 +303,7 @@ sub APPLY_ROLES {
         $required_methods
     ) = COMPOSE_ALL_ROLE_METHODS( @meta_roles );
 
-    Carp::croak("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
+    Carp::confess("[CONFLICT] There should be no conflicting methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$method_conflicts)  . ")")
         if (scalar keys %$method_conflicts) # do we have any conflicts ...
         # and the conflicts are not satisfied by the composing item ...
         && (scalar grep { !$meta->has_method( $_ ) } keys %$method_conflicts);
@@ -316,7 +316,7 @@ sub APPLY_ROLES {
             if $meta->name->can( $name );
     }
 
-    Carp::croak("[CONFLICT] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")")
+    Carp::confess("[CONFLICT] There should be no required methods when composing (" . (join ', ' => @$roles) . ") into (" . $meta->name . ") but instead we found (" . (join ', ' => keys %$required_methods)  . ")")
         if scalar keys %$required_methods; # do we have required methods ...
 
     foreach my $name ( keys %$methods ) {
@@ -338,7 +338,7 @@ sub APPLY_ROLES {
 sub COMPOSE_ALL_ROLE_SLOTS {
     my @roles = @_;
 
-    Carp::croak('[ARGS] You must specify a least one role to compose slots in')
+    Carp::confess('[ARGS] You must specify a least one role to compose slots in')
         if scalar( @roles ) == 0;
 
     my (%slots, %conflicts);
@@ -375,7 +375,7 @@ sub COMPOSE_ALL_ROLE_SLOTS {
 sub COMPOSE_ALL_ROLE_METHODS {
     my @roles = @_;
 
-    Carp::croak('[ARGS] You must specify a least one role to compose methods in')
+    Carp::confess('[ARGS] You must specify a least one role to compose methods in')
         if scalar( @roles ) == 0;
 
     my (%methods, %conflicts, %required);

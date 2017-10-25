@@ -36,10 +36,10 @@ sub BUILDARGS {
         %args = @_;
     }
 
-    Carp::croak('[ARGS] You must specify a method body')
+    Carp::confess('[ARGS] You must specify a method body')
         unless $args{body};
 
-    Carp::croak('[ARGS] The body specified must be a CODE reference')
+    Carp::confess('[ARGS] The body specified must be a CODE reference')
         unless ref $args{body} eq 'CODE';
 
     return \%args;
@@ -94,7 +94,7 @@ sub origin_stash {
 sub was_aliased_from {
     my ($self, @classnames) = @_;
 
-    Carp::croak('[ARGS] You must specify at least one classname')
+    Carp::confess('[ARGS] You must specify at least one classname')
         if scalar( @classnames ) == 0;
 
     my $class = $self->origin_stash;

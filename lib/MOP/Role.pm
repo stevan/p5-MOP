@@ -48,10 +48,10 @@ sub BUILDARGS {
         %args = @_;
     }
 
-    Carp::croak('[ARGS] You must specify a package name')
+    Carp::confess('[ARGS] You must specify a package name')
         unless $args{name};
 
-    Carp::croak('[ARGS] You must specify a valid package name, not `'.$_[0].'`')
+    Carp::confess('[ARGS] You must specify a valid package name, not `'.$_[0].'`')
         unless MOP::Internal::Util::IS_VALID_MODULE_NAME( $args{name} );
 
     return \%args;
@@ -117,7 +117,7 @@ sub roles {
 
 sub set_roles {
     my ($self, @roles) = @_;
-    Carp::croak('[ARGS] You must specify at least one role')
+    Carp::confess('[ARGS] You must specify at least one role')
         if scalar( @roles ) == 0;
     MOP::Internal::Util::SET_GLOB_SLOT( $self->stash, 'DOES', \@roles );
     return;
@@ -126,7 +126,7 @@ sub set_roles {
 sub does_role {
     my ($self, $to_test) = @_;
 
-    Carp::croak('[ARGS] You must specify a role')
+    Carp::confess('[ARGS] You must specify a role')
         unless $to_test;
 
     my @roles = $self->roles;
@@ -253,7 +253,7 @@ sub has_required_method {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the required method to look for')
+    Carp::confess('[ARGS] You must specify the name of the required method to look for')
         unless $name;
 
     return 0 unless exists $stash->{ $name };
@@ -268,7 +268,7 @@ sub get_required_method {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the required method to get')
+    Carp::confess('[ARGS] You must specify the name of the required method to get')
         unless $name;
 
     # check these two easy cases first ...
@@ -289,7 +289,7 @@ sub get_required_method {
 sub add_required_method {
     my ($self, $name) = @_;
 
-    Carp::croak('[ARGS] You must specify the name of the required method to add')
+    Carp::confess('[ARGS] You must specify the name of the required method to add')
         unless $name;
 
     # if we already have a glob there ...
@@ -298,7 +298,7 @@ sub add_required_method {
         return if MOP::Internal::Util::DOES_GLOB_HAVE_NULL_CV( $glob );
         # and if we don't and we have a CODE slot, we
         # need to die because this doesn't make sense
-        Carp::croak("[CONFLICT] Cannot add a required method ($name) when there is a regular method already there")
+        Carp::confess("[CONFLICT] Cannot add a required method ($name) when there is a regular method already there")
             if defined *{ $glob }{CODE};
     }
 
@@ -312,7 +312,7 @@ sub add_required_method {
 sub delete_required_method {
     my ($self, $name) = @_;
 
-   Carp::croak('[ARGS] You must specify the name of the required method to delete')
+   Carp::confess('[ARGS] You must specify the name of the required method to delete')
         unless $name;
 
     # check if we have a stash entry for $name ...
@@ -327,7 +327,7 @@ sub delete_required_method {
             # and if we have a CV slot, but it doesn't have
             # a NULL CV in it, then we need to die because
             # this doesn't make sense
-            Carp::croak("[CONFLICT] Cannot delete a required method ($name) when there is a regular method already there")
+            Carp::confess("[CONFLICT] Cannot delete a required method ($name) when there is a regular method already there")
                 if defined *{ $glob }{CODE};
 
             # if we have the glob, but no CV slot (NULL or otherwise)
@@ -347,7 +347,7 @@ sub has_method {
     my $stash = $self->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the method to look for')
+    Carp::confess('[ARGS] You must specify the name of the method to look for')
         unless $name;
 
     # check these two easy cases first ...
@@ -375,7 +375,7 @@ sub get_method {
     my $stash = $self->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the method to get')
+    Carp::confess('[ARGS] You must specify the name of the method to get')
         unless $name;
 
     # check the easy cases first ...
@@ -400,10 +400,10 @@ sub get_method {
 sub add_method {
     my ($self, $name, $code) = @_;
 
-    Carp::croak('[ARGS] You must specify the name of the method to add')
+    Carp::confess('[ARGS] You must specify the name of the method to add')
         unless $name;
 
-    Carp::croak('[ARGS] You must specify a CODE reference to add as a method')
+    Carp::confess('[ARGS] You must specify a CODE reference to add as a method')
         unless $code && ref $code eq 'CODE';
 
     MOP::Internal::Util::INSTALL_CV( $self->name, $name, $code, set_subname => 1 );
@@ -413,7 +413,7 @@ sub add_method {
 sub delete_method {
     my ($self, $name) = @_;
 
-    Carp::croak('[ARGS] You must specify the name of the method to delete')
+    Carp::confess('[ARGS] You must specify the name of the method to delete')
         unless $name;
 
     # check if we have a stash entry for $name ...
@@ -423,7 +423,7 @@ sub delete_method {
             # then we need to die because this
             # shouldn't happen, we should only
             # delete regular methods.
-            Carp::croak("[CONFLICT] Cannot delete a regular method ($name) when there is a required method already there");
+            Carp::confess("[CONFLICT] Cannot delete a regular method ($name) when there is a required method already there");
         }
         else {
             # if we don't have a code slot ...
@@ -445,7 +445,7 @@ sub delete_method {
                 # trying to delete an alias using the
                 # regular method method
                 unless ( @roles && $method->was_aliased_from( @roles ) ) {
-                    Carp::croak("[CONFLICT] Cannot delete a regular method ($name) when there is an aliased method already there")
+                    Carp::confess("[CONFLICT] Cannot delete a regular method ($name) when there is an aliased method already there")
                 }
             }
 
@@ -465,7 +465,7 @@ sub get_method_alias {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the method alias to look for')
+    Carp::confess('[ARGS] You must specify the name of the method alias to look for')
         unless $name;
 
     # check the easy cases first ...
@@ -495,10 +495,10 @@ sub get_method_alias {
 sub alias_method {
     my ($self, $name, $code) = @_;
 
-    Carp::croak('[ARGS] You must specify the name of the method alias to add')
+    Carp::confess('[ARGS] You must specify the name of the method alias to add')
         unless $name;
 
-    Carp::croak('[ARGS] You must specify a CODE reference to add as a method alias')
+    Carp::confess('[ARGS] You must specify a CODE reference to add as a method alias')
         unless $code && ref $code eq 'CODE';
 
     MOP::Internal::Util::INSTALL_CV( $self->name, $name, $code, set_subname => 0 );
@@ -508,7 +508,7 @@ sub alias_method {
 sub delete_method_alias {
     my ($self, $name) = @_;
 
-    Carp::croak('[ARGS] You must specify the name of the method alias to remove')
+    Carp::confess('[ARGS] You must specify the name of the method alias to remove')
         unless $name;
 
     # check if we have a stash entry for $name ...
@@ -518,7 +518,7 @@ sub delete_method_alias {
             # then we need to die because this
             # shouldn't happen, we should only
             # delete regular methods.
-            Carp::croak("[CONFLICT] Cannot delete an aliased method ($name) when there is a required method already there");
+            Carp::confess("[CONFLICT] Cannot delete an aliased method ($name) when there is a required method already there");
         }
         else {
             # if we don't have a code slot ...
@@ -528,7 +528,7 @@ sub delete_method_alias {
             # otherwise, error accordingly
             my $method = MOP::Method->new( body => *{ $glob }{CODE} );
 
-            Carp::croak("[CONFLICT] Cannot delete an aliased method ($name) when there is a regular method already there")
+            Carp::confess("[CONFLICT] Cannot delete an aliased method ($name) when there is a regular method already there")
                 if $method->origin_stash eq $self->name;
 
             # but if we have a regular method, then we
@@ -545,7 +545,7 @@ sub has_method_alias {
     my $stash = $_[0]->stash;
     my $name  = $_[1];
 
-    Carp::croak('[ARGS] You must specify the name of the method alias to look for')
+    Carp::confess('[ARGS] You must specify the name of the method alias to look for')
         unless $name;
 
     # check these two easy cases first ...
@@ -610,7 +610,7 @@ sub has_slot {
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    Carp::croak('[ARGS] You must specify the name of the slot to look for')
+    Carp::confess('[ARGS] You must specify the name of the slot to look for')
         unless $name;
 
     return unless $has;
@@ -632,7 +632,7 @@ sub get_slot {
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    Carp::croak('[ARGS] You must specify the name of the slot to get')
+    Carp::confess('[ARGS] You must specify the name of the slot to get')
         unless $name;
 
     return unless $has;
@@ -656,10 +656,10 @@ sub add_slot {
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    Carp::croak('[ARGS] You must specify the name of the slot to add')
+    Carp::confess('[ARGS] You must specify the name of the slot to add')
         unless $name;
 
-    Carp::croak('[ARGS] You must specify an initializer CODE reference to associate with the slot')
+    Carp::confess('[ARGS] You must specify an initializer CODE reference to associate with the slot')
         unless $initializer && (ref $initializer eq 'CODE' || MOP::Internal::Util::CAN_COERCE_TO_CODE_REF( $initializer ));
 
     my $stash = $self->stash;
@@ -686,7 +686,7 @@ sub delete_slot {
     my $stash = $self->stash;
     my $class = $self->name;
 
-    Carp::croak('[ARGS] You must specify the name of the slot to delete')
+    Carp::confess('[ARGS] You must specify the name of the slot to delete')
         unless $name;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -694,7 +694,7 @@ sub delete_slot {
     return unless $has;
     return unless exists $has->{ $name };
 
-    Carp::croak("[CONFLICT] Cannot delete a regular slot ($name) when there is an aliased slot already there")
+    Carp::confess("[CONFLICT] Cannot delete a regular slot ($name) when there is an aliased slot already there")
         if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
@@ -711,7 +711,7 @@ sub has_slot_alias {
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    Carp::croak('[ARGS] You must specify the name of the slot alias to look for')
+    Carp::confess('[ARGS] You must specify the name of the slot alias to look for')
         unless $name;
 
     return unless $has;
@@ -729,7 +729,7 @@ sub get_slot_alias {
     my $class = $self->name;
     my $has   = MOP::Internal::Util::GET_GLOB_SLOT( $self->stash, 'HAS', 'HASH' );
 
-    Carp::croak('[ARGS] You must specify the name of the slot alias to get')
+    Carp::confess('[ARGS] You must specify the name of the slot alias to get')
         unless $name;
 
     return unless $has;
@@ -751,17 +751,17 @@ sub alias_slot {
     my $name        = $_[1];
     my $initializer = $_[2];
 
-    Carp::croak('[ARGS] You must specify the name of the slot alias to add')
+    Carp::confess('[ARGS] You must specify the name of the slot alias to add')
         unless $name;
 
-    Carp::croak('[ARGS] You must specify an initializer CODE reference to associate with the slot alias')
+    Carp::confess('[ARGS] You must specify an initializer CODE reference to associate with the slot alias')
         unless $initializer && (ref $initializer eq 'CODE' || MOP::Internal::Util::CAN_COERCE_TO_CODE_REF( $initializer ));
 
     my $stash = $self->stash;
     my $class = $self->name;
     my $slot  = MOP::Slot->new( name => $name, initializer => $initializer );
 
-    Carp::croak('[CONFLICT] Slot is from the local class (' . $class . '), it should be from a different class')
+    Carp::confess('[CONFLICT] Slot is from the local class (' . $class . '), it should be from a different class')
         if $slot->origin_stash eq $class;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -778,7 +778,7 @@ sub delete_slot_alias {
     my $stash = $self->stash;
     my $class = $self->name;
 
-    Carp::croak('[ARGS] You must specify the name of the slot alias to delete')
+    Carp::confess('[ARGS] You must specify the name of the slot alias to delete')
         unless $name;
 
     my $has = MOP::Internal::Util::GET_GLOB_SLOT( $stash, 'HAS', 'HASH' );
@@ -786,7 +786,7 @@ sub delete_slot_alias {
     return unless $has;
     return unless exists $has->{ $name };
 
-    Carp::croak("[CONFLICT] Cannot delete an slot alias ($name) when there is an regular slot already there")
+    Carp::confess("[CONFLICT] Cannot delete an slot alias ($name) when there is an regular slot already there")
         if MOP::Slot->new(
             name        => $name,
             initializer => $has->{ $name }
