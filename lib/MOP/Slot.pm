@@ -10,7 +10,7 @@ use UNIVERSAL::Object::Immutable;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object::Immutable' }

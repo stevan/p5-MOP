@@ -8,7 +8,7 @@ use MOP::Role;
 use MOP::Class;
 use MOP::Internal::Util ();
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub get_meta {
@@ -52,10 +52,11 @@ sub inherit_slots {
         # will gives us *all* the slots, including
         # those that are themselves inherited ...
         foreach my $slot ( $super->all_slots ) {
+            my $slot_name = $slot->name;
             # we always just alias this anyway ...
-            $meta->alias_slot( $slot->name, $slot->initializer )
-                unless $meta->has_slot( $slot->name )
-                    || $meta->has_slot_alias( $slot->name );
+            $meta->alias_slot( $slot_name, $slot->initializer )
+                unless $meta->has_slot( $slot_name )
+                    || $meta->has_slot_alias( $slot_name );
         }
     }
 
