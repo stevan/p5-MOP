@@ -156,18 +156,20 @@ sub DOES_GLOB_HAVE_NULL_CV {
     my ($glob) = @_;
     Carp::confess('[ARGS] You must specify a GLOB')
         unless $glob;
-    # NOTE:
-    # If the glob eq -1 that means it may well be a null sub
-    # this seems to be some kind of artifact of an optimization
-    # perhaps, I really don't know, it is odd. It should not
-    # need to be dealt with in XS, it seems to be a Perl language
-    # level thing.
-    # - SL
-    return 1 if $glob eq '-1';
-    # next lets see if we have a CODE slot ...
-    if ( my $code = *{ $glob }{CODE} ) {
+
+    # The glob may be -1 or a string, which is perl’s way
+    # of optimizing null sub declarations like ‘sub foo;’
+    # and ‘sub bar($);’.
+    return 1 if ref \$glob eq 'SCALAR' && defined $glob;
+    # We may have a reference to a scalar or array, which
+    # represents a constant, so is not a null sub.
+    return 0 if ref $glob and ref $glob ne 'CODE';
+    # next lets see if we have a CODE slot (or a code
+    # reference instead of a glob) ...
+    if ( my $code = ref $glob ? $glob : *{ $glob }{CODE} ) {
         return Sub::Metadata::sub_body_type( $code ) eq 'UNDEF';
     }
+
     # if we had no CODE slot, it can't be a NULL CV ...
     return 0;
 }

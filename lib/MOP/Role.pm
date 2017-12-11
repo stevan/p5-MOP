@@ -299,7 +299,9 @@ sub add_required_method {
         # and if we don't and we have a CODE slot, we
         # need to die because this doesn't make sense
         Carp::confess("[CONFLICT] Cannot add a required method ($name) when there is a regular method already there")
-            if defined *{ $glob }{CODE};
+            if ref \$glob eq 'GLOB'
+                ? defined *{ $glob }{CODE}
+                : defined $glob;
     }
 
     # if we get here, then we
