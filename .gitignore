@@ -6,3 +6,5 @@ nytprof*
 Makefile
 Makefile.old
 cover_db
+*.gz
+.build/
