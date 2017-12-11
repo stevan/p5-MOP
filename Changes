@@ -1,5 +1,15 @@
 Revision history for Perl extension MOP
 
+0.13
+    - added support for Travis CI
+    - added in some new tests
+        - thanks to Lisa Hare for these
+
+    [DEPENDENCIES]
+    - dropping the Sub::Name dependency in favor of Sub::Util
+      which will be core eventually
+        - thanks to Toby Inkster for this
+
 0.12 2017-10-30
     [ENHANCEMENT]
     - MOP::Util::get_meta now will check for the existance

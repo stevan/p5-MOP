@@ -13,7 +13,7 @@ use MOP::Slot;
 
 use MOP::Internal::Util;
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 our @ISA; BEGIN { @ISA = 'UNIVERSAL::Object::Immutable' };

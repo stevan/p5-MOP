@@ -4,7 +4,7 @@ package MOP;
 use strict;
 use warnings;
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use MOP::Role;
