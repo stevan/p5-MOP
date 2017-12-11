@@ -6,7 +6,7 @@ use warnings;
 
 use B                   (); # nasty stuff, all nasty stuff
 use Carp                (); # errors and stuff
-use Sub::Name           (); # handling some sub stuff
+use Sub::Util           (); # handling some sub stuff
 use Sub::Metadata       (); # handling other sub stuff
 use Symbol              (); # creating the occasional symbol
 use Scalar::Util        (); # I think I use blessed somewhere in here ...
@@ -214,7 +214,7 @@ sub INSTALL_CV {
         no warnings 'once', 'redefine';
 
         my $fullname =  $in_pkg.'::'.$name;
-        *{$fullname} = $opts{set_subname} ? Sub::Name::subname($fullname, $cv) : $cv;
+        *{$fullname} = $opts{set_subname} ? Sub::Util::set_subname($fullname, $cv) : $cv;
     }
     return;
 }
