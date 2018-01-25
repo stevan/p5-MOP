@@ -1,9 +1,11 @@
 Revision history for Perl extension MOP
 
-0.13
+0.13 2018-01-25
     - added support for Travis CI
     - added in some new tests
         - thanks to Lisa Hare for these
+    - added patches to support 5.27/bleadperl
+        - thanks to FatherC for these
 
     [DEPENDENCIES]
     - dropping the Sub::Name dependency in favor of Sub::Util
