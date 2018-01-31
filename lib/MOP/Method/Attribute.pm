@@ -6,7 +6,7 @@ use warnings;
 
 use Carp ();
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use parent 'UNIVERSAL::Object::Immutable';

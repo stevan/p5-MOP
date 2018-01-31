@@ -1,5 +1,10 @@
 Revision history for Perl extension MOP
 
+0.14
+    - use `parent` where it is needed, no need
+      not to, it is core
+    - also fix the travis config
+
 0.13 2018-01-25
     - added support for Travis CI
     - added in some new tests
