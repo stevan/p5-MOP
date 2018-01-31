@@ -6,12 +6,11 @@ use warnings;
 
 use Carp ();
 
-use UNIVERSAL::Object::Immutable;
-
 our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA; BEGIN { @ISA = ('UNIVERSAL::Object::Immutable') }
+use parent 'UNIVERSAL::Object::Immutable';
+
 our %HAS; BEGIN {
     %HAS = (
         original => sub { die '`original` is required' },

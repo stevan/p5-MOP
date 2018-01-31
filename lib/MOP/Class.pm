@@ -7,8 +7,6 @@ use warnings;
 use mro  ();
 use Carp ();
 
-use UNIVERSAL::Object::Immutable;
-
 use MOP::Role;
 use MOP::Method;
 use MOP::Slot;
@@ -18,9 +16,9 @@ use MOP::Internal::Util;
 our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
-our @ISA;  BEGIN { @ISA  = 'UNIVERSAL::Object::Immutable' };
-our @DOES; BEGIN { @DOES = 'MOP::Role' }; # to be composed later ...
+use parent 'UNIVERSAL::Object::Immutable';
 
+our @DOES; BEGIN { @DOES = 'MOP::Role' }; # to be composed later ...
 UNITCHECK {
     # apply them roles  ...
     MOP::Internal::Util::APPLY_ROLES(
