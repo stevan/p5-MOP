@@ -117,9 +117,9 @@ Note, if this is called more than once, the results are undefined.
 =item C<inherit_slots( $meta )>
 
 This will look to see if the C<$meta> object is a L<MOP::Class>
-instance and if so, will then loop through the direct superclasses
-(thouse in the C<@ISA> array of C<$meta>) and alias all the slots
-into the C<$meta> namespace.
+instance and if so, will then loop through the superclass chain
+(those derived from the classes in the C<@ISA> array of C<$meta>)
+and alias all the slots into the C<$meta> namespace.
 
 Note, if this is called more than once, the results are undefined.
 
