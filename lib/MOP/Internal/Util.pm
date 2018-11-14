@@ -138,8 +138,7 @@ sub CAN_COERCE_TO_CODE_REF {
     # might be just a blessed CODE ref ...
     return 1 if Scalar::Util::reftype( $object ) eq 'CODE';
     # or might be overloaded object ...
-    return 0 unless Devel::OverloadInfo::is_overloaded( $object );
-    return exists Devel::OverloadInfo::overload_info( $object )->{'&{}'};
+    return defined Devel::OverloadInfo::overload_op_info( $object, '&{}' );
 }
 
 sub IS_CV_NULL {
