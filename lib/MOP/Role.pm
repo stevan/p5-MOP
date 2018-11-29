@@ -812,7 +812,7 @@ defintions, and I<may> consume other roles.
 
 =over 4
 
-=item C<new( name => $package_name )>
+=item C<< new( name => $package_name ) >>
 
 =item C<new( $package_name )>
 
